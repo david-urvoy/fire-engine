@@ -1,6 +1,6 @@
 {
 	"name": "@david-urvoy/fire-engine",
-	"version": "0.0.1",
+	"version": "0.0.1-alpha",
 	"description": "",
 	"main": "index.ts",
 	"scripts": {
@@ -55,7 +55,7 @@
 			"optional": true
 		}
 	},
-	"keywords": [ ],
+	"keywords": [],
 	"author": "",
 	"license": "ISC"
 }
