@@ -46,8 +46,8 @@
 	"peerDependencies": {
 		"@react-three/drei": "^9.120.5",
 		"@react-three/fiber": "^8 || ^9.0.0-0",
-		"react": "^18",
-		"react-dom": "^18",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
 		"three": ">=0.137"
 	},
 	"peerDependenciesMeta": {

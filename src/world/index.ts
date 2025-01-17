@@ -1,4 +1,5 @@
 export * from './characters/character'
+export * from './characters/movement/animate'
 export * from './characters/npc'
 export * from './characters/skinned-mesh'
 export * from './environment'
