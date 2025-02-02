@@ -36,7 +36,6 @@ export const time = proxy({
 })
 
 export const timer = new Timer()
-// timer.update()
 
 function tick(onTick?: (time: Time) => void) {
 	if (time.minutes !== 59) ++time.minutes

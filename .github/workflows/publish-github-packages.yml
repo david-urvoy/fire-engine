@@ -1,6 +1,9 @@
-name: pnpm Example Workflow
+name: publish NPM Package
+
 on:
   push:
+    branches:
+      - develop
 
 jobs:
   build:
@@ -8,27 +11,70 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
+        pnpm-version: [10]
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
-      - uses: actions/checkout@v4
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - name: Use Node.js ${{ matrix.node-version }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          registry-url: https://npm.pkg.github.com/
+          # cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ matrix.pnpm-version }}
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Authenticate with GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        
+      - name: Get package name from package.json
+        id: package_name
+        run: echo "PACKAGE_NAME=$(node -p "require('./package.json').name.replace(/^@.*\//, '')")" >> $GITHUB_ENV
+
+      - name: Get package version from package.json
+        id: package_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Delete existing alpha version (if exists)
+        if: contains(env.VERSION, '-alpha')  # Only delete if version is an alpha version
+        run: |
+          echo "Detected alpha version: $VERSION. Checking if it exists..."
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.NPM_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/users/david-urvoy/packages/npm/$PACKAGE_NAME/versions")
+
+          echo "API Response: $RESPONSE"
+
+          # Ensure the response is an array before using jq
+          if echo "$RESPONSE" | jq -e 'type == "array"' > /dev/null; then
+            VERSION_ID=$(echo "$RESPONSE" | jq -r ".[] | select(.name == \"$VERSION\") | .id")
+          else
+            echo "Unexpected API response. Skipping version check."
+            exit 0
+          fi
+
+          if [[ -n "$VERSION_ID" ]]; then
+            echo "Alpha version $VERSION exists with ID $VERSION_ID. Deleting..."
+            curl -X DELETE \
+              -H "Authorization: token ${{ secrets.NPM_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/users/david-urvoy/packages/npm/$PACKAGE_NAME/versions/$VERSION_ID"
+            echo "Deleted alpha version $VERSION."
+          else
+            echo "Alpha version $VERSION does not exist. Proceeding with publishing..."
+          fi
+
       - name: Publish
         run: pnpm publish --publish-branch=develop
         env:
