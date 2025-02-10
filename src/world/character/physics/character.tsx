@@ -2,9 +2,9 @@ import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, type RapierRigidBody, RigidBody, type RigidBodyProps, useRapier } from '@react-three/rapier'
 import { type PropsWithChildren, type RefObject, useCallback, useRef } from 'react'
 import { type Camera, type Quaternion, Vector3 } from 'three'
-import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../store/game-store'
-import { timer } from '../../store/time-store'
-import { useCharacterController } from './movement/character-controller'
+import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../store/game-store'
+import { timer } from '../../../store/time-store'
+import { useCharacterController } from './character-controller'
 
 interface CharacterProps {
 	velocity: Vector3

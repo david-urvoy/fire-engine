@@ -5,14 +5,17 @@ import { useSubscribePlayerMove } from '../../../controls'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }
+export interface Animated extends GroupProps {
+	animationsRef: MutableRefObject<Animations | undefined>
+}
 
 export function Animate({
 	Model,
 	...props
 }: {
-	Model: (props: {
-		animationsRef: MutableRefObject<Animations | undefined>
-	}) => JSX.Element
+	Model:
+		| ((props: Animated) => JSX.Element)
+		| React.LazyExoticComponent<({ animationsRef, ...props }: Animated) => JSX.Element>
 } & GroupProps) {
 	const animations = useRef<Animations>()
 	const animation = useRef(animations.current?.idle)

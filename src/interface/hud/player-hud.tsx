@@ -1,5 +1,5 @@
-import HoloHud from '../../interface/hud/holo-hud'
 import { game, isDev } from '../../store/game-store'
+import HoloHud from './holo-hud'
 
 export const PlayerHud = () => (
 	<HoloHud

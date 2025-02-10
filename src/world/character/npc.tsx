@@ -3,9 +3,9 @@ import { type RefObject, useRef, useState } from 'react'
 import { Quaternion, Vector3 } from 'three'
 import { characterDimensions } from '../../store/game-store'
 import { InteractZone } from '../objects/interact-zone/interact-zone'
-import { Character } from './character'
-import type { Animations } from './movement/animate'
+import type { Animations } from './animation/animate'
 import { useWanderingBehavior } from './npc/behavior/wandering'
+import { Character } from './physics/character'
 
 export function NPC({
 	position,
