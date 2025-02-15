@@ -1,18 +1,23 @@
-import { type RapierContext, useRapier } from '@react-three/rapier'
-import { type MutableRefObject, useRef } from 'react'
+import { useRapier } from '@react-three/rapier'
+import { useEffect, useRef } from 'react'
 
-export function useCharacterController(): MutableRefObject<
-	ReturnType<RapierContext['world']['createCharacterController']>
->['current'] {
+export function useCharacterController() {
 	const { world } = useRapier()
-	const controller = useRef<ReturnType<RapierContext['world']['createCharacterController']>>(
-		world.createCharacterController(0.2),
-	)
+	const controller = useRef<ReturnType<typeof world.createCharacterController> | null>(null)
 
-	controller.current.setMaxSlopeClimbAngle((80 * Math.PI) / 180)
-	controller.current.setMinSlopeSlideAngle((80 * Math.PI) / 180)
-	controller.current.enableSnapToGround(1)
-	controller.current.setApplyImpulsesToDynamicBodies(true)
+	useEffect(() => {
+		if (!controller.current) {
+			controller.current = world.createCharacterController(0.2)
+			controller.current.setMaxSlopeClimbAngle((80 * Math.PI) / 180)
+			controller.current.setMinSlopeSlideAngle((80 * Math.PI) / 180)
+			controller.current.enableSnapToGround(1)
+			controller.current.setApplyImpulsesToDynamicBodies(true)
+		}
 
-	return controller.current
+		return () => {
+			controller.current = null
+		}
+	}, [world])
+
+	return controller
 }

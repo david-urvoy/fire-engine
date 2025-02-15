@@ -26,8 +26,10 @@ export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
 	useMove(velocity, orientation)
 	usePointerLock(controls)
 
-	const updateOrientation = useCallback<NonNullable<CameraControlsProps['onChange']>>(
-		(e) => {
+	const updateOrientation = useCallback<CameraControlsProps['onChange']>(
+		(e: {
+			type: 'update'
+		}) => {
 			if (e?.type === 'update' || !controls.current) return
 
 			controls.current.getSpherical(sphere)
@@ -73,7 +75,7 @@ export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
 	)
 }
 
-function usePointerLock(controls: RefObject<CameraControls>) {
+function usePointerLock(controls: RefObject<CameraControls | null>) {
 	const subscribeFocus = useCallback(() => controls.current?.lockPointer(), [controls])
 	const unsubscribeFocus = useCallback(() => controls.current?.unlockPointer(), [controls])
 	useEffect(() => {

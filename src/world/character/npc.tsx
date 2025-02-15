@@ -1,4 +1,5 @@
-import { type GroupProps, type ThreeEvent, useFrame } from '@react-three/fiber'
+import { type ThreeElements, type ThreeEvent, useFrame } from '@react-three/fiber'
+import type React from 'react'
 import { type RefObject, useRef, useState } from 'react'
 import { Quaternion, Vector3 } from 'three'
 import { characterDimensions } from '../../store/game-store'
@@ -11,11 +12,13 @@ export function NPC({
 	position,
 	CharacterComponent,
 	...props
-}: GroupProps & {
+}: ThreeElements['group'] & {
 	position: Vector3
-	CharacterComponent: (props: { animationsRef: RefObject<Animations | undefined> } & GroupProps) => JSX.Element
+	CharacterComponent: (
+		props: { animationsRef: RefObject<Animations | undefined> } & ThreeElements['group'],
+	) => React.JSX.Element
 }) {
-	const animations = useRef<Animations>()
+	const animations = useRef<Animations>(undefined)
 	const [hovered, hover] = useState(false)
 	const target = { position: new Vector3(0, 0, 10), speed: 10 }
 	const linvel = new Vector3()
@@ -33,7 +36,7 @@ export function NPC({
 		hover(isPointerOver)
 		e.stopPropagation()
 	}
-	const handlePointer: GroupProps = {
+	const handlePointer: ThreeElements['group'] = {
 		onPointerOver: handlePointerEvent(true),
 		onPointerOut: handlePointerEvent(false),
 	}

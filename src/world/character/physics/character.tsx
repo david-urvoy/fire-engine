@@ -24,17 +24,18 @@ export function Character({
 }: PropsWithChildren<CharacterProps & RigidBodyProps>) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
+	console.log({ controller })
 	const gravityComponent = useRef(0)
 	const grounded = useRef(false)
 
 	useFrame(() => {
 		const delta = timer.getDelta()
 
-		if (body.current) {
+		if (body.current && controller.current) {
 			translation.copy(velocity).y += gravityComponent.current
 
-			controller.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
-			translation.copy(controller.computedMovement()).add(body.current.translation())
+			controller.current.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
+			translation.copy(controller.current.computedMovement()).add(body.current.translation())
 
 			translation.x = Math.round(translation.x * 1000) / 1000
 			translation.y = Math.round(translation.y * 1000) / 1000
@@ -44,8 +45,8 @@ export function Character({
 			body.current.setNextKinematicTranslation(translation)
 			body.current.setRotation(orientation, false)
 
-			if (controller.computedGrounded() !== grounded.current) {
-				grounded.current = controller.computedGrounded()
+			if (controller.current.computedGrounded() !== grounded.current) {
+				grounded.current = controller.current.computedGrounded()
 			}
 			if (grounded.current) gravityComponent.current = 0
 			gravityComponent.current -= GRAVITY_CONST * delta
