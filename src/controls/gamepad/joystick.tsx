@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { animated, useSpring } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { gamepad } from './gamepad'

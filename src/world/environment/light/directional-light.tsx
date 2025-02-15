@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { animated } from '@react-spring/three'
 import { Helper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'

@@ -24,7 +24,6 @@ export function Character({
 }: PropsWithChildren<CharacterProps & RigidBodyProps>) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
-	console.log({ controller })
 	const gravityComponent = useRef(0)
 	const grounded = useRef(false)
 

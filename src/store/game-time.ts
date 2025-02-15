@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
-import { useVisibilityChange } from '@uidotdev/usehooks'
 import { useEffect } from 'react'
+import { useWindowFocus } from '../hooks/useWindowFocus'
 import { time, timer } from './time-store'
 
 export function useGameTime() {
@@ -23,7 +23,9 @@ export function useGameTime() {
 	// 		unsubscribeKeys()
 	// 	}
 	// }, [subscribeKeys, getKeys])
-	const visibility = useVisibilityChange()
+	const visibility = useWindowFocus()
+
+	console.log('visibility', visibility)
 
 	useEffect(() => {
 		time.start()

@@ -1,4 +1,4 @@
-import type { GroupProps } from '@react-three/fiber'
+import type { JSX } from 'react'
 import { PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import fragmentShader from './fragment-shader.glsl'
 import vertexShader from './vertex-shader.glsl'
@@ -10,7 +10,7 @@ export function InteractZone({
 	hovered,
 	onPointerOver,
 	onPointerOut,
-}: { offset: number; hovered: boolean } & GroupProps) {
+}: { offset: number; hovered: boolean } & JSX.IntrinsicElements['group']) {
 	const shaderMaterial = new ShaderMaterial({
 		fragmentShader,
 		vertexShader,

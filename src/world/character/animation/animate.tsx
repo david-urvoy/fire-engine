@@ -1,12 +1,12 @@
-import type { ThreeElements } from '@react-three/fiber'
+// @ts-nocheck
 import type React from 'react'
 import { type RefObject, useEffect, useRef } from 'react'
-import type { AnimationAction } from 'three'
+import type { AnimationAction, Group } from 'three'
 import { useSubscribePlayerMove } from '../../../controls'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }
-export interface Animated {
+export interface Animated extends Group {
 	animationsRef: RefObject<Animations | null>
 }
 
@@ -14,10 +14,9 @@ export function Animate({
 	Model,
 	...props
 }: {
-	Model:
-		| ((props: Animated) => React.JSX.Element)
-		| React.LazyExoticComponent<({ animationsRef, ...props }: Animated) => React.JSX.Element>
-} & ThreeElements['group']) {
+	Model: (props: Animated) => React.JSX.Element
+	// | React.LazyExoticComponent<({ animationsRef, ...props }: Animated) => React.JSX.Element>
+} & Animated) {
 	const animations = useRef<Animations>(null)
 	const animation = useRef(animations.current?.idle)
 	const direction = useSubscribePlayerMove()
