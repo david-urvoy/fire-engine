@@ -1,14 +1,9 @@
 import { CameraControls, type CameraControlsProps } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { type RefObject, useCallback, useEffect, useRef } from 'react'
-import { type Group, Matrix4, type Quaternion, Spherical, Vector3 } from 'three'
+import { type Group, Matrix4, Quaternion, Spherical, Vector3 } from 'three'
 import { VERTICAL, ZERO } from '../../game'
 import { usePlayerMove } from './use-player-controls'
-
-type ControlProps = {
-	velocity: Vector3
-	orientation: Quaternion
-}
 
 const mx = new Matrix4()
 
@@ -19,20 +14,30 @@ const cameraPosition = new Vector3()
 const targetPosition = new Vector3()
 const previousTargetPosition = new Vector3()
 
-export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
-	const controls = useRef<CameraControls>(null)
-	const target = useRef<Group>(null)
+export const PlayerControls: {
+	velocity: Vector3
+	orientation: Quaternion
+	target: RefObject<Group | null>
+} = {
+	velocity: new Vector3(),
+	orientation: new Quaternion(),
+	target: { current: null },
+}
 
-	useMove(velocity, orientation)
-	usePointerLock(controls)
+export function ThirdPersonControls() {
+	const cameraControls = useRef<CameraControls>(null)
+	const { orientation, target } = PlayerControls
+
+	useMove()
+	usePointerLock(cameraControls)
 
 	const updateOrientation = useCallback<CameraControlsProps['onChange']>(
 		(e: {
 			type: 'update'
 		}) => {
-			if (e?.type === 'update' || !controls.current) return
+			if (e?.type === 'update' || !cameraControls.current) return
 
-			controls.current.getSpherical(sphere)
+			cameraControls.current.getSpherical(sphere)
 			direction.setFromSpherical(sphere).negate()
 			mx.lookAt(direction.setY(0), ZERO, VERTICAL)
 			orientation.setFromRotationMatrix(mx)
@@ -41,14 +46,14 @@ export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
 	)
 
 	useFrame(() => {
-		if (!target.current || !controls.current) return
+		if (!target.current || !cameraControls.current) return
 
 		target.current.getWorldPosition(targetPosition)
 
-		controls.current.getPosition(cameraPosition)
+		cameraControls.current.getPosition(cameraPosition)
 		cameraPosition.add(targetPosition).sub(previousTargetPosition)
 
-		controls.current.setLookAt(
+		cameraControls.current.setLookAt(
 			cameraPosition.x,
 			cameraPosition.y,
 			cameraPosition.z,
@@ -62,9 +67,8 @@ export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
 
 	return (
 		<>
-			<group ref={target} position-y={1.2} position-x={-1} />
 			<CameraControls
-				ref={controls}
+				ref={cameraControls}
 				minDistance={2}
 				maxDistance={6}
 				onChange={updateOrientation}
@@ -78,22 +82,22 @@ export function ThirdPersonControls({ velocity, orientation }: ControlProps) {
 function usePointerLock(controls: RefObject<CameraControls | null>) {
 	const subscribeFocus = useCallback(() => controls.current?.lockPointer(), [controls])
 	const unsubscribeFocus = useCallback(() => controls.current?.unlockPointer(), [controls])
+	const controller = new AbortController()
 	useEffect(() => {
-		addEventListener('focus', subscribeFocus)
-		addEventListener('click', subscribeFocus)
+		addEventListener('focus', subscribeFocus, { signal: controller.signal })
+		addEventListener('click', subscribeFocus, { signal: controller.signal })
 		return () => {
 			unsubscribeFocus()
-			removeEventListener('focus', subscribeFocus)
-			removeEventListener('click', subscribeFocus)
+			controller.abort()
 		}
-	}, [subscribeFocus, unsubscribeFocus])
+	}, [subscribeFocus, unsubscribeFocus, controller])
 }
 
-function useMove(velocity: Vector3, orientation: Quaternion) {
+function useMove() {
 	const direction = usePlayerMove()
 
 	useFrame(() => {
 		const [x, z] = direction
-		velocity.setX(x).setZ(z).applyQuaternion(orientation).setY(0).multiplyScalar(7.5)
+		PlayerControls.velocity.setX(x).setZ(z).applyQuaternion(PlayerControls.orientation).setY(0).multiplyScalar(7.5)
 	})
 }

@@ -1,8 +1,8 @@
 import { useThree } from '@react-three/fiber'
-import type { MutableRefObject } from 'react'
+import type { RefObject } from 'react'
 import { type Material, type Mesh, Raycaster, type Vector3 } from 'three'
 
-export const useXRay = (target: MutableRefObject<Vector3>) => {
+export const useXRay = (target: RefObject<Vector3>) => {
 	const { scene, camera } = useThree()
 	const transparentElements: Map<string, Mesh> = new Map()
 	const raycaster = new Raycaster(camera.position, target.current.sub(camera.position).normalize(), 0, 10)

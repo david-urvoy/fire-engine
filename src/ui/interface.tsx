@@ -2,8 +2,8 @@ import { button, folder, useControls } from 'leva'
 import { type PropsWithChildren, useRef } from 'react'
 import { useSnapshot } from 'valtio'
 import { game } from '../game/game-store'
-import { time } from '../game/time/time-store'
 import type { Time } from '../game/time/time'
+import { time } from '../game/time/time-store'
 
 export function Interface({ children }: PropsWithChildren) {
 	return (
