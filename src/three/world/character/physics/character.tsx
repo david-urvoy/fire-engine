@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, type RapierRigidBody, RigidBody, type RigidBodyProps, useRapier } from '@react-three/rapier'
 import { type PropsWithChildren, type RefObject, useCallback, useRef } from 'react'
-import { type Camera, type Quaternion, Vector3 } from 'three'
+import { type Quaternion, Vector3 } from 'three'
 import { type CharacterDimensions, GRAVITY_CONST, characterDimensions, timer } from '../../../../game'
 import { useCharacterController } from './character-controller'
 
@@ -9,7 +9,6 @@ interface CharacterProps {
 	velocity: Vector3
 	orientation: Quaternion
 	dimensions?: CharacterDimensions
-	onUpdate?: ((camera: Camera) => void)[]
 }
 
 const translation = new Vector3()
@@ -34,11 +33,6 @@ export function Character({
 
 			controller.current.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
 			translation.copy(controller.current.computedMovement()).add(body.current.translation())
-
-			translation.x = Math.round(translation.x * 1000) / 1000
-			translation.y = Math.round(translation.y * 1000) / 1000
-			// if (Math.abs(translation.y) < 0.03) translation.y = 0
-			translation.z = Math.round(translation.z * 1000) / 1000
 
 			body.current.setNextKinematicTranslation(translation)
 			body.current.setRotation(orientation, false)
