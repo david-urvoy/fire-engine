@@ -25,9 +25,7 @@ export function useGameTime() {
 	// }, [subscribeKeys, getKeys])
 	const visibility = useWindowFocus()
 
-	useEffect(() => {
-		time.start()
-	}, [])
+	useEffect(() => time.start(), [])
 	useEffect(() => {
 		if (!visibility) {
 			timer.update()

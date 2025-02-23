@@ -3,7 +3,7 @@ import { proxy } from 'valtio'
 import { PERIODS, Period } from './period'
 import type { Time } from './time'
 
-export const GAME_TIME_SPEED_RATIO = 60
+export const GAME_TIME_SPEED_RATIO = 20
 const TIME_STORE_KEY = 'game-time'
 
 const INITIAL_TIME = localStorage.getItem(TIME_STORE_KEY)
@@ -12,7 +12,7 @@ const INITIAL_TIME = localStorage.getItem(TIME_STORE_KEY)
 
 export const time = proxy({
 	...INITIAL_TIME,
-	start: () => {
+	start() {
 		const interval = setInterval(() => !time.frozen && tick(), (1000 * 60) / GAME_TIME_SPEED_RATIO)
 		return () => clearInterval(interval)
 	},
