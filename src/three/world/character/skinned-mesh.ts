@@ -16,7 +16,7 @@ interface GLTFAction<ActionName extends string> extends AnimationClip {
 
 export function useSkinnedMeshGLTF<GLTFResult extends GLTFData, ActionName extends string>(filepath: string) {
 	const group = useRef(null)
-	const gltf = useGLTF(filepath) as GLTFResult
+	const gltf = useGLTF(filepath) as unknown as GLTFResult
 	const { scene, animations } = gltf
 	const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
 	const { nodes } = useGraph(clone)

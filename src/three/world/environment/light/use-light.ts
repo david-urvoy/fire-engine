@@ -2,14 +2,14 @@ import { config, useSpring } from '@react-spring/three'
 import { folder, useControls } from 'leva'
 import type { Light } from 'three'
 import { useSnapshot } from 'valtio'
-import { time } from '../../../../game'
-import { type Period, PERIODS } from '../../../../game/time/period'
+import { gameTime } from '../../../../game'
+import { PERIODS, type Period } from '../../../../game/time/period'
 
 export const useLight = ({
 	folderName,
 	lightProvider,
 }: { folderName: string; lightProvider: (period: Period) => Light }) => {
-	const { period } = useSnapshot(time)
+	const { period } = useSnapshot(gameTime)
 	const gamePeriod = PERIODS[period]
 	const light = lightProvider(gamePeriod)
 

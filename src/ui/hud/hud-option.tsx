@@ -1,12 +1,12 @@
 import { type PropsWithChildren, useState } from 'react'
-import { hudSize } from './hud-store'
 
-export default function HudOption({
+export function HudOption({
 	index,
 	total,
+	hudSize,
 	action,
 	children,
-}: PropsWithChildren<{ index: number; total: number; action?: () => void }>) {
+}: PropsWithChildren<{ index: number; total: number; hudSize: number; action?: () => void }>) {
 	const [mouseOver, setMouseOver] = useState(false)
 
 	const hoverRatio = 1.1

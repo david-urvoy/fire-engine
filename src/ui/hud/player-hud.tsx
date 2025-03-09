@@ -1,5 +1,5 @@
-import { game, isDev } from '../../game/game-store'
-import HoloHud from './holo-hud'
+import { game, isDev } from '../../game'
+import { HoloHud } from './holo-hud'
 
 export const PlayerHud = () => (
 	<HoloHud

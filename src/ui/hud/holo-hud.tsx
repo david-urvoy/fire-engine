@@ -1,11 +1,26 @@
 import { Float, Html } from '@react-three/drei'
 import type { HtmlProps } from '@react-three/drei/web/Html'
-import { useSnapshot } from 'valtio'
-import HudOption from './hud-option'
-import { hud, hudSize } from './hud-store'
-import type { ActionOptions } from './option'
+import { proxy, useSnapshot } from 'valtio'
+import { HudOption } from './hud-option'
 
-export default function HoloHud({ options, ...props }: HtmlProps & { options: ActionOptions }) {
+type ActionOptions = Record<string, { action: () => void }>
+
+const hudSize = 200
+
+const hud = proxy({
+	isVisible: false,
+	toggle() {
+		hud.isVisible = !hud.isVisible
+	},
+	setVisible(visible: boolean) {
+		hud.isVisible = visible
+	},
+	hide() {
+		hud.setVisible(false)
+	},
+})
+
+export function HoloHud({ options, ...props }: HtmlProps & { options: ActionOptions }) {
 	const { isVisible } = useSnapshot(hud)
 
 	// const rotation = new Euler().setFromQuaternion(
@@ -47,7 +62,7 @@ export function WheelHud(props: { options: ActionOptions }) {
 		<svg width={hudSize * 2} height={hudSize * 2}>
 			<title>hud</title>
 			{options?.map(([name, { action }], i) => (
-				<HudOption key={name} index={i} total={options.length} action={action}>
+				<HudOption key={name} index={i} total={options.length} hudSize={hudSize} action={action}>
 					{name}
 				</HudOption>
 			))}

@@ -2,7 +2,8 @@ import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, type RapierRigidBody, RigidBody, type RigidBodyProps, useRapier } from '@react-three/rapier'
 import { type PropsWithChildren, type RefObject, useCallback, useRef } from 'react'
 import { type Quaternion, Vector3 } from 'three'
-import { type CharacterDimensions, GRAVITY_CONST, characterDimensions, timer } from '../../../../game'
+import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../../game'
+import { timer } from '../../../../game/time/timer'
 import { useCharacterController } from './character-controller'
 
 interface CharacterProps {

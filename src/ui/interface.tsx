@@ -1,9 +1,8 @@
 import { button, folder, useControls } from 'leva'
 import { type PropsWithChildren, useRef } from 'react'
 import { useSnapshot } from 'valtio'
-import { game } from '../game/game-store'
+import { game, gameTime } from '../game'
 import type { Time } from '../game/time/time'
-import { time } from '../game/time/time-store'
 
 export function Interface({ children }: PropsWithChildren) {
 	return (
@@ -17,7 +16,7 @@ export function Interface({ children }: PropsWithChildren) {
 
 function Clock() {
 	const timeRef = useRef<HTMLDivElement>(null)
-	const { days, hours, minutes } = useSnapshot(time)
+	const { days, hours, minutes } = useSnapshot(gameTime)
 
 	useControls(
 		'Debug',
@@ -30,7 +29,7 @@ function Clock() {
 					step: 1,
 					label: 'Change time',
 					onEditEnd: (hours) => {
-						time.hours = hours
+						gameTime.hours = hours
 					},
 				},
 			}),
@@ -49,7 +48,7 @@ function Clock() {
 }
 
 function DebugUI() {
-	const { toggle } = useSnapshot(time)
+	const { toggle } = useSnapshot(gameTime)
 	const { debug } = useSnapshot(game)
 
 	useControls('Debug', { Time: folder({ 'Pause/Resume': button(toggle) }) }, { collapsed: true, order: 100 })

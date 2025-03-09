@@ -1,4 +1,4 @@
-import type { Light } from '../../three'
+import type { Light } from '../../three/world/environment/light/light'
 import type { Time } from './time'
 
 /**
