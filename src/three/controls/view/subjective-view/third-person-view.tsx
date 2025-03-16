@@ -1,23 +1,21 @@
 import { OrbitControls } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { CameraTarget } from '../../camera/camera-target'
-import { PointerLock } from '../mouse/pointer-lock'
-import { useCameraTracking } from './use-controls'
+import { PointerLock } from '../../mouse/pointer-lock'
+import { ControlledCharacter } from '../../use-player-controls'
+import { useSubjectiveView } from './use-subjective-view'
 
+/**
+ * Third person view
+ */
 const targetPosition = new Vector3()
-
 export function ThirdPersonView() {
 	const orbit = useRef<OrbitControlsImpl>(null)
-	const { ref: target } = CameraTarget
+	const { ref: target } = ControlledCharacter
 
-	useCameraTracking()
-
-	useFrame(({ camera }) => {
+	useSubjectiveView((camera) => {
 		if (!target.current || !orbit.current) return
-
 		camera.position.sub(targetPosition).add(target.current.getWorldPosition(targetPosition))
 		orbit.current.target.copy(targetPosition)
 	})
