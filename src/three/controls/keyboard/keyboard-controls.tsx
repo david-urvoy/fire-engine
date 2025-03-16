@@ -1,26 +1,14 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
 import { Vector2 } from 'three'
-import { proxy, useSnapshot } from 'valtio'
+import { proxy } from 'valtio'
 import { game } from '../../../game'
+import { Keymap } from './keymap'
 
-export const Keymap = {
-	up: ['ArrowUp', 'KeyW'],
-	down: ['ArrowDown', 'KeyS'],
-	left: ['ArrowLeft', 'KeyA'],
-	right: ['ArrowRight', 'KeyD'],
-	shift: ['Shift'],
-	meta: ['Meta'],
-	alt: ['Alt'],
-	holoHud: ['KeyI'],
-} satisfies Record<string, string[] | [string | string[], () => void]>
-
-export const onKeyDown: (() => void)[] = []
-
-const KeySubscriptions: [string | string[], () => void][] = [
+const KeySubscriptions: [string, () => void][] = [
 	[
 		'KeyM',
 		() => {
-			game.isMobile = true
+			game.isMobile = !game.isMobile
 		},
 	],
 ]
@@ -48,9 +36,7 @@ export const keyboard = {
 	},
 }
 
-export function useKeyboard() {
-	return useSnapshot(keyboard)
-}
+const onKeyDown: (() => void)[] = []
 
 export function KeyboardControls({ map: keymap, children }: PropsWithChildren & { map: typeof Keymap }) {
 	const toggleKey = useCallback(

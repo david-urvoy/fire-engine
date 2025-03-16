@@ -53,25 +53,6 @@ function tick(onTick?: (time: Time) => void) {
 }
 
 export function useGameTime() {
-	// const controls = useMoveControl()
-
-	// useEffect(() => {
-	// 	const unsubscribeTime = time.start()
-	// 	const unsubscribeKeys = subscribeKeys(
-	// 		({ save }) => ({ save }),
-	// 		({ save: saveKey }) => {
-	// 			const { alt } = getKeys()
-	// 			if (alt && saveKey) {
-	// 				time.save()
-	// 				console.log('saved !')
-	// 			}
-	// 		},
-	// 	)
-	// 	return () => {
-	// 		unsubscribeTime()
-	// 		unsubscribeKeys()
-	// 	}
-	// }, [subscribeKeys, getKeys])
 	const visibility = useWindowFocus()
 
 	useEffect(() => gameTime.start(), [])

@@ -38,7 +38,6 @@ export const useLight = ({
 								options: { preset: 'colors' },
 								transient: false,
 							},
-							// Reset: button(() => setManual({}))
 						},
 						{ collapsed: true },
 					),
