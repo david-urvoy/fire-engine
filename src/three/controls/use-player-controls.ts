@@ -3,7 +3,7 @@ import { type Group, Quaternion, type Vector2, Vector3 } from 'three'
 import { useSnapshot } from 'valtio'
 import { game } from '../../game'
 import { gamepad } from './gamepad/gamepad'
-import { keyboard } from './keyboard/keyboard-controls'
+import { keyboard } from './keyboard/keymap'
 
 export const ControlledCharacter: {
 	velocity: Vector3
@@ -19,8 +19,8 @@ export const playerDirection = game.isMobile ? gamepad.direction : keyboard.dire
 
 export function useSubscribePlayerDirection(): Vector2 {
 	const { isMobile } = useSnapshot(game)
-	const gamepadDirection = useSnapshot(gamepad.direction)
-	const keyboardDirection = useSnapshot(keyboard.direction)
+	const gamepadDirection = useSnapshot(gamepad).direction
+	const keyboardDirection = useSnapshot(keyboard).direction
 	return isMobile ? gamepadDirection : keyboardDirection
 }
 

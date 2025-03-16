@@ -4,7 +4,7 @@ import { ActionPad } from './action-pad'
 import { Joystick } from './joystick'
 
 export const gamepad: { direction: Vector2 } = proxy({
-	direction: proxy(new Vector2()),
+	direction: new Vector2(),
 })
 
 export function Gamepad() {

@@ -15,6 +15,6 @@ export const game: {
 	isMobile?: boolean
 	debug?: string | number | object
 } = proxy({
-	isDebug: isDev,
+	isDebug: false,
 	isMobile: 'ontouchstart' in window,
 })
