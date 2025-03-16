@@ -4,11 +4,11 @@ import { game } from '../../game'
 import { gamepad } from './gamepad/gamepad'
 import { keyboard } from './keyboard/keyboard-controls'
 
-export function usePlayerMove(): Vector2 {
+export function usePlayerDirection(): Vector2 {
 	const { isMobile } = useSnapshot(game)
 	return isMobile ? gamepad.direction : keyboard.direction
 }
-export function useSubscribePlayerMove(): Vector2 {
+export function useSubscribePlayerDirection(): Vector2 {
 	const { isMobile } = useSnapshot(game)
 	const gamepadDirection = useSnapshot(gamepad.direction)
 	const keyboardDirection = useSnapshot(keyboard.direction)

@@ -2,7 +2,7 @@
 import type React from 'react'
 import { type RefObject, useEffect, useRef } from 'react'
 import type { AnimationAction, Group } from 'three'
-import { useSubscribePlayerMove } from '../../../controls'
+import { useSubscribePlayerDirection } from '../../../controls'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }
@@ -14,12 +14,12 @@ export function Animate({
 	Model,
 	...props
 }: {
-	Model: (props: Animated) => React.JSX.Element
+	Model?: (props: Animated) => React.JSX.Element
 	// | React.LazyExoticComponent<({ animationsRef, ...props }: Animated) => React.JSX.Element>
 } & Animated) {
 	const animations = useRef<Animations>(null)
 	const animation = useRef(animations.current?.idle)
-	const direction = useSubscribePlayerMove()
+	const direction = useSubscribePlayerDirection()
 
 	useEffect(() => {
 		const action = direction.length() > 0 ? animations.current?.run : animations.current?.idle
@@ -30,7 +30,7 @@ export function Animate({
 		}
 	}, [direction])
 
-	return <Model {...props} animationsRef={animations} />
+	return Model && <Model {...props} animationsRef={animations} />
 }
 
 export function animate() {
