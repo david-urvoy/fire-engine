@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { animated } from '@react-spring/three'
 import { useLight } from './use-light'
 

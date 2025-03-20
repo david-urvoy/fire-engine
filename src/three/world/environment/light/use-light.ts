@@ -10,8 +10,7 @@ export const useLight = ({
 	lightProvider,
 }: { folderName: string; lightProvider: (period: Period) => Light }) => {
 	const { period } = useSnapshot(gameTime)
-	const gamePeriod = PERIODS[period]
-	const light = lightProvider(gamePeriod)
+	const light = lightProvider(PERIODS[period])
 
 	const [, set] = useControls(
 		'Debug',
@@ -29,7 +28,7 @@ export const useLight = ({
 								transient: false,
 							},
 							Color: {
-								value: light.color,
+								value: `#${light.color.getHexString()}`,
 								onChange: (color) => api.set({ color }),
 								transient: false,
 							},
