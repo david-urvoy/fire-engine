@@ -14,5 +14,5 @@ export function FirstPersonView() {
 		target.current.getWorldPosition(camera.position).add(VERTICAL)
 	})
 
-	return <PointerLockControls />
+	return <PointerLockControls selector="canvas" />
 }
