@@ -1,9 +1,9 @@
 import { config, useSpring } from '@react-spring/three'
 import { folder, useControls } from 'leva'
-import type { Light } from 'three'
 import { useSnapshot } from 'valtio'
 import { gameTime } from '../../../../game'
 import { PERIODS, type Period } from '../../../../game/time/period'
+import type { Light } from './light'
 
 export const useLight = ({
 	folderName,
@@ -25,17 +25,12 @@ export const useLight = ({
 								min: 0,
 								max: 3,
 								step: 0.1,
-								onChange: (intensity) => {
-									api.set({ intensity })
-								},
+								onChange: (intensity) => api.set({ intensity }),
 								transient: false,
 							},
 							Color: {
 								value: light.color,
-								onChange: (color) => {
-									api.set({ color })
-								},
-								options: { preset: 'colors' },
+								onChange: (color) => api.set({ color }),
 								transient: false,
 							},
 						},
