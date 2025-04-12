@@ -1,17 +1,35 @@
-import { type Vector3, useFrame } from '@react-three/fiber'
-import { type PropsWithChildren, useState } from 'react'
-import * as THREE from 'three'
+import { useFrame } from '@react-three/fiber'
+import { type PropsWithChildren, useRef } from 'react'
+import type { Vector3 } from 'three'
 
-export function Section({ position, children }: PropsWithChildren<{ position: Vector3 | undefined }>) {
-	const [isLoaded, load] = useState(false)
+function isInRange(subjectPosition: Vector3, targetPosition: Vector3, range: number) {
+	return targetPosition.distanceTo(subjectPosition) < range
+}
+
+export function Section({
+	position,
+	maxDistance = 60,
+	children,
+}: PropsWithChildren<{ position: Vector3; maxDistance?: number }>) {
+	const isLoaded = useRef(false)
+	const isVisible = useRef(false)
 
 	useFrame(({ camera }) => {
-		if (position && Array.isArray(position)) {
-			const distance = camera.position.distanceTo(new THREE.Vector3(position[0], position[1], position[2]))
-			if (distance < 60 && !isLoaded) load(true)
-			if (distance > 60 && isLoaded) load(false)
+		const inRange = isInRange(position, camera.position, maxDistance)
+		if (inRange) {
+			isLoaded.current = true
+			isVisible.current = true
+			return
 		}
+
+		isVisible.current = false
 	})
 
-	return <>{isLoaded && <group position={position}>{children}</group>}</>
+	return (
+		isLoaded && (
+			<group visible={isVisible.current} position={position}>
+				{children}
+			</group>
+		)
+	)
 }
