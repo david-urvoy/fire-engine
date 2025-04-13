@@ -11,11 +11,13 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
+		"@tweakpane/core": "^2.0.5",
 		"@types/react": "^19.0.11",
 		"@types/react-dom": "^19.0.4",
 		"@types/three": "^0.174.0",
 		"@vitest/ui": "^3.0.9",
 		"typescript": "^5.8.2",
+		"tweakpane": "^4.0.5",
 		"vite": "^6.2.2",
 		"vitest": "^3.0.9"
 	},
@@ -28,7 +30,6 @@
 		"@use-gesture/react": "^10.3.1",
 		"@vitejs/plugin-react-swc": "^3.8.0",
 		"derive-valtio": "^0.2.0",
-		"leva": "^0.10.0",
 		"r3f-perf": "^7.2.3",
 		"spectorjs": "^0.9.30",
 		"tailwind-merge": "^3.0.2",
