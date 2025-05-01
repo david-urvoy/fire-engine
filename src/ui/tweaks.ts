@@ -28,10 +28,11 @@ export function useTweaks<B extends TweaksBindingMap | Record<string, unknown>, 
 						isBindingApi(binding) && binding.on('change', (event) => setValues(event.value as R))
 						return binding
 					})
-				: Object.entries(bindings as TweaksBindingMap).map(([key, { value, params }]) =>
-						folders[folderName]
-							.addBinding({ [key]: value }, key, params)
-							.on('change', (e) => setValues({ [key]: e.value } as R)),
+				: Object.entries(bindings as TweaksBindingMap).map(([key, { value, params, onChange }]) =>
+						folders[folderName].addBinding({ [key]: value }, key, params).on('change', (event) => {
+							onChange?.(event.value)
+							setValues({ [key]: event.value } as R)
+						}),
 					)
 
 		return () => {
@@ -56,6 +57,7 @@ export function useTweaks<B extends TweaksBindingMap | Record<string, unknown>, 
 type DeclarativeBindingDefinition<V> = {
 	value: V
 	params?: BindingParams
+	onChange?: (value: V) => void
 }
 
 type TweaksBindingMap = Record<string, DeclarativeBindingDefinition<unknown>>

@@ -6,5 +6,6 @@ export function AmbientLight() {
 		folderName: 'Ambient Light',
 		lightProvider: (period) => period.light.ambient,
 	})
+
 	return <animated.ambientLight color={springs.color} intensity={springs.intensity} />
 }
