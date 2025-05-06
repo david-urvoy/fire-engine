@@ -11,7 +11,7 @@ function useFollowCameraOrientation() {
 	const { up, down, right, left, shift } = useSnapshot(keyboard.state)
 	const z = +up - +down
 	const x = +left - +right
-	const speed = (!shift ? 3 : 1) * 0.4
+	const speed = (!shift ? 2 : 1) * 0.2
 	keyboard.direction.set(x, z).multiplyScalar(speed)
 
 	return () => {
