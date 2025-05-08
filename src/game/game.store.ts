@@ -1,3 +1,4 @@
+import { type RefObject, createRef } from 'react'
 import { Vector3 } from 'three'
 import { proxy } from 'valtio'
 
@@ -14,7 +15,9 @@ export const game: {
 	isDebug: boolean
 	isMobile?: boolean
 	debug?: string | number | object
+	canvas: RefObject<HTMLDivElement | null>
 } = proxy({
 	isDebug: false,
 	isMobile: 'ontouchstart' in window,
+	canvas: createRef<HTMLDivElement>(),
 })
