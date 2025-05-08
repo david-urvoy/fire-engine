@@ -1,18 +1,10 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { type Camera, Vector3 } from 'three'
-import { useSnapshot } from 'valtio'
 import { FORWARD, timer } from '../../../../game'
-import { keyboard } from '../../keyboard/keymap'
 import { ControlledCharacter, playerDirection } from '../../use-player-controls'
 
 function useFollowCameraOrientation() {
 	const { camera } = useThree()
-
-	const { up, down, right, left, shift } = useSnapshot(keyboard.state)
-	const z = +up - +down
-	const x = +left - +right
-	const speed = (!shift ? 2 : 1) * 0.2
-	keyboard.direction.set(x, z).multiplyScalar(speed)
 
 	return () => {
 		// set orientation to camera direction

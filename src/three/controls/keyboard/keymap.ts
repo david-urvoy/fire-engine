@@ -1,21 +1,36 @@
-import { useEffect } from 'react'
+import { derive } from 'derive-valtio'
 import { Vector2 } from 'three'
-import { proxy } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
+import { game } from '../../../game'
+import { ControlsType } from '../view/camera-view'
 
 export const Keymap = {
-	up: ['ArrowUp', 'KeyW'],
-	down: ['ArrowDown', 'KeyS'],
-	left: ['ArrowLeft', 'KeyA'],
-	right: ['ArrowRight', 'KeyD'],
-	shift: ['ShiftLeft'],
-	mobile: ['KeyM'],
-	meta: ['MetaLeft'],
-	alt: ['AltLeft'],
-	holoHud: ['KeyI'],
-} satisfies Record<string, [string] | string[]>
+	up: { keys: ['ArrowUp', 'KeyW'] },
+	down: { keys: ['ArrowDown', 'KeyS'] },
+	left: { keys: ['ArrowLeft', 'KeyA'] },
+	right: { keys: ['ArrowRight', 'KeyD'] },
+	shift: { keys: ['ShiftLeft'] },
+	mobile: { keys: ['KeyM'] },
+	meta: { keys: ['MetaLeft'] },
+	alt: { keys: ['AltLeft'] },
+	holoHud: { keys: ['KeyI'] },
+	toggleDebug: {
+		keys: ['KeyK'],
+		action: () => {
+			game.isDebug = !game.isDebug
+		},
+	},
+	switchCameraType: {
+		keys: ['KeyP'],
+		action: () => {
+			if (ControlsType.type === 'first-person') ControlsType.type = 'orbit'
+			else ControlsType.type = 'first-person'
+		},
+	},
+} as const
 
-export const keyboard = proxy({
-	direction: new Vector2(),
+const direction = new Vector2()
+export const base = proxy({
 	state: Object.fromEntries(
 		Object.keys(Keymap).map((key) => {
 			return [key, false]
@@ -23,10 +38,22 @@ export const keyboard = proxy({
 	) as Record<keyof typeof Keymap, boolean>,
 })
 
-export function useSubscribeKey(key: string, callback: () => void) {
-	useEffect(() => {
-		const handler = (event: KeyboardEvent) => event.code === key && !event.repeat && callback()
-		window.addEventListener('keydown', handler)
-		return () => window.removeEventListener('keydown', handler)
-	})
+function createMergedState<B, D>(base: B, derived: D): B & D {
+	return proxy(Object.assign({}, base, derived))
+}
+
+const keyboardDirection = derive({
+	direction: (get) => {
+		const { up, down, right, left, shift } = get(base.state)
+		const z = +up - +down
+		const x = +left - +right
+		const speed = (!shift ? 2 : 1) * 0.2
+		return direction.set(x, z).multiplyScalar(speed)
+	},
+})
+
+export const keyboard = createMergedState(base, keyboardDirection)
+
+export function useKeyboardDirection() {
+	return useSnapshot(keyboard).direction
 }

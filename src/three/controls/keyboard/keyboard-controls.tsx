@@ -1,12 +1,17 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
-import { keyboard } from './keymap'
+import { type Keymap, keyboard } from './keymap'
 
-export function KeyboardControls({ map: keymap, children }: PropsWithChildren & { map: Record<string, string[]> }) {
+export function KeyboardControls({ map: keymap, children }: PropsWithChildren & { map: typeof Keymap }) {
 	const toggleKey = useCallback(
 		(code: string, value: boolean) => {
-			const obj = Object.entries(keymap).find(([_, keyCodes]) => keyCodes.includes(code))
+			const obj = Object.entries(keymap).find(([_, { keys }]: [string, { keys: readonly string[] }]) =>
+				keys.includes(code),
+			)
 			if (!obj) return
 			keyboard.state[obj[0] as keyof typeof keyboard.state] = value
+			if (value && 'action' in obj[1]) {
+				obj[1].action()
+			}
 		},
 		[keymap],
 	)
@@ -41,4 +46,12 @@ export function KeyboardControls({ map: keymap, children }: PropsWithChildren & 
 	}, [downHandler, upHandler])
 
 	return children
+}
+
+export function useSubscribeKey(key: string, callback: () => void) {
+	useEffect(() => {
+		const handler = (event: KeyboardEvent) => event.code === key && !event.repeat && callback()
+		window.addEventListener('keydown', handler)
+		return () => window.removeEventListener('keydown', handler)
+	})
 }

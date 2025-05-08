@@ -8,6 +8,8 @@ export const gamepad: { direction: Vector2 } = proxy({
 })
 
 export function Gamepad() {
+	useJoystick()
+
 	return (
 		<div
 			className="pointer-events-none absolute bottom-1/4 z-50 flex w-full flex-row justify-between px-[10%]"
@@ -20,7 +22,7 @@ export function Gamepad() {
 	)
 }
 
-export function useJoystick() {
+function useJoystick() {
 	return useSnapshot(gamepad).direction
 }
 

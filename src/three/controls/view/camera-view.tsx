@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { proxy, useSnapshot } from 'valtio'
-import { useSubscribeKey } from '../keyboard/keymap'
+import { Controls } from '../../../game/controls'
 import { FirstPersonView } from './subjective-view/first-person-view'
 import { ThirdPersonView } from './subjective-view/third-person-view'
 
@@ -15,10 +15,11 @@ const controlsMap = {
 
 export function CameraView() {
 	const { type } = useSnapshot(ControlsType)
-	useSubscribeKey('KeyP', () => {
-		if (ControlsType.type === 'first-person') ControlsType.type = 'orbit'
-		else ControlsType.type = 'first-person'
-	})
 
-	return controlsMap[type]
+	return (
+		<>
+			{controlsMap[type]}
+			<Controls />
+		</>
+	)
 }
