@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { type Camera, Vector3 } from 'three'
-import { FORWARD, timer } from '../../../../game'
-import { ControlledCharacter, playerDirection } from '../../use-player-controls'
+import { FORWARD, timer } from '../../../game'
+import { ControlledCharacter, usePlayerDirection } from '../../../game/controls/controls'
 
 function useFollowCameraOrientation() {
 	const { camera } = useThree()
@@ -14,8 +14,8 @@ function useFollowCameraOrientation() {
 		)
 
 		// set velocity to player direction
-		const [x, z] = playerDirection
 		const delta = timer.getDelta()
+		const [x, z] = usePlayerDirection()
 		ControlledCharacter.velocity
 			.setX(x)
 			.setZ(z)

@@ -2,7 +2,7 @@
 import type React from 'react'
 import { type RefObject, useEffect, useRef } from 'react'
 import type { AnimationAction, Group } from 'three'
-import { useSubscribePlayerDirection } from '../../../controls'
+import { useSubscribePlayerDirection } from '../../../../game'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }

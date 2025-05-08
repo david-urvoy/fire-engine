@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { Color } from 'three'
 import { useSnapshot } from 'valtio'
 import { gameTime } from '../../../../game'
-import { PERIODS, type Period } from '../../../../game/time/period'
+import { PERIODS, type Period } from '../../../../game/time/periods/period'
 import { useTweaks } from '../../../../ui'
 import type { Light } from './light'
 

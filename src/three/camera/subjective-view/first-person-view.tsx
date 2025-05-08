@@ -1,7 +1,7 @@
 import { PointerLockControls } from '@react-three/drei'
 import { useEffect, useRef } from 'react'
 import type { PointerLockControls as PointerLockControlsImpl } from 'three-stdlib'
-import { ControlledCharacter } from '../../use-player-controls'
+import { ControlledCharacter } from '../../../game/controls/controls'
 import { useSubjectiveView } from './use-subjective-view'
 
 /**

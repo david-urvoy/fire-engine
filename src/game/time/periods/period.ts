@@ -1,6 +1,6 @@
 import { Color } from 'three'
-import type { Light } from '../../three/world/environment/light/light'
-import type { Time } from './time'
+import type { Light } from '../../../three/world/environment/light/light'
+import type { Time } from '../time'
 
 /**
  * night = white ~null

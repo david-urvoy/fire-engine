@@ -1,17 +1,18 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
-import { type Keymap, keyboard } from './keymap'
+import { KeyboardActions } from './keyboard-actions'
+import { keyboard } from './keyboard.store'
+import type { Keymap } from './keymap'
 
 export function KeyboardControls({ map: keymap, children }: PropsWithChildren & { map: typeof Keymap }) {
 	const toggleKey = useCallback(
 		(code: string, value: boolean) => {
-			const obj = Object.entries(keymap).find(([_, { keys }]: [string, { keys: readonly string[] }]) =>
-				keys.includes(code),
-			)
+			const obj = Object.entries(keymap).find(([_, keys]: [string, readonly string[]]) => keys.includes(code))
+
 			if (!obj) return
-			keyboard.state[obj[0] as keyof typeof keyboard.state] = value
-			if (value && 'action' in obj[1]) {
-				obj[1].action()
-			}
+
+			const command = obj[0] as keyof typeof keymap
+			keyboard.state[command] = value
+			value && KeyboardActions[command]?.()
 		},
 		[keymap],
 	)

@@ -2,8 +2,8 @@ import { OrbitControls } from '@react-three/drei'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { PointerLock } from '../../mouse/pointer-lock'
-import { ControlledCharacter } from '../../use-player-controls'
+import { ControlledCharacter } from '../../../game/controls/controls'
+import { PointerLock } from '../../../game/controls/mouse/pointer-lock'
 import { useSubjectiveView } from './use-subjective-view'
 
 /**
