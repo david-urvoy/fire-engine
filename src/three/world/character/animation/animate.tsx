@@ -2,7 +2,8 @@
 import type React from 'react'
 import { type RefObject, useEffect, useRef } from 'react'
 import type { AnimationAction, Group } from 'three'
-import { useSubscribePlayerDirection } from '../../../../game'
+import { useSnapshot } from 'valtio'
+import { keyboard } from '../../../../game/controls/actions/keyboard/keyboard.store'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }
@@ -19,16 +20,16 @@ export function Animate({
 } & Animated) {
 	const animations = useRef<Animations>(null)
 	const animation = useRef(animations.current?.idle)
-	const direction = useSubscribePlayerDirection()
+	const { up, down, right, left } = useSnapshot(keyboard).state
 
 	useEffect(() => {
-		const action = direction.length() > 0 ? animations.current?.run : animations.current?.idle
+		const action = up || down || right || left ? animations.current?.run : animations.current?.idle
 		if (animation.current?.getClip().name !== action?.getClip().name) {
 			animation.current?.stop()
 			animation.current = action
 			animation.current?.play()
 		}
-	}, [direction])
+	}, [up, down, right, left])
 
 	return Model && <Model {...props} animationsRef={animations} />
 }

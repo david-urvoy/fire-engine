@@ -1,4 +1,4 @@
+export * from '../../game/controls/view/camera-view'
 export * from './adaptative-camera'
-export * from './camera-view'
 export * from './focus'
 export * from './hud'

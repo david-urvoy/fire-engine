@@ -1,10 +1,11 @@
 import { OrbitControls } from '@react-three/drei'
 import { proxy, useSnapshot } from 'valtio'
-import { FirstPersonView } from './subjective-view/first-person-view'
-import { ThirdPersonView } from './subjective-view/third-person-view'
+import { game } from '../../game.store'
+import { FirstPersonView } from './first-person-view'
+import { ThirdPersonView } from './third-person-view'
 
 type ControlsType = 'first-person' | 'third-person' | 'orbit'
-export const ControlsType: { type: ControlsType } = proxy({ type: 'first-person' })
+export const ControlsType: { type: ControlsType } = proxy({ type: 'third-person' })
 
 const controlsMap = {
 	'first-person': <FirstPersonView />,
@@ -14,6 +15,7 @@ const controlsMap = {
 
 export function CameraView() {
 	const { type } = useSnapshot(ControlsType)
+	game.debug = type
 
 	return controlsMap[type]
 }

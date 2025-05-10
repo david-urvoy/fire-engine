@@ -10,7 +10,7 @@ export const gamepad: { direction: Vector2 } = proxy({
 export function Gamepad() {
 	return (
 		<div
-			className="pointer-events-none absolute bottom-1/4 z-50 flex w-full flex-row justify-between px-[10%]"
+			className="virtual-joystick pointer-events-none absolute bottom-1/4 z-50 flex w-full touch-none flex-row justify-between px-[10%]"
 			onClick={(e) => e.stopPropagation()}
 			onKeyDown={() => {}}
 		>
