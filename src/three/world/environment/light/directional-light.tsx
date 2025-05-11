@@ -2,7 +2,7 @@ import { animated } from '@react-spring/three'
 import { Helper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { type DirectionalLight, DirectionalLightHelper, type Group } from 'three'
+import { Color, type DirectionalLight, DirectionalLightHelper, type Group } from 'three'
 import { useSnapshot } from 'valtio'
 import { gameTime } from '../../../../game'
 import { useLight } from './use-light'
@@ -17,7 +17,7 @@ export function StarLight() {
 	const { isDay } = useSnapshot(gameTime)
 	const springs = useLight({
 		folderName: `${isDay ? 'Sun' : 'Moon'} Light`,
-		lightProvider: (period) => period.light.directional,
+		light: { color: new Color('#f3f37e'), intensity: 0.8 },
 	})
 
 	useEffect(() => {

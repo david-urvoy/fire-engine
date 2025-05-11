@@ -1,16 +1,10 @@
 import { config, useSpring } from '@react-spring/three'
 import { useCallback } from 'react'
 import { Color } from 'three'
-import { useSnapshot } from 'valtio'
-import { gameTime } from '../../../../game'
-import { PERIODS, type Period } from '../../../../game/time/periods/period'
 import { useTweaks } from '../../../../ui'
 import type { Light } from './light'
 
-export const useLight = ({ lightProvider }: { folderName: string; lightProvider: (period: Period) => Light }) => {
-	const { period } = useSnapshot(gameTime)
-	const light = lightProvider(PERIODS[period])
-
+export const useLight = ({ light }: { folderName: string; light: Light }) => {
 	const [springs, api] = useSpring(
 		{
 			onRest: ({ value: { intensity, color } }) => {
