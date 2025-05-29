@@ -1,5 +1,5 @@
 import type { BindingApi, BindingParams, BladeApi } from '@tweakpane/core'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { type FolderApi, Pane } from 'tweakpane'
 
 // Define folder names as constants for better autocomplete
@@ -14,7 +14,8 @@ const folders: Record<string, FolderApi> = {}
 type DeclarativeBindingDefinition<V> = {
 	value: V
 	params?: BindingParams
-	onChange?: (value: V) => void
+	onChange?: (event: { value: V }) => void
+	title?: string
 }
 
 type TweaksBindingMap = Record<string, DeclarativeBindingDefinition<unknown>>
@@ -47,7 +48,11 @@ export function useTweaks<B extends TweaksBindingMap | Record<string, unknown>, 
 }): [R, () => void] {
 	const [values, setValues] = useState<R>({} as R)
 	const bladesRef = useRef<BladeApi[]>([])
-	const initialValuesRef = useRef<R>({} as R)
+	const bindingObjectsRef = useRef<Record<string, { [key: string]: unknown }>>({})
+	const isInitializedRef = useRef(false)
+
+	// Memoize bindings to prevent unnecessary re-runs
+	const memoizedBindings = useMemo(() => bindings, [bindings])
 
 	useEffect(() => {
 		// Create folder if it doesn't exist
@@ -56,8 +61,8 @@ export function useTweaks<B extends TweaksBindingMap | Record<string, unknown>, 
 		}
 
 		// Handle function-based or object-based bindings
-		if (typeof bindings === 'function') {
-			bladesRef.current = bindings(folders[folderName]).map((binding) => {
+		if (typeof memoizedBindings === 'function') {
+			bladesRef.current = memoizedBindings(folders[folderName]).map((binding) => {
 				if (isBindingApi(binding)) {
 					binding.on('change', (event) => {
 						setValues((prev) => ({ ...prev, [binding.key]: event.value }))
@@ -67,45 +72,95 @@ export function useTweaks<B extends TweaksBindingMap | Record<string, unknown>, 
 			})
 		} else {
 			// Object-based bindings
-			const bindingsMap = bindings as TweaksBindingMap
+			const bindingsMap = memoizedBindings as TweaksBindingMap
 			const initialValues: Record<string, unknown> = {}
 
-			bladesRef.current = Object.entries(bindingsMap).map(([key, { value, params, onChange }]) => {
+			bladesRef.current = Object.entries(bindingsMap).map(([key, { value, params, onChange, title }]) => {
+				// Create binding object for this key
+				const bindingObject = { [key]: value }
+				bindingObjectsRef.current[key] = bindingObject
 				initialValues[key] = value
 
-				return folders[folderName].addBinding({ [key]: value }, key, params).on('change', (event) => {
-					onChange?.(event.value)
+				// Add binding with optional title override
+				const bindingParams = title ? { ...params, label: title } : params
+				const binding = folders[folderName].addBinding(bindingObject, key, bindingParams)
+
+				binding.on('change', (event) => {
+					onChange?.(event)
 					setValues((prev) => ({ ...prev, [key]: event.value }))
 				})
+
+				return binding
 			})
 
-			// Set initial values
-			if (Object.keys(initialValuesRef.current).length === 0) {
-				initialValuesRef.current = initialValues as R
+			// Set initial values only once
+			if (!isInitializedRef.current) {
 				setValues(initialValues as R)
+				isInitializedRef.current = true
 			}
 		}
 
 		// Cleanup function
 		return () => {
 			for (const blade of bladesRef.current) {
-				folders[folderName]?.remove(blade)
+				try {
+					folders[folderName]?.remove(blade)
+				} catch (error) {
+					// Ignore errors if blade is already removed or folder is disposed
+					console.warn('Error removing blade:', error)
+				}
 			}
 			bladesRef.current = []
+			bindingObjectsRef.current = {}
 
-			// Remove folder if empty
-			if (folders[folderName]?.children.length === 0) {
-				folders[folderName].dispose()
-				delete folders[folderName]
+			// Remove folder if empty and it still exists
+			if (folders[folderName] && folders[folderName].children.length === 0) {
+				try {
+					folders[folderName].dispose()
+					delete folders[folderName]
+				} catch (error) {
+					// Ignore errors if folder is already disposed
+					console.warn('Error disposing folder:', error)
+				}
 			}
 		}
-	}, [folderName, bindings])
+	}, [folderName, memoizedBindings]) // Include folderName in dependencies
+
+	// Update tweakpane when external values change
+	useEffect(() => {
+		if (!isInitializedRef.current || typeof memoizedBindings === 'function') return
+
+		const bindingsMap = memoizedBindings as TweaksBindingMap
+
+		for (const [key, { value }] of Object.entries(bindingsMap)) {
+			const bindingObject = bindingObjectsRef.current[key]
+			if (bindingObject && bindingObject[key] !== value) {
+				// Update the binding object
+				bindingObject[key] = value
+				// Find the corresponding blade and refresh it
+				const blade = bladesRef.current.find((b) => isBindingApi(b) && b.key === key)
+				if (blade && isBindingApi(blade)) {
+					try {
+						blade.refresh()
+					} catch (error) {
+						// Ignore errors if blade is disposed
+						console.warn('Error refreshing blade:', error)
+					}
+				}
+			}
+		}
+	}, [memoizedBindings]) // Use memoized bindings
 
 	// Function to refresh all bindings
 	const refreshBindings = () => {
 		for (const blade of bladesRef.current) {
 			if (isBindingApi(blade)) {
-				blade.refresh()
+				try {
+					blade.refresh()
+				} catch (error) {
+					// Ignore errors if blade is disposed
+					console.warn('Error refreshing blade:', error)
+				}
 			}
 		}
 	}
