@@ -2,10 +2,10 @@ import { animated } from '@react-spring/three'
 import { Color } from 'three'
 import { useLight } from './use-light'
 
-export function AmbientLight() {
+export function AmbientLight({ color = new Color('#fcfcfc'), intensity = .1 }: { color?: Color; intensity?: number }) {
 	const springs = useLight({
 		folderName: 'Ambient Light',
-		light: { color: new Color('#fcfcfc'), intensity: 0.8 },
+		light: { color, intensity },
 	})
 
 	return <animated.ambientLight color={springs.color} intensity={springs.intensity} />
