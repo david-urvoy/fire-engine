@@ -1,6 +1,6 @@
 import { useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
-import * as THREE from 'three'
+import { Euler } from 'three'
 
 export function TouchControls() {
 	const { camera } = useThree()
@@ -23,7 +23,7 @@ export function TouchControls() {
 
 	useEffect(() => {
 		// Initialize pitch/yaw from camera
-		const euler = new THREE.Euler().copy(camera.rotation)
+		const euler = new Euler().copy(camera.rotation)
 		pitch.current = euler.x
 		yaw.current = euler.y
 
@@ -52,7 +52,7 @@ export function TouchControls() {
 			pitch.current -= dy * sensitivity
 			pitch.current = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch.current))
 
-			const newRotation = new THREE.Euler(pitch.current, yaw.current, 0, 'YXZ')
+			const newRotation = new Euler(pitch.current, yaw.current, 0, 'YXZ')
 			camera.quaternion.setFromEuler(newRotation)
 
 			touch.current.x = t.clientX

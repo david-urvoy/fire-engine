@@ -1,5 +1,5 @@
 import { ThreeElements, ThreeEvent } from '@react-three/fiber'
-import * as React from 'react'
+import { useMemo, useState } from 'react'
 import { CanvasTexture } from 'three'
 import { useGizmoContext } from './gizmo-helper'
 
@@ -53,7 +53,7 @@ function AxisHead({
 	axisHeadScale = 1,
 	...props
 }: AxisHeadProps) {
-	const texture = React.useMemo(() => {
+	const texture = useMemo(() => {
 		const canvas = document.createElement('canvas')
 		canvas.width = 64
 		canvas.height = 64
@@ -74,7 +74,7 @@ function AxisHead({
 		return new CanvasTexture(canvas)
 	}, [arcStyle, label, labelColor, font])
 
-	const [active, setActive] = React.useState(false)
+	const [active, setActive] = useState(false)
 	const scale = (label ? 1 : 0.75) * (active ? 1.2 : 1) * axisHeadScale
 	const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
 		e.stopPropagation()

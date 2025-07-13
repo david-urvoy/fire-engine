@@ -1,6 +1,6 @@
 import { CameraControls as CameraControlsType, Hud, OrthographicCamera } from '@react-three/drei'
 import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
-import * as React from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { Group, Matrix4, Object3D, OrthographicCamera as OrthographicCameraImpl, Quaternion, Vector3 } from 'three'
 import { OrbitControls as OrbitControlsType } from 'three-stdlib'
 
@@ -8,10 +8,10 @@ type GizmoHelperContext = {
 	tweenCamera: (direction: Vector3) => void
 }
 
-const Context = /* @__PURE__ */ React.createContext<GizmoHelperContext>({} as GizmoHelperContext)
+const Context = /* @__PURE__ */ createContext<GizmoHelperContext>({} as GizmoHelperContext)
 
 export const useGizmoContext = () => {
-	return React.useContext<GizmoHelperContext>(Context)
+	return useContext<GizmoHelperContext>(Context)
 }
 
 const turnRate = 2 * Math.PI // turn rate in angles per second
@@ -64,19 +64,19 @@ export const GizmoHelper = ({
 	// @ts-ignore
 	const defaultControls = useThree((state) => state.controls) as ControlsProto
 	const invalidate = useThree((state) => state.invalidate)
-	const gizmoRef = React.useRef<Group>(null!)
-	const virtualCam = React.useRef<OrthographicCameraImpl>(null!)
+	const gizmoRef = useRef<Group>(null!)
+	const virtualCam = useRef<OrthographicCameraImpl>(null!)
 
-	const animating = React.useRef(false)
-	const radius = React.useRef(0)
-	const defaultUp = React.useRef(new Vector3(0, 0, 0))
+	const animating = useRef(false)
+	const radius = useRef(0)
+	const defaultUp = useRef(new Vector3(0, 0, 0))
 
-	React.useEffect(() => {
+	useEffect(() => {
 		defaultUp.current.copy(mainCamera.up)
 		dummy.up.copy(mainCamera.up)
 	}, [mainCamera])
 
-	const tweenCamera = React.useCallback(
+	const tweenCamera = useCallback(
 		(direction: Vector3) => {
 			animating.current = true
 			radius.current = mainCamera.position.distanceTo(target)
@@ -129,7 +129,7 @@ export const GizmoHelper = ({
 		}
 	})
 
-	const gizmoHelperContext = React.useMemo(() => ({ tweenCamera }), [tweenCamera])
+	const gizmoHelperContext = useMemo(() => ({ tweenCamera }), [tweenCamera])
 
 	// Position gizmo component within scene
 	const [marginX, marginY] = margin

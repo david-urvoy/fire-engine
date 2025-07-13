@@ -6,7 +6,7 @@ import { PERIODS, Period } from './periods/period'
 import type { Time } from './time'
 import { timer } from './timer'
 
-const GAME_TIME_SPEED_RATIO = 200
+const GAME_TIME_SPEED_RATIO = 20
 const TIME_STORE_KEY = 'game-time'
 
 const INITIAL_TIME = localStorage.getItem(TIME_STORE_KEY)

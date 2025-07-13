@@ -2,8 +2,7 @@ import { useAnimations, useGLTF } from '@react-three/drei'
 import { useGraph } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import type { AnimationClip } from 'three'
-import type { GLTF } from 'three-stdlib'
-import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
+import { SkeletonUtils, type GLTF } from 'three-stdlib'
 
 interface GLTFData extends GLTF {
 	nodes: Record<string, unknown>

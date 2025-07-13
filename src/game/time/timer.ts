@@ -1,3 +1,3 @@
-import { Timer } from 'three/examples/jsm/Addons.js'
+import { Timer } from 'three-stdlib'
 
 export const timer = new Timer()
