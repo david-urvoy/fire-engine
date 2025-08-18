@@ -5,7 +5,7 @@ import { useImperativeTweaks } from './tweaks/imperative'
 
 
 // Singleton pane instance
-export const pane = new Pane()
+export const pane = new Pane({ title: "Tweaks", expanded: false })
 export const folders: Record<string, FolderApi> = {}
 
 // ---

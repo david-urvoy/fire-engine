@@ -17,7 +17,7 @@ export const useLight = ({ light }: { folderName: string; light: Light }) => {
 	)
 
 	Tweaks.useImperative({
-		folder: '💡 Lights',
+		title: '💡 Lights',
 		bindings: useCallback(
 			(folder) => [
 				folder

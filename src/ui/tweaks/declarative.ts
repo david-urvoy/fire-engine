@@ -13,13 +13,13 @@ type DeclarativeBindingDefinition<V = unknown> = {
 type TweaksBindingMap<V = unknown> = Record<string, DeclarativeBindingDefinition<V>>
 
 export function useDeclarativeTweaks<B extends TweaksBindingMap>({
-	folder: folderName,
+	folder: title,
 	bindings,
 }: {
 	folder: string
 	bindings: B
 }): [() => void] {
-	const { folder, bladesRef, refreshBindings } = useTweaksBase({ folderName })
+	const { folder, bladesRef, refreshBindings } = useTweaksBase({ title })
 	const isInitializedRef = useRef(false)
 
 	useEffect(() => {

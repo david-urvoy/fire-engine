@@ -1,4 +1,4 @@
-import type { BladeApi } from '@tweakpane/core'
+import type { BladeApi, FolderParams } from '@tweakpane/core'
 import { useEffect } from 'react'
 import type { FolderApi } from 'tweakpane'
 import { useTweaksBase, type FOLDERS } from './abstract'
@@ -12,13 +12,13 @@ import { useTweaksBase, type FOLDERS } from './abstract'
  * @returns [values, refreshBindings] - Current values and a function to refresh bindings
  */
 export function useImperativeTweaks<R extends BladeApi[]>({
-	folder: folderName,
+	title,
 	bindings,
-}: {
-	folder: FOLDERS
+	...params
+}: Omit<FolderParams, 'title'> & { title: FOLDERS } & {
 	bindings: (folder: FolderApi) => R
 }): [() => void] {
-	const { bladesRef, refreshBindings, folder } = useTweaksBase<R>({ folderName })
+	const { bladesRef, refreshBindings, folder } = useTweaksBase<R>({ title, ...params })
 
 	useEffect(() => {
 		const result = bindings(folder)

@@ -50,7 +50,7 @@ function _increment(minutes: number = 1) {
 	gameTime.minute = totalMinutes % 60
 }
 
-const timeFolder = Tweaks.addFolder('🕒 Time')
+const timeFolder = Tweaks.addFolder({ title: '🕒 Time' })
 timeFolder.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
 	min: 0,
 	max: 100,
