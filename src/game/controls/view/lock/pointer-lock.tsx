@@ -19,13 +19,16 @@ export function usePointerLock(controls: RefObject<OrbitControlsImpl | null>) {
 		[controls],
 	)
 
-	useEffect(() => {
-		const handleClick = () => document.body.requestPointerLock()
+	const handleClick = useCallback((event: MouseEvent) => {
+		if ((event.target as HTMLElement).tagName === 'CANVAS')
+			document.body.requestPointerLock()
+	}, [])
 
+	useEffect(() => {
 		const controller = new AbortController()
 		document.addEventListener('click', handleClick, { signal: controller.signal })
 		document.addEventListener('mousemove', handleMouseMove, { signal: controller.signal })
 
 		return () => controller.abort()
-	}, [handleMouseMove])
+	}, [handleClick, handleMouseMove])
 }

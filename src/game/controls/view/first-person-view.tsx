@@ -26,5 +26,5 @@ export function FirstPersonView() {
 		ControlledCharacter.ref.current?.getWorldPosition(camera.position)
 	})
 
-	return isMobile ? <TouchControls /> : <PointerLockControls makeDefault />
+	return isMobile ? <TouchControls /> : <PointerLockControls selector='canvas' makeDefault />
 }
