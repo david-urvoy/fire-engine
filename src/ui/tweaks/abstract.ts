@@ -12,15 +12,17 @@ function isBindingApi(blade: BladeApi): blade is BindingApi<unknown, unknown> {
 	return 'refresh' in blade
 }
 
+export function addFolder(folderName: FOLDERS): FolderApi {
+	if (!folders[folderName]) {
+		folders[folderName] = pane.addFolder({ title: folderName })
+	}
+	return folders[folderName]
+}
+
 export function useTweaksBase<R extends BladeApi[]>({ folderName }: { folderName: FOLDERS }) {
 	const bladesRef = useRef<R | null>(null)
 
-	const folder = useMemo(() => {
-		if (!folders[folderName]) {
-			folders[folderName] = pane.addFolder({ title: folderName })
-		}
-		return folders[folderName]
-	}, [folderName])
+	const folder = useMemo(() => addFolder(folderName), [folderName])
 
 	useEffect(() => () => {
 		if (!bladesRef.current) return

@@ -8,13 +8,13 @@ import { gameTime } from '../../../../game'
 import { useLight } from './use-light'
 
 export const light = {
-	position: [gameTime.isDay ? (12 * 60 - (gameTime.hours * 60 + gameTime.minutes)) / 20 : 5, 50, 5],
+	position: [gameTime.isDay ? (12 * 60 - (gameTime.hour * 60 + gameTime.minute)) / 20 : 5, 50, 5],
 }
 
 export function StarLight() {
 	const starlight = useRef<DirectionalLight>(null)
 	const target = useRef<Group>(null)
-	const { isDay } = useSnapshot(gameTime)
+	const { isDay, hour, minute } = useSnapshot(gameTime)
 	const springs = useLight({
 		folderName: `${isDay ? 'Sun' : 'Moon'} Light`,
 		light: { color: new Color('#f3f37e'), intensity: 0.8 },
@@ -33,7 +33,7 @@ export function StarLight() {
 			<group ref={target} />
 			<animated.directionalLight
 				ref={starlight}
-				position={[gameTime.isDay ? (12 * 60 - (gameTime.hours * 60 + gameTime.minutes)) / 20 : 5, 50, 5]}
+				position={[isDay ? (12 * 60 - (hour * 60 + minute)) / 20 : 5, 50, 5]}
 				intensity={springs.intensity}
 				color={springs.color}
 				castShadow

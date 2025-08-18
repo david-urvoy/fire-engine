@@ -13,7 +13,7 @@ import type { Time } from '../time'
 export type PeriodName = 'dawn' | 'morning' | 'noon' | 'afternoon' | 'evening' | 'dusk' | 'night'
 export interface Period {
 	name: PeriodName
-	time: Omit<Time, 'days' | 'tick'>
+	time: Omit<Time, 'day'>
 	light: {
 		ambient: Light
 		directional: Light & { type: 'moon' | 'sun' }
@@ -22,7 +22,7 @@ export interface Period {
 export const PERIODS: { [name in PeriodName]: Period } = {
 	dawn: {
 		name: 'dawn',
-		time: { hours: 4, minutes: 0 },
+		time: { hour: 4, minute: 0 },
 		light: {
 			ambient: { color: new Color('#506886'), intensity: 0.2 },
 			directional: { type: 'moon', color: new Color('#506886'), intensity: 0.1 },
@@ -30,7 +30,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	morning: {
 		name: 'morning',
-		time: { hours: 7, minutes: 0 },
+		time: { hour: 7, minute: 0 },
 		light: {
 			ambient: { color: new Color('#ebae52'), intensity: 0.2 },
 			directional: { type: 'sun', color: new Color('#ebae52'), intensity: 0.2 },
@@ -38,7 +38,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	noon: {
 		name: 'noon',
-		time: { hours: 10, minutes: 0 },
+		time: { hour: 10, minute: 0 },
 		light: {
 			ambient: { color: new Color('#a5a247'), intensity: 0.4 },
 			directional: { type: 'sun', color: new Color('#a5a247'), intensity: 0.5 },
@@ -46,7 +46,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	afternoon: {
 		name: 'afternoon',
-		time: { hours: 14, minutes: 0 },
+		time: { hour: 14, minute: 0 },
 		light: {
 			ambient: { color: new Color('#e8cc1e'), intensity: 0.4 },
 			directional: { type: 'sun', color: new Color('#e8cc1e'), intensity: 0.5 },
@@ -54,7 +54,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	evening: {
 		name: 'evening',
-		time: { hours: 18, minutes: 0 },
+		time: { hour: 18, minute: 0 },
 		light: {
 			ambient: { color: new Color('#d88b55'), intensity: 0.3 },
 			directional: { type: 'sun', color: new Color('#d88b55'), intensity: 0.2 },
@@ -62,7 +62,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	dusk: {
 		name: 'dusk',
-		time: { hours: 20, minutes: 0 },
+		time: { hour: 20, minute: 0 },
 		light: {
 			ambient: { color: new Color('#506886'), intensity: 0.2 },
 			directional: { type: 'moon', color: new Color('#506886'), intensity: 0.1 },
@@ -70,7 +70,7 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 	night: {
 		name: 'night',
-		time: { hours: 22, minutes: 0 },
+		time: { hour: 22, minute: 0 },
 		light: {
 			ambient: { color: new Color('#3a5676'), intensity: 0.2 },
 			directional: { type: 'moon', color: new Color('#3a5676'), intensity: 0.1 },
@@ -78,6 +78,6 @@ export const PERIODS: { [name in PeriodName]: Period } = {
 	},
 }
 
-export function Period({ hours }: Time): PeriodName {
-	return Object.values(PERIODS).findLast((period) => period.time.hours <= hours)?.name ?? 'night'
+export function Period({ hour: hours }: Time): PeriodName {
+	return Object.values(PERIODS).findLast((period) => period.time.hour <= hours)?.name ?? 'night'
 }

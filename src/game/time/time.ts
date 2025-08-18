@@ -1,5 +1,5 @@
 export interface Time {
-	days: number
-	hours: number
-	minutes: number
+	day: number
+	hour: number
+	minute: number
 }
