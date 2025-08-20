@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber'
-import { useCallback, useRef, useState } from 'react'
+import { useRef } from 'react'
 import type { Group } from 'three'
 import { game } from '../../game'
-import { useImperativeTweaks } from '../../ui/tweaks/imperative'
+import { useTweaks } from '../../ui'
 
 function roundToNearestTens(num: number) {
 	return Math.round(num / 10) * 10
@@ -10,7 +10,6 @@ function roundToNearestTens(num: number) {
 
 
 export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
-	const [gridSize, setGridSize] = useState(12)
 	const groupRef = useRef<Group>(null)
 	useFrame(({ camera }) => {
 		const { x, z } = camera.position
@@ -18,12 +17,9 @@ export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
 		const roundedZ = roundToNearestTens(z)
 		groupRef.current?.position.set(roundedX, 0, roundedZ)
 	})
-	useImperativeTweaks({
-		title: '𖣯 Grid', bindings: useCallback((folder) => [
-			folder.addBinding({ gridSize }, 'gridSize', { min: 2, max: 20, step: 2 })
-				.on('change', ({ value }) => setGridSize(value)),
-		], [])
-	})
+	const gridSize = useTweaks({ title: 'Debug' })
+		.addFolder({ title: '𖣯 Grid' })
+		.addBinding<number>({ params: [{ gridSize: 12 }, 'gridSize', { min: 2, max: 20, step: 2 }] })
 	return (
 		<group ref={groupRef} visible={game.isDebug}>
 			{Array.from({ length: count }, (_, i) =>

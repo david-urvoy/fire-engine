@@ -1,7 +1,7 @@
 import { config, useSpring } from '@react-spring/three'
-import { useCallback } from 'react'
+import { useEffect } from 'react'
 import { Color } from 'three'
-import { Tweaks } from '../../../../ui'
+import { useTweaks } from '../../../../ui'
 import type { Light } from './light'
 
 export const useLight = ({ light }: { folderName: string; light: Light }) => {
@@ -16,22 +16,17 @@ export const useLight = ({ light }: { folderName: string; light: Light }) => {
 		[light],
 	)
 
-	Tweaks.useImperative({
-		title: '💡 Lights',
-		bindings: useCallback(
-			(folder) => [
-				folder
-					.addBinding({ intensity: light.intensity }, 'intensity', { min: 0, max: 3, step: 0.1 })
-					.on('change', ({ value: intensity }) => {
-						api.start({ intensity })
-					}),
-				folder.addBinding({ color: light.color.getStyle() }, 'color').on('change', ({ value: color }) => {
-					api.start({ color: new Color(color) })
-				}),
-			],
-			[light, api],
-		),
-	})
+	const tweaks = useTweaks({ title: '💡 Lights' })
+	const intensity = tweaks
+		.addBinding<number>({ params: [{ intensity: light.intensity }, 'intensity', { min: 0, max: 3, step: 0.1 }] })
+	const [color] = tweaks
+		.addBinding<string>({ params: [{ color: light.color.getStyle() }, 'color'] })
+
+	useEffect(() => {
+		return () => {
+			api.start({ color: new Color(color), intensity })
+		}
+	}, [api, color, intensity])
 
 	return springs
 }
