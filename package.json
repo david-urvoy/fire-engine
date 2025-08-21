@@ -10,13 +10,13 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.2.0",
 		"@eslint/js": "^9.33.0",
 		"@tweakpane/core": "^2.0.5",
 		"@types/react": "^19.1.10",
 		"@types/react-dom": "^19.1.7",
 		"@types/three": "^0.179.0",
 		"@vitest/ui": "^3.2.4",
+		"babel-plugin-react-compiler": "^19.1.0-rc.2",
 		"eslint": "^9.33.0",
 		"eslint-plugin-react-hooks": "^6.0.0-rc.1",
 		"tweakpane": "^4.0.5",
@@ -43,7 +43,7 @@
 		"valtio": "^2.1.5",
 		"vite-plugin-glsl": "^1.5.1"
 	},
-	"keywords": [],
+	"keywords": [ ],
 	"author": "",
 	"license": "ISC"
 }
