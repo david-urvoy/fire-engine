@@ -1,17 +1,21 @@
 // @ts-check
-
 import eslint from '@eslint/js'
+import reactHooks from "eslint-plugin-react-hooks"
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
 	eslint.configs.recommended,
 	tseslint.configs.recommended,
+	reactHooks.configs[ 'recommended-latest' ],
 	{
 		languageOptions: {
 			parserOptions: {
-				project: [ "./tsconfig.json" ],     // ton tsconfig du module
-				tsconfigRootDir: import.meta.dirname, // <— équivalent moderne de __dirname
+				projectService: { defaultProject: "./tsconfig.json" },
+				tsconfigRootDir: import.meta.dirname,
 			},
-		}
+		},
+		rules: {
+			"react-hooks/react-compiler": "error",
+		},
 	}
 )
