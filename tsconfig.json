@@ -42,7 +42,8 @@
 		"types": [
 			"vite-plugin-glsl/ext",
 			"vitest/globals",
-			"vitest/importMeta"
+			"vitest/importMeta",
+			"./types/import-meta"
 		] /* Specify type package names to be included without being referenced in a source file. */,
 		// "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
 		// "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
@@ -54,7 +55,7 @@
 		// "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
 		// "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
 		/* JavaScript Support */
-		// "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+		"allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
 		// "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
 		// "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
 		/* Emit */
@@ -112,7 +113,7 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
-	"include": ["./src", "index.ts", "lib"],
+	"include": ["./src", "index.ts", "lib", "eslint.config.mjs"],
 	"exclude": ["./node_modules/**/*"],
 	"references": [
 		{

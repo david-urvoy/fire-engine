@@ -6,9 +6,8 @@ import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from
 export const pane = new Pane({ title: "Tweaks", expanded: false })
 export const folders: Record<string, FolderApi> = {}
 
-const FOLDERS = ['💡 Lights', '🕒 Time'] as const
-
-type FolderName = (typeof FOLDERS)[number] | (string & {})
+type Folders = '💡 Lights' | '🕒 Time'
+type FolderName = Folders[number] | (string & {})
 type FolderParams = Omit<TweakpaneFolderParams, 'title'> & { title: FolderName }
 
 export const Tweaks = {
