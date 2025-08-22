@@ -26,9 +26,10 @@ function tweaks(folder: FolderApi) {
 				params[0][Object.keys(params[0])[0]]
 			)
 			const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
+			const paramsRef = useRef(params)
 
 			useEffect(() => {
-				bindingRef.current = folder.addBinding(...params)
+				bindingRef.current = folder.addBinding(...paramsRef.current)
 					.on('change', ({ value }) => setValue(value))
 				return () => {
 					if (bindingRef.current)
@@ -41,18 +42,20 @@ function tweaks(folder: FolderApi) {
 		addButton: ({ onClick, params }: { onClick?: (target: ButtonApi) => void, params: ButtonParams }) => {
 			const [value, setValue] = useState(false)
 			const buttonRef = useRef<ButtonApi | null>(null)
+			const paramsRef = useRef(params)
+			const onClickRef = useRef(onClick)
 
 			useEffect(() => {
-				buttonRef.current = folder.addButton(params)
+				buttonRef.current = folder.addButton(paramsRef.current)
 					.on('click', ({ target }) => {
-						onClick?.(target)
+						onClickRef.current?.(target)
 						setValue(prev => !prev)
 					})
 				return () => {
 					if (buttonRef.current)
 						folder.remove(buttonRef.current)
 				}
-			}, [])
+			}, [paramsRef, onClickRef])
 
 			return value
 		},
