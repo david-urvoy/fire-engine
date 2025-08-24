@@ -1,7 +1,7 @@
 import { config, useSpring } from '@react-spring/three'
 import { useEffect } from 'react'
 import { Color } from 'three'
-import { useTweaks } from '../../../../ui'
+import { Tweaks, useAddBinding } from '../../../../ui'
 import type { Light } from './light'
 
 export const useLight = ({ light }: { folderName: string; light: Light }) => {
@@ -16,11 +16,9 @@ export const useLight = ({ light }: { folderName: string; light: Light }) => {
 		[light],
 	)
 
-	const tweaks = useTweaks({ title: '💡 Lights' })
-	const intensity = tweaks
-		.addBinding<number>({ params: [{ intensity: light.intensity }, 'intensity', { min: 0, max: 3, step: 0.1 }] })
-	const [color] = tweaks
-		.addBinding<string>({ params: [{ color: light.color.getStyle() }, 'color'] })
+	const folder = Tweaks.folder({ title: '💡 Lights' })
+	const intensity = useAddBinding<number>({ folder, params: [{ intensity: light.intensity }, 'intensity', { min: 0, max: 3, step: 0.1 }] })
+	const [color] = useAddBinding<string>({ folder, params: [{ color: light.color.getStyle() }, 'color'] })
 
 	useEffect(() => {
 		return () => {

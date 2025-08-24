@@ -3,66 +3,84 @@ import { useEffect, useRef, useState } from 'react'
 import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from 'tweakpane'
 
 // Singleton pane instance
+
 export const pane = new Pane({ title: "Tweaks", expanded: false })
-export const folders: Record<string, FolderApi> = {}
+const folderRegistry = new WeakMap<FolderApi | Pane, Map<string, FolderApi>>()
 
 type Folders = '💡 Lights' | '🕒 Time'
 type FolderName = Folders[number] | (string & {})
 type FolderParams = Omit<TweakpaneFolderParams, 'title'> & { title: FolderName }
 
+function ensureRegistry(parent: FolderApi | Pane) {
+	if (!folderRegistry.has(parent)) {
+		folderRegistry.set(parent, new Map())
+	}
+	return folderRegistry.get(parent)!
+}
+
+function getOrCreateFolder(
+	parent: FolderApi | Pane,
+	{ title, ...params }: FolderParams
+): FolderApi {
+	const reg = ensureRegistry(parent)
+	if (!reg.has(title)) {
+		const newFolder = parent.addFolder({ title, ...params })
+		reg.set(title, newFolder)
+		return newFolder
+	}
+	return reg.get(title)!
+}
+
 export const Tweaks = {
-	folder({ title, folder, ...params }: FolderParams & { folder?: FolderApi }): FolderApi {
-		if (!folders[title]) {
-			folders[title] = folder ? folder.addFolder({ title, ...params }) : pane.addFolder({ title, ...params })
+	folder(args: FolderParams, parent: FolderApi | Pane = pane) {
+		const newFolder = getOrCreateFolder(parent, args)
+
+		return Object.assign(newFolder, {
+			folder: (childArgs: FolderParams) => Tweaks.folder(childArgs, newFolder),
+		})
+	},
+}
+
+export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params: Parameters<FolderApi['addBinding']> }) {
+	const [value, setValue] = useState<T>(
+		params[0][Object.keys(params[0])[0]]
+	)
+	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
+	const paramsRef = useRef(params)
+	const folderRef = useRef(folder)
+
+	useEffect(() => {
+		bindingRef.current = folderRef.current.addBinding(...paramsRef.current)
+			.on('change', ({ value }) => setValue(value))
+		const cleanupFolder = folderRef.current
+		return () => {
+			if (bindingRef.current)
+				cleanupFolder.remove(bindingRef.current)
 		}
-		return folders[title]
-	}
+	}, [folderRef])
+
+	return value
 }
 
-function tweaks(folder: FolderApi) {
-	return {
-		addBinding: <T>({ params }: { params: Parameters<FolderApi['addBinding']> }) => {
-			const [value, setValue] = useState<T>(
-				params[0][Object.keys(params[0])[0]]
-			)
-			const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
-			const paramsRef = useRef(params)
+export function useAddButton({ folder, onClick, params }: { folder: FolderApi, onClick?: (target: ButtonApi) => void, params: ButtonParams }) {
+	const [value, setValue] = useState(false)
+	const buttonRef = useRef<ButtonApi | null>(null)
+	const paramsRef = useRef(params)
+	const onClickRef = useRef(onClick)
+	const folderRef = useRef(folder)
 
-			useEffect(() => {
-				bindingRef.current = folder.addBinding(...paramsRef.current)
-					.on('change', ({ value }) => setValue(value))
-				return () => {
-					if (bindingRef.current)
-						folder.remove(bindingRef.current)
-				}
-			}, [])
+	useEffect(() => {
+		buttonRef.current = folderRef.current.addButton(paramsRef.current)
+			.on('click', ({ target }) => {
+				onClickRef.current?.(target)
+				setValue(prev => !prev)
+			})
+		const cleanupFolder = folderRef.current
+		return () => {
+			if (buttonRef.current)
+				cleanupFolder.remove(buttonRef.current)
+		}
+	}, [paramsRef, onClickRef])
 
-			return value
-		},
-		addButton: ({ onClick, params }: { onClick?: (target: ButtonApi) => void, params: ButtonParams }) => {
-			const [value, setValue] = useState(false)
-			const buttonRef = useRef<ButtonApi | null>(null)
-			const paramsRef = useRef(params)
-			const onClickRef = useRef(onClick)
-
-			useEffect(() => {
-				buttonRef.current = folder.addButton(paramsRef.current)
-					.on('click', ({ target }) => {
-						onClickRef.current?.(target)
-						setValue(prev => !prev)
-					})
-				return () => {
-					if (buttonRef.current)
-						folder.remove(buttonRef.current)
-				}
-			}, [paramsRef, onClickRef])
-
-			return value
-		},
-		addFolder: (args: FolderParams) => tweaks(Tweaks.folder({ folder, ...args })),
-	}
-}
-
-export function useTweaks(args: FolderParams) {
-	return tweaks(Tweaks.folder(args))
+	return value
 }
