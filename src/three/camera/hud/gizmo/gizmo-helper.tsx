@@ -56,13 +56,11 @@ export const GizmoHelper = ({
 	margin = [80, 80],
 	renderPriority = 1,
 	onUpdate,
-	onTarget,
 	children,
-}: GizmoHelperProps): any => {
+}: GizmoHelperProps) => {
 	const size = useThree((state) => state.size)
 	const mainCamera = useThree((state) => state.camera)
-	// @ts-ignore
-	const defaultControls = useThree((state) => state.controls) as ControlsProto
+	const defaultControls = useThree((state) => state.controls) as unknown as ControlsProto
 	const invalidate = useThree((state) => state.invalidate)
 	const gizmoRef = useRef<Group>(null!)
 	const virtualCam = useRef<OrthographicCameraImpl>(null!)
@@ -91,7 +89,7 @@ export const GizmoHelper = ({
 			q2.copy(dummy.quaternion)
 			invalidate()
 		},
-		[defaultControls, mainCamera, onTarget, invalidate]
+		[mainCamera, invalidate]
 	)
 
 	useFrame((_, delta) => {
