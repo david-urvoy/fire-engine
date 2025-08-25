@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import type { Group } from 'three'
+import { useSnapshot } from 'valtio'
 import { game } from '../../game'
 import { Tweaks, useAddBinding } from '../../ui'
 
@@ -8,8 +9,8 @@ function roundToNearestTens(num: number) {
 	return Math.round(num / 10) * 10
 }
 
-
 export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
+	const { isDebug } = useSnapshot(game)
 	const groupRef = useRef<Group>(null)
 	useFrame(({ camera }) => {
 		const { x, z } = camera.position
@@ -23,7 +24,7 @@ export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
 	const gridSize = useAddBinding<number>({ folder, params: [{ gridSize: 12 }, 'gridSize', { min: 2, max: 20, step: 2 }] })
 
 	return (
-		<group ref={groupRef} visible={game.isDebug}>
+		<group ref={groupRef} visible={isDebug}>
 			{Array.from({ length: count }, (_, i) =>
 				Array.from({ length: count }, (_, j) => {
 					const key = `g-${i}-${j}`
