@@ -54,6 +54,7 @@ export function Character({
 	)
 }
 
+/* oxlint-disable no-unused-vars */
 // @ts-ignore
 function useExtractFromGround(bodyRef: RefObject<RapierRigidBody>, { halfHeight, radius }: CharacterDimensions) {
 	const { rapier, world } = useRapier()

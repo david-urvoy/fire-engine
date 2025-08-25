@@ -57,7 +57,7 @@ export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params
 			if (bindingRef.current)
 				cleanupFolder.remove(bindingRef.current)
 		}
-	}, [folderRef])
+	}, [])
 
 	return value
 }
@@ -80,7 +80,7 @@ export function useAddButton({ folder, onClick, params }: { folder: FolderApi, o
 			if (buttonRef.current)
 				cleanupFolder.remove(buttonRef.current)
 		}
-	}, [paramsRef, onClickRef])
+	}, [])
 
 	return value
 }
