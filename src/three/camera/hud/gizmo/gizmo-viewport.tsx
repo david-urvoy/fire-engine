@@ -1,4 +1,4 @@
-import { ThreeElements, ThreeEvent } from '@react-three/fiber'
+import type { ThreeElements, ThreeEvent } from '@react-three/fiber'
 import { useMemo, useState } from 'react'
 import { CanvasTexture } from 'three'
 import { useGizmoContext } from './gizmo-helper'

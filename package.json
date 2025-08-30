@@ -2,9 +2,13 @@
 	"name": "@david-urvoy/fire-engine",
 	"version": "0.0.1-alpha",
 	"description": "",
-	"main": "index.ts",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [ "dist" ],
 	"scripts": {
-		"dev": "tsc --watch"
+		"dev": "bun --hot src/index.ts",
+		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
+		"watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
 	},
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/"

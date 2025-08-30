@@ -1,5 +1,5 @@
 import { CameraControls as CameraControlsType, Hud, OrthographicCamera } from '@react-three/drei'
-import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
+import { type ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { Group, Matrix4, Object3D, OrthographicCamera as OrthographicCameraImpl, Quaternion, Vector3 } from 'three'
 import { OrbitControls as OrbitControlsType } from 'three-stdlib'

@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { proxy } from 'valtio'
-import { useWindowFocus } from '../../../lib/hooks/useWindowFocus'
+import { useWindowFocus } from '../../lib/hooks/useWindowFocus'
 import { Tweaks } from '../../ui'
 import { Period, PERIODS, type PeriodName } from './periods/period'
 import type { Time } from './time'

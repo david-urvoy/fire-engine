@@ -43,6 +43,7 @@ export const Tweaks = {
 
 export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params: Parameters<FolderApi['addBinding']> }) {
 	const [value, setValue] = useState<T>(
+		// @ts-ignore
 		params[0][Object.keys(params[0])[0]]
 	)
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)

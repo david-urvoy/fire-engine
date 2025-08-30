@@ -28,7 +28,7 @@ jobs:
         run: bun install
 
       - name: Compile
-        run: bun tsc
+        run: bun compile
 
       - name: Authenticate with GitHub Package Registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
