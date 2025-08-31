@@ -1,4 +1,4 @@
-import { BindingApi, ButtonApi, type ButtonParams } from '@tweakpane/core'
+import { BindingApi, ButtonApi, type Bindable, type BindingParams, type ButtonParams } from '@tweakpane/core'
 import { useEffect, useRef, useState } from 'react'
 import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from 'tweakpane'
 
@@ -41,21 +41,21 @@ export const Tweaks = {
 	},
 }
 
-export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params: Parameters<FolderApi['addBinding']> }) {
-	const [value, setValue] = useState<T>(() => {
-		// @ts-ignore
-		const initial = params[0][Object.keys(params[0])[0]] as T
-		// @ts-ignore
-		return initial.clone ? initial.clone() : initial
-	}
-	)
+export function useAddBinding<T extends Bindable, Key extends keyof T | undefined = undefined>(
+	{ folder, param, key, options }:
+		{ folder: FolderApi, param: T, key?: Key, options?: BindingParams }
+) {
+	const [value, setValue] = useState<T>(() => param.clone ? param.clone() : param)
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
-	const paramsRef = useRef(params)
+	const paramsRef = useRef([param, key ?? Object.keys(param)[0] as keyof T, options] as const)
 	const folderRef = useRef(folder)
 
 	useEffect(() => {
 		bindingRef.current = folderRef.current.addBinding(...paramsRef.current)
-			.on('change', ({ value }) => setValue(value.clone ? value.clone() : value))
+			.on('change', ({ value }) => setValue(prev => ({
+				...prev,
+				[paramsRef.current[1]]: value.clone ? value.clone() : value
+			})))
 		const cleanupFolder = folderRef.current
 		return () => {
 			if (bindingRef.current)
@@ -66,7 +66,7 @@ export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params
 	return value
 }
 
-export function useAddButton({ folder, onClick, params }: { folder: FolderApi, onClick?: (target: ButtonApi) => void, params: ButtonParams }) {
+export function useAddButton({ folder, onClick, ...params }: { folder: FolderApi, onClick?: (target: ButtonApi) => void } & ButtonParams) {
 	const [value, setValue] = useState(false)
 	const buttonRef = useRef<ButtonApi | null>(null)
 	const paramsRef = useRef(params)

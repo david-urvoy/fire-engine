@@ -21,7 +21,11 @@ export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
 
 	const folder = Tweaks.folder({ title: 'Debug' })
 		.folder({ title: '𖣯 Grid' })
-	const gridSize = useAddBinding<number>({ folder, params: [{ gridSize: 12 }, 'gridSize', { min: 2, max: 20, step: 2 }] })
+	const { gridSize } = useAddBinding({
+		folder,
+		param: { gridSize: 12 },
+		options: { min: 2, max: 20, step: 2 }
+	})
 
 	return (
 		<group ref={groupRef} visible={isDebug}>
