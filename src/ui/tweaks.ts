@@ -42,9 +42,12 @@ export const Tweaks = {
 }
 
 export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params: Parameters<FolderApi['addBinding']> }) {
-	const [value, setValue] = useState<T>(
+	const [value, setValue] = useState<T>(() => {
 		// @ts-ignore
-		params[0][Object.keys(params[0])[0]]
+		const initial = params[0][Object.keys(params[0])[0]] as T
+		// @ts-ignore
+		return initial.clone ? initial.clone() : initial
+	}
 	)
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
 	const paramsRef = useRef(params)
@@ -52,7 +55,7 @@ export function useAddBinding<T>({ folder, params }: { folder: FolderApi, params
 
 	useEffect(() => {
 		bindingRef.current = folderRef.current.addBinding(...paramsRef.current)
-			.on('change', ({ value }) => setValue(value))
+			.on('change', ({ value }) => setValue(value.clone ? value.clone() : value))
 		const cleanupFolder = folderRef.current
 		return () => {
 			if (bindingRef.current)
