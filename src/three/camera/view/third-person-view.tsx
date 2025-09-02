@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { ControlledCharacter, useCameraFollowsTargetOrientation, useCharacterMove } from '../controls'
+import { ControlledCharacter, useCameraFollowsTargetOrientation, useCharacterMove } from '../../../game/controls/controls'
 import { usePointerLock } from './lock/pointer-lock'
 
 const targetPosition = new Vector3()

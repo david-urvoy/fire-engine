@@ -8,7 +8,7 @@ import { Gamepad, gamepad } from './actions/gamepad/gamepad'
 import { KeyboardControls } from './actions/keyboard/keyboard-controls'
 import { keyboard } from './actions/keyboard/keyboard.store'
 import { Keymap } from './actions/keyboard/keymap'
-import { useFullscreen } from './view/fullscreen'
+import { useFullscreen } from './fullscreen'
 
 export function Controls() {
 	const { isMobile } = useSnapshot(game)

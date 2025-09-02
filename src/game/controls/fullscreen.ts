@@ -1,5 +1,5 @@
-import { game } from '../../game.store'
-import { useSubscribeKey } from '../actions/keyboard/keyboard-controls'
+import { game } from '../game.store'
+import { useSubscribeKey } from './actions/keyboard/keyboard-controls'
 
 export function useFullscreen() {
 	useSubscribeKey('KeyO', toggleFullscreen)

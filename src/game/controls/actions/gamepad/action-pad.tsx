@@ -1,4 +1,4 @@
-import { toggleFullscreen } from '../../view/fullscreen'
+import { toggleFullscreen } from '../../fullscreen'
 
 export function ActionPad() {
 	return (
@@ -8,7 +8,7 @@ export function ActionPad() {
 				toggleFullscreen()
 				e.stopPropagation()
 			}}
-			onKeyUp={() => {}}
+			onKeyUp={() => { }}
 		/>
 	)
 }

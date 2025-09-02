@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { proxy, useSnapshot } from 'valtio'
-import { game } from '../../game.store'
+import { game } from '../../../game/game.store'
 import { FirstPersonView } from './first-person-view'
 import { ThirdPersonView } from './third-person-view'
 
