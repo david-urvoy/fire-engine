@@ -13,12 +13,22 @@ interface GLTFAction<ActionName extends string> extends AnimationClip {
 	name: ActionName
 }
 
-export function useSkinnedMeshGLTF<GLTFResult extends GLTFData, ActionName extends string>(filepath: string) {
+export function useSkinnedMeshGLTF<
+	GLTFResult extends GLTFData,
+	ActionName extends string
+>(filepath: string) {
 	const group = useRef(null)
 	const gltf = useGLTF(filepath) as unknown as GLTFResult
 	const { scene, animations } = gltf
+
 	const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
+
 	const { nodes } = useGraph(clone)
-	const { actions } = useAnimations(animations as GLTFAction<ActionName>[], group)
+
+	const { actions } = useAnimations(
+		animations as GLTFAction<ActionName>[],
+		clone
+	)
+
 	return { ...gltf, actions, nodes, group }
 }

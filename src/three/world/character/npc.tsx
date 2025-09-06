@@ -2,8 +2,6 @@ import { type ThreeElements, type ThreeEvent, useFrame } from '@react-three/fibe
 import type React from 'react'
 import { type RefObject, useRef, useState } from 'react'
 import { Quaternion, Vector3 } from 'three'
-import { characterDimensions } from '../../../game'
-import { InteractZone } from '../objects/interact-zone/interact-zone'
 import type { Animations } from './animation/animate'
 import { useWanderingBehavior } from './npc/behavior/wandering'
 import { Character } from './physics/character'
@@ -19,7 +17,7 @@ export function NPC({
 	) => React.JSX.Element
 }) {
 	const animations = useRef<Animations>(undefined)
-	const [hovered, hover] = useState(false)
+	const [_, hover] = useState(false)
 	const target = { position: new Vector3(0, 0, 10), speed: 10 }
 	const linvel = new Vector3()
 
@@ -44,11 +42,11 @@ export function NPC({
 	return (
 		<Character orientation={new Quaternion()} position={position} velocity={linvel}>
 			<CharacterComponent {...handlePointer} animationsRef={animations} castShadow {...props} />
-			<InteractZone
+			{/* <InteractZone
 				offset={characterDimensions.halfHeight + characterDimensions.radius}
 				hovered={hovered}
 				{...handlePointer}
-			/>
+			/> */}
 		</Character>
 	)
 }

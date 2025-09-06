@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { proxy, useSnapshot } from 'valtio'
-import { game } from '../../../game/game.store'
+import { useReticleInteraction } from '../../../ui'
 import { FirstPersonView } from './first-person-view'
 import { ThirdPersonView } from './third-person-view'
 
@@ -15,7 +15,8 @@ const controlsMap = {
 
 export function CameraView() {
 	const { type } = useSnapshot(ControlsType)
-	game.debug = type
+
+	useReticleInteraction()
 
 	return controlsMap[type]
 }

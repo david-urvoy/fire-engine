@@ -7,9 +7,9 @@ import { useSnapshot } from 'valtio'
 import { gameTime } from '../../../../game'
 import { useLight } from './use-light'
 
-export const light = {
-	position: [gameTime.isDay ? (12 * 60 - (gameTime.hour * 60 + gameTime.minute)) / 20 : 5, 50, 5],
-}
+// export const light = {
+// 	position: [gameTime?.isDay ? (12 * 60 - (gameTime.hour * 60 + gameTime.minute)) / 20 : 5, 50, 5],
+// }
 
 export function StarLight() {
 	const starlight = useRef<DirectionalLight>(null)
