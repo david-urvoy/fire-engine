@@ -20,7 +20,6 @@ export function useReticleInteraction() {
 	useFrame(() => {
 		raycaster.current.setFromCamera(CENTER, camera)
 
-
 		const intersections = raycaster.current.intersectObjects(
 			Array.from(interactable._map.values()),
 			true
@@ -36,7 +35,6 @@ export function useReticleInteraction() {
 			if (hit && intersections[0] && intersections[0]?.distance < 3) {
 				interactable.active.add(hit.uuid)
 			}
-
 
 			lastHit.current = hit
 		}

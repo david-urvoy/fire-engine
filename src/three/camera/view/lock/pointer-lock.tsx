@@ -2,7 +2,7 @@ import { type RefObject, useCallback, useEffect, useRef } from 'react'
 import { Euler } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
-export function usePointerLock(controls: RefObject<OrbitControlsImpl | null>) {
+export function PointerLock({ controls }: { controls: RefObject<OrbitControlsImpl | null> }) {
 	const sensitivity = 0.002
 	const rotation = useRef(new Euler())
 
@@ -31,4 +31,6 @@ export function usePointerLock(controls: RefObject<OrbitControlsImpl | null>) {
 
 		return () => controller.abort()
 	}, [handleClick, handleMouseMove])
+
+	return <></>
 }

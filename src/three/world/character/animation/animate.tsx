@@ -17,7 +17,7 @@ export function Animate({
 }: {
 	Model?: (props: Animated) => React.JSX.Element
 	// | React.LazyExoticComponent<({ animationsRef, ...props }: Animated) => React.JSX.Element>
-} & Animated) {
+} & Partial<Animated>) {
 	const animations = useRef<Animations>(null)
 	const animation = useRef(animations.current?.idle)
 	const { up, down, right, left } = useSnapshot(keyboard).state

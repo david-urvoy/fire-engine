@@ -1,17 +1,19 @@
 import { PointerLockControls } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
 import { useEffect } from 'react'
 import { useSnapshot } from 'valtio'
-import { ControlledCharacter, game } from '../../../game'
-import { useCameraFollowsTargetOrientation, useCharacterMove } from '../../../game/controls/controls'
+import { game } from '../../../game'
+import { CameraTracking } from '../../../game/controls/controls'
 import { TouchControls } from './lock/touch-lock'
+
+function FirstPersonControls() {
+	const { isMobile } = useSnapshot(game)
+	return isMobile ? <TouchControls /> : <PointerLockControls selector='canvas' makeDefault />
+}
 
 /**
  * First person view
  */
 export function FirstPersonView() {
-	const { isMobile } = useSnapshot(game)
-
 	useEffect(
 		() => () => {
 			document.exitPointerLock()
@@ -19,12 +21,8 @@ export function FirstPersonView() {
 		[],
 	)
 
-	useCameraFollowsTargetOrientation()
-	useCharacterMove()
-
-	useFrame(function cameraFollowsTargetPosition({ camera }) {
-		ControlledCharacter.ref.current?.getWorldPosition(camera.position)
-	})
-
-	return isMobile ? <TouchControls /> : <PointerLockControls selector='canvas' makeDefault />
+	return <>
+		<CameraTracking />
+		<FirstPersonControls />
+	</>
 }

@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, type RapierRigidBody, RigidBody, type RigidBodyProps, useRapier } from '@react-three/rapier'
-import { type PropsWithChildren, type RefObject, useCallback, useRef } from 'react'
+import { type RefObject, useCallback, useRef } from 'react'
 import { type Quaternion, Vector3 } from 'three'
 import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../../game'
 import { timer } from '../../../../game/time/timer'
@@ -20,7 +20,7 @@ export function Character({
 	dimensions: { halfHeight, radius } = characterDimensions,
 	children,
 	...props
-}: PropsWithChildren<CharacterProps & RigidBodyProps>) {
+}: CharacterProps & RigidBodyProps) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
 	const gravityComponent = useRef(0)

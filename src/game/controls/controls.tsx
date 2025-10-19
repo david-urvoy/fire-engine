@@ -1,7 +1,8 @@
 import { useFrame } from '@react-three/fiber'
-import type { RefObject } from 'react'
-import { type Group, Quaternion, Vector3 } from 'three'
+import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
+import { Group, Quaternion, Vector3 } from 'three'
 import { useSnapshot } from 'valtio'
+import { Character } from '../../three'
 import { FORWARD, game } from '../game.store'
 import { timer } from '../time/timer'
 import { Gamepad, gamepad } from './actions/gamepad/gamepad'
@@ -27,13 +28,38 @@ export const ControlledCharacter: {
 	ref: { current: null },
 }
 
-export function usePlayerDirection() {
-	const { isMobile } = useSnapshot(game)
-	return (isMobile ? gamepad : keyboard).direction
+export function Controlled({ children }: PropsWithChildren) {
+	const groupRef = useRef<Group>(null)
+	const npcControls = useRef({
+		velocity: new Vector3(),
+		orientation: new Quaternion(),
+	})
+
+	useEffect(() => {
+		ControlledCharacter.ref = groupRef
+	}, [])
+
+	const isPlayerControlled = groupRef.current === ControlledCharacter.ref.current
+	const { velocity, orientation } = isPlayerControlled ? ControlledCharacter : npcControls.current
+
+	return (
+		<Character velocity={velocity} orientation={orientation} position={[2.3, 2, 0.66]}>
+			<group ref={groupRef} />
+			{children}
+		</Character>
+	)
 }
-export function useCharacterMove() {
+
+function usePlayerDirection() {
+	const { isMobile } = useSnapshot(game)
+	const control = isMobile ? gamepad : keyboard
+	return control.direction
+}
+
+function useCharacterMove() {
 	const direction = usePlayerDirection()
 	useFrame(() => {
+		game.debug = direction.x + ', ' + direction.y
 		// set velocity to player direction
 		const delta = timer.getDelta()
 		ControlledCharacter.velocity
@@ -44,7 +70,8 @@ export function useCharacterMove() {
 			.multiplyScalar(7.5 * delta * 60)
 	})
 }
-export function useCameraFollowsTargetOrientation() {
+
+function useCameraFollowsTargetOrientation() {
 	useFrame(({ camera }) => {
 		// set orientation to camera direction
 		ControlledCharacter.orientation.setFromUnitVectors(
@@ -52,4 +79,18 @@ export function useCameraFollowsTargetOrientation() {
 			camera.getWorldDirection(new Vector3()).setY(0).negate().normalize(),
 		)
 	})
+}
+
+export function CameraTracking({ target }: { target?: RefObject<Vector3> } = {}) {
+	useCameraFollowsTargetOrientation()
+	useCharacterMove()
+
+	useFrame(function cameraFollowsTargetPosition({ camera }) {
+		const characterPosition = ControlledCharacter.ref.current?.getWorldPosition(target?.current ?? camera.position)
+
+		if (target?.current && characterPosition)
+			camera.position.sub(target.current).add(characterPosition)
+	})
+
+	return <></>
 }

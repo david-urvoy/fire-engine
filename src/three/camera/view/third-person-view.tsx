@@ -3,24 +3,22 @@ import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { ControlledCharacter, useCameraFollowsTargetOrientation, useCharacterMove } from '../../../game/controls/controls'
-import { usePointerLock } from './lock/pointer-lock'
+import { CameraTracking } from '../../../game/controls/controls'
+import { PointerLock } from './lock/pointer-lock'
 
-const targetPosition = new Vector3()
 
 export function ThirdPersonView() {
+	const target = useRef(new Vector3())
 	const orbit = useRef<OrbitControlsImpl>(null)
 
-	usePointerLock(orbit)
-
-	useCharacterMove()
-	useCameraFollowsTargetOrientation()
-
-	useFrame(function cameraFollowsTargetPosition({ camera }) {
-		if (!ControlledCharacter.ref.current || !orbit.current) return
-		camera.position.sub(targetPosition).add(ControlledCharacter.ref.current.getWorldPosition(targetPosition))
-		orbit.current.target.copy(targetPosition)
+	useFrame(function cameraFollowsTargetPosition() {
+		if (!orbit.current) return
+		orbit.current.target.copy(target.current)
 	})
 
-	return <OrbitControls ref={orbit} minDistance={2} maxDistance={6} enableDamping={false} makeDefault />
+	return <>
+		<CameraTracking target={target} />
+		<PointerLock controls={orbit} />
+		<OrbitControls ref={orbit} minDistance={2} maxDistance={6} enableDamping={false} makeDefault />
+	</>
 }
