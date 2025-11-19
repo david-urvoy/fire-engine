@@ -6,7 +6,7 @@ import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '..
 import { timer } from '../../../../game/time/timer'
 import { useCharacterController } from './character-controller'
 
-interface CharacterProps {
+interface PhysicProps {
 	velocity: Vector3
 	orientation: Quaternion
 	dimensions?: CharacterDimensions
@@ -14,13 +14,13 @@ interface CharacterProps {
 
 const translation = new Vector3()
 
-export function Character({
+export function Physic({
 	velocity,
 	orientation,
 	dimensions: { halfHeight, radius } = characterDimensions,
 	children,
 	...props
-}: CharacterProps & RigidBodyProps) {
+}: PhysicProps & RigidBodyProps) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
 	const gravityComponent = useRef(0)
@@ -29,21 +29,21 @@ export function Character({
 	useFrame(() => {
 		const delta = timer.getDelta()
 
-		if (body.current && controller.current) {
-			translation.copy(velocity).y += gravityComponent.current
+		if (!body.current || !controller.current) return
 
-			controller.current.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
-			translation.copy(controller.current.computedMovement()).add(body.current.translation())
+		translation.copy(velocity).y += gravityComponent.current
+		controller.current.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
+		translation.copy(controller.current.computedMovement()).add(body.current.translation())
 
-			body.current.setNextKinematicTranslation(translation)
-			body.current.setRotation(orientation, false)
+		body.current.setNextKinematicTranslation(translation)
+		body.current.setRotation(orientation, false)
 
-			if (controller.current.computedGrounded() !== grounded.current) {
-				grounded.current = controller.current.computedGrounded()
-			}
-			if (grounded.current) gravityComponent.current = 0
-			gravityComponent.current -= GRAVITY_CONST * delta
+		if (controller.current.computedGrounded() !== grounded.current) {
+			grounded.current = controller.current.computedGrounded()
 		}
+		if (grounded.current) gravityComponent.current = 0
+		gravityComponent.current -= GRAVITY_CONST * delta
+
 	}, 50)
 
 	return (

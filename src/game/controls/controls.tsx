@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Group, Quaternion, Vector3 } from 'three'
 import { useSnapshot } from 'valtio'
-import { Character } from '../../three'
+import { Physic } from '../../three'
 import { FORWARD, game } from '../game.store'
 import { timer } from '../time/timer'
 import { Gamepad, gamepad } from './actions/gamepad/gamepad'
@@ -28,7 +28,24 @@ export const ControlledCharacter: {
 	ref: { current: null },
 }
 
-export function Controlled({ children }: PropsWithChildren) {
+export function useControlled(groupRef: RefObject<Group | null>) {
+	const npcControls = useRef({
+		velocity: new Vector3(),
+		orientation: new Quaternion(),
+	})
+
+	useEffect(() => {
+		ControlledCharacter.ref = groupRef
+	}, [groupRef])
+
+	const isControlled = groupRef.current === ControlledCharacter.ref.current
+
+	const { velocity, orientation } = isControlled ? ControlledCharacter : npcControls.current
+
+	return { velocity, orientation, isControlled, ref: groupRef }
+}
+
+export function Controllable({ children }: PropsWithChildren) {
 	const groupRef = useRef<Group>(null)
 	const npcControls = useRef({
 		velocity: new Vector3(),
@@ -43,10 +60,10 @@ export function Controlled({ children }: PropsWithChildren) {
 	const { velocity, orientation } = isPlayerControlled ? ControlledCharacter : npcControls.current
 
 	return (
-		<Character velocity={velocity} orientation={orientation} position={[2.3, 2, 0.66]}>
+		<Physic body={groupRef} velocity={velocity} orientation={orientation} position={[2.3, 2, 0.66]}>
 			<group ref={groupRef} />
 			{children}
-		</Character>
+		</Physic>
 	)
 }
 

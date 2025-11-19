@@ -4,7 +4,7 @@ import { type RefObject, useRef, useState } from 'react'
 import { Quaternion, Vector3 } from 'three'
 import type { Animations } from './animation/animate'
 import { useWanderingBehavior } from './npc/behavior/wandering'
-import { Character } from './physics/character'
+import { Physic } from './physics/physic'
 
 export function NPC({
 	position,
@@ -40,13 +40,13 @@ export function NPC({
 	}
 
 	return (
-		<Character orientation={new Quaternion()} position={position} velocity={linvel}>
+		<Physic orientation={new Quaternion()} position={position} velocity={linvel}>
 			<CharacterComponent {...handlePointer} animationsRef={animations} castShadow {...props} />
 			{/* <InteractZone
 				offset={characterDimensions.halfHeight + characterDimensions.radius}
 				hovered={hovered}
 				{...handlePointer}
 			/> */}
-		</Character>
+		</Physic>
 	)
 }
