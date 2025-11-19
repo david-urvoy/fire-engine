@@ -23,7 +23,7 @@ export function useSkinnedMeshGLTF<
 
 	const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
 	const { nodes } = useGraph(clone)
-	const { actions } = useAnimations(animations as GLTFAction<ActionName>[], group)
+	const { actions } = useAnimations(animations as GLTFAction<ActionName>[], clone)
 
 	return { ...gltf, actions, nodes, group }
 }

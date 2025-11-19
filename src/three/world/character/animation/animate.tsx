@@ -13,14 +13,17 @@ export function useAnimations(bindAnimations: () => Animations) {
 
 	useEffect(() => {
 		animations.current = bindAnimations()
+		animation.current = animations.current?.idle
+		animation.current?.play()
+	}, [bindAnimations])
 
-		const action = up || down || right || left ? animations.current?.run : animations.current?.idle
-		if (animation.current?.getClip().name !== action?.getClip().name) {
-			animation.current?.stop()
-			animation.current = action
-			animation.current?.play()
-		}
-	}, [up, down, right, left, bindAnimations])
+	const action = up || down || right || left ? animations.current?.run : animations.current?.idle
+
+	if (animation.current?.getClip().name !== action?.getClip().name) {
+		animation.current?.stop()
+		animation.current = action
+		animation.current?.play()
+	}
 }
 
 export function animate() {

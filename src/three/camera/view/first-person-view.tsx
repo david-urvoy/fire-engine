@@ -14,12 +14,7 @@ function FirstPersonControls() {
  * First person view
  */
 export function FirstPersonView() {
-	useEffect(
-		() => () => {
-			document.exitPointerLock()
-		},
-		[],
-	)
+	useEffect(() => () => document.exitPointerLock(), [])
 
 	return <>
 		<CameraTracking />
