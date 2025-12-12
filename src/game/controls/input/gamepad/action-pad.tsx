@@ -1,4 +1,4 @@
-import { toggleFullscreen } from '../../fullscreen'
+import { toggleFullscreen } from '../../bindings/fullscreen'
 
 export function ActionPad() {
 	return (

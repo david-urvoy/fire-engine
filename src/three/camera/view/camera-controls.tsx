@@ -13,7 +13,7 @@ const controlsMap = {
 	orbit: <OrbitControls />,
 }
 
-export function CameraView() {
+export function CameraControls() {
 	const { type } = useSnapshot(ControlsType)
 
 	useReticleInteraction()

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { AnimationAction } from 'three'
 import { useSnapshot } from 'valtio'
-import { keyboard } from '../../../../game/controls/actions/keyboard/keyboard.store'
+import { keyboard } from '../../../../game/controls/input/keyboard/keyboard.store'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }

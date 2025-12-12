@@ -2,8 +2,8 @@ import { PointerLockControls } from '@react-three/drei'
 import { useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 import { game } from '../../../game'
-import { CameraTracking } from '../../../game/controls/controls'
-import { TouchControls } from './lock/touch-lock'
+import { TouchControls } from '../lock/touch-lock'
+import { CameraTracking } from './tracking'
 
 function FirstPersonControls() {
 	const { isMobile } = useSnapshot(game)

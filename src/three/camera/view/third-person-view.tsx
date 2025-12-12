@@ -3,8 +3,8 @@ import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { CameraTracking } from '../../../game/controls/controls'
-import { PointerLock } from './lock/pointer-lock'
+import { PointerLock } from '../lock/pointer-lock'
+import { CameraTracking } from './tracking'
 
 
 export function ThirdPersonView() {

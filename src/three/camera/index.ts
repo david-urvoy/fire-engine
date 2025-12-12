@@ -1,5 +1,5 @@
 export * from './adaptative-camera'
 export * from './focus'
 export * from './hud'
-export * from './view/camera-view'
+export * from './view/camera-controls'
 
