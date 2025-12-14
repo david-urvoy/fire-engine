@@ -1,7 +1,14 @@
 import { CameraControls as CameraControlsType, Hud, OrthographicCamera } from '@react-three/drei'
 import { type ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
-import { Group, Matrix4, Object3D, OrthographicCamera as OrthographicCameraImpl, Quaternion, Vector3 } from 'three'
+import {
+	Group,
+	Matrix4,
+	Object3D,
+	OrthographicCamera as OrthographicCameraImpl,
+	Quaternion,
+	Vector3,
+} from 'three'
 import { OrbitControls as OrbitControlsType } from 'three-stdlib'
 
 type GizmoHelperContext = {
@@ -25,15 +32,15 @@ type ControlsProto = { update(delta?: number): void; target: Vector3 }
 
 export type GizmoHelperProps = ThreeElements['group'] & {
 	alignment?:
-	| 'top-left'
-	| 'top-right'
-	| 'bottom-right'
-	| 'bottom-left'
-	| 'bottom-center'
-	| 'center-right'
-	| 'center-left'
-	| 'center-center'
-	| 'top-center'
+		| 'top-left'
+		| 'top-right'
+		| 'bottom-right'
+		| 'bottom-left'
+		| 'bottom-center'
+		| 'center-right'
+		| 'center-left'
+		| 'center-center'
+		| 'top-center'
 	margin?: [number, number]
 	renderPriority?: number
 	autoClear?: boolean
@@ -47,7 +54,9 @@ const isOrbitControls = (controls: ControlsProto): controls is OrbitControlsType
 	return 'minPolarAngle' in (controls as OrbitControlsType)
 }
 
-const isCameraControls = (controls: CameraControlsType | ControlsProto): controls is CameraControlsType => {
+const isCameraControls = (
+	controls: CameraControlsType | ControlsProto,
+): controls is CameraControlsType => {
 	return 'getTarget' in (controls as CameraControlsType)
 }
 
@@ -89,7 +98,7 @@ export const GizmoHelper = ({
 			q2.copy(dummy.quaternion)
 			invalidate()
 		},
-		[mainCamera, invalidate]
+		[mainCamera, invalidate],
 	)
 
 	useFrame((_, delta) => {
@@ -113,7 +122,11 @@ export const GizmoHelper = ({
 					mainCamera.quaternion.copy(q1)
 
 					if (isCameraControls(defaultControls))
-						defaultControls.setPosition(mainCamera.position.x, mainCamera.position.y, mainCamera.position.z)
+						defaultControls.setPosition(
+							mainCamera.position.x,
+							mainCamera.position.y,
+							mainCamera.position.z,
+						)
 
 					if (onUpdate) onUpdate()
 					else if (defaultControls.update) defaultControls.update(delta)

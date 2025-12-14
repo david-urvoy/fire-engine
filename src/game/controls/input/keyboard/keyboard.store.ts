@@ -6,7 +6,10 @@ import { Keymap } from './keymap'
 const direction = new Vector2()
 
 const keyboardBase = proxy({
-	state: Object.fromEntries(Object.keys(Keymap).map((key) => [key, false])) as Record<keyof typeof Keymap, boolean>,
+	state: Object.fromEntries(Object.keys(Keymap).map((key) => [key, false])) as Record<
+		keyof typeof Keymap,
+		boolean
+	>,
 })
 
 export const keyboard = derive(

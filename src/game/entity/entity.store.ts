@@ -8,7 +8,7 @@ export type EntityState = {
 	orientation: Quaternion
 }
 
-export const controlled = proxy<{controlled: string, entities: Record<string, EntityState>}>({
+export const controlled = proxy<{ controlled: string; entities: Record<string, EntityState> }>({
 	controlled: '',
 	entities: {},
 })

@@ -10,6 +10,10 @@ export const KeyboardActions: Partial<Record<Action, () => void>> = {
 	},
 	switchCameraType: () => {
 		ControlsType.type =
-			ControlsType.type === 'first-person' ? 'orbit' : ControlsType.type === 'orbit' ? 'third-person' : 'first-person'
+			ControlsType.type === 'first-person'
+				? 'orbit'
+				: ControlsType.type === 'orbit'
+					? 'third-person'
+					: 'first-person'
 	},
 }

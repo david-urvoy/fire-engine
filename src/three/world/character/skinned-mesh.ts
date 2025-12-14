@@ -13,10 +13,9 @@ interface GLTFAction<ActionName extends string> extends AnimationClip {
 	name: ActionName
 }
 
-export function useSkinnedMeshGLTF<
-	GLTFResult extends GLTFData,
-	ActionName extends string
->(filepath: string) {
+export function useSkinnedMeshGLTF<GLTFResult extends GLTFData, ActionName extends string>(
+	filepath: string,
+) {
 	const group = useRef(null)
 	const gltf = useGLTF(filepath) as unknown as GLTFResult
 	const { scene, animations } = gltf

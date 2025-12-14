@@ -4,7 +4,9 @@ import { Raycaster, Vector2, type Object3D } from 'three'
 import { interactable } from '../three/world/objects/interactable/interactable.store'
 
 export function Reticle() {
-	return <div className="fixed left-1/2 top-1/2 w-1 h-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-reticle pointer-events-none" />
+	return (
+		<div className="fixed left-1/2 top-1/2 w-1 h-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-reticle pointer-events-none" />
+	)
 }
 
 const CENTER = new Vector2(0, 0)
@@ -22,7 +24,7 @@ export function useReticleInteraction() {
 
 		const intersections = raycaster.current.intersectObjects(
 			Array.from(interactable._map.values()),
-			true
+			true,
 		)
 
 		const hit = intersections[0]?.object ?? null

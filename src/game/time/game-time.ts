@@ -28,11 +28,14 @@ export const gameTime = proxy({
 	},
 	save() {
 		const { day, hour, minute } = gameTime
-		localStorage.setItem(TIME_STORE_KEY, JSON.stringify({
-			day,
-			hour,
-			minute,
-		}))
+		localStorage.setItem(
+			TIME_STORE_KEY,
+			JSON.stringify({
+				day,
+				hour,
+				minute,
+			}),
+		)
 	},
 	get period(): PeriodName {
 		return Period({ day: this.day, hour: this.hour, minute: this.minute })
@@ -43,7 +46,7 @@ export const gameTime = proxy({
 })
 
 function _increment(minutes: number = 1) {
-	const totalMinutes = (timeToMinutes(gameTime) + minutes)
+	const totalMinutes = timeToMinutes(gameTime) + minutes
 
 	gameTime.day = Math.floor(totalMinutes / (24 * 60))
 	gameTime.hour = Math.floor((totalMinutes % (24 * 60)) / 60)
@@ -54,13 +57,14 @@ Tweaks.folder({ title: '🕒 Time' })
 	.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
 		min: 0,
 		max: 100,
-		step: 1
-	}).on('change', ({ value }) => {
+		step: 1,
+	})
+	.on('change', ({ value }) => {
 		gameTime.GAME_SPEED = value
 	})
 
 function timeToMinutes(time: Time): number {
-	return (time.day * 24 * 60 + time.hour * 60 + time.minute)
+	return time.day * 24 * 60 + time.hour * 60 + time.minute
 }
 
 export function useGameTime() {
@@ -75,7 +79,6 @@ export function useGameTime() {
 			timer.reset()
 			gameTime.resume()
 		}
-
 	}, [visibility])
 
 	useFrame(() => {

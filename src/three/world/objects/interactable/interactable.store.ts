@@ -5,5 +5,5 @@ import { proxy } from 'valtio/vanilla'
 export const interactable = proxy({
 	active: proxySet<string>([]),
 	groups: proxySet<string>([]),
-	_map: new Map<string, Object3D>()
+	_map: new Map<string, Object3D>(),
 })

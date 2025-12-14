@@ -27,9 +27,7 @@ export function Controllable({ id }: { id: string }) {
 		}
 	}, [id, ref])
 
-	return (
-		<group ref={ref} />
-	)
+	return <group ref={ref} />
 }
 
 export function useControlled(name: string) {

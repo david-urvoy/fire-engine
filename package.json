@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [ "dist" ],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "bun --hot src/index.ts",
 		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
@@ -49,7 +51,7 @@
 		"valtio": "^2.2.0",
 		"vite-plugin-glsl": "^1.5.4"
 	},
-	"keywords": [ ],
+	"keywords": [],
 	"author": "",
 	"license": "ISC"
 }

@@ -7,11 +7,11 @@ export const useLight = ({ light }: { folderName: string; light: Light }) => {
 	const { intensity } = useAddBinding({
 		folder,
 		param: { intensity: light.intensity },
-		options: { min: 0, max: 3, step: 0.1 }
+		options: { min: 0, max: 3, step: 0.1 },
 	})
 	const { color } = useAddBinding({
 		folder,
-		param: { color: light.color.getStyle() }
+		param: { color: light.color.getStyle() },
 	})
 
 	return { color: new Color(color), intensity }

@@ -7,5 +7,7 @@ export function useFullscreen() {
 
 export function toggleFullscreen() {
 	if (!document.fullscreenEnabled) return
-	return !document.fullscreenElement ? game.canvas.current?.requestFullscreen() : document.exitFullscreen()
+	return !document.fullscreenElement
+		? game.canvas.current?.requestFullscreen()
+		: document.exitFullscreen()
 }

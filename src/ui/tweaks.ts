@@ -1,10 +1,16 @@
-import { BindingApi, ButtonApi, type Bindable, type BindingParams, type ButtonParams } from '@tweakpane/core'
+import {
+	BindingApi,
+	ButtonApi,
+	type Bindable,
+	type BindingParams,
+	type ButtonParams,
+} from '@tweakpane/core'
 import { useEffect, useRef, useState } from 'react'
 import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from 'tweakpane'
 
 // Singleton pane instance
 
-export const pane = new Pane({ title: "Tweaks", expanded: false })
+export const pane = new Pane({ title: 'Tweaks', expanded: false })
 const folderRegistry = new WeakMap<FolderApi | Pane, Map<string, FolderApi>>()
 
 type Folders = '💡 Lights' | '🕒 Time'
@@ -20,7 +26,7 @@ function ensureRegistry(parent: FolderApi | Pane) {
 
 function getOrCreateFolder(
 	parent: FolderApi | Pane,
-	{ title, ...params }: FolderParams
+	{ title, ...params }: FolderParams,
 ): FolderApi {
 	const reg = ensureRegistry(parent)
 	if (!reg.has(title)) {
@@ -41,32 +47,45 @@ export const Tweaks = {
 	},
 }
 
-export function useAddBinding<T extends Bindable, Key extends keyof T | undefined = undefined>(
-	{ folder, param, key, options }:
-		{ folder: FolderApi, param: T, key?: Key, options?: BindingParams }
-) {
-	const [value, setValue] = useState<T>(() => param.clone ? param.clone() : param)
+export function useAddBinding<T extends Bindable, Key extends keyof T | undefined = undefined>({
+	folder,
+	param,
+	key,
+	options,
+}: {
+	folder: FolderApi
+	param: T
+	key?: Key
+	options?: BindingParams
+}) {
+	const [value, setValue] = useState<T>(() => (param.clone ? param.clone() : param))
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
-	const paramsRef = useRef([param, key ?? Object.keys(param)[0] as keyof T, options] as const)
+	const paramsRef = useRef([param, key ?? (Object.keys(param)[0] as keyof T), options] as const)
 	const folderRef = useRef(folder)
 
 	useEffect(() => {
-		bindingRef.current = folderRef.current.addBinding(...paramsRef.current)
-			.on('change', ({ value }) => setValue(prev => ({
-				...prev,
-				[paramsRef.current[1]]: value.clone ? value.clone() : value
-			})))
+		bindingRef.current = folderRef.current
+			.addBinding(...paramsRef.current)
+			.on('change', ({ value }) =>
+				setValue((prev) => ({
+					...prev,
+					[paramsRef.current[1]]: value.clone ? value.clone() : value,
+				})),
+			)
 		const cleanupFolder = folderRef.current
 		return () => {
-			if (bindingRef.current)
-				cleanupFolder.remove(bindingRef.current)
+			if (bindingRef.current) cleanupFolder.remove(bindingRef.current)
 		}
 	}, [])
 
 	return value
 }
 
-export function useAddButton({ folder, onClick, ...params }: { folder: FolderApi, onClick?: (target: ButtonApi) => void } & ButtonParams) {
+export function useAddButton({
+	folder,
+	onClick,
+	...params
+}: { folder: FolderApi; onClick?: (target: ButtonApi) => void } & ButtonParams) {
 	const [value, setValue] = useState(false)
 	const buttonRef = useRef<ButtonApi | null>(null)
 	const paramsRef = useRef(params)
@@ -74,15 +93,13 @@ export function useAddButton({ folder, onClick, ...params }: { folder: FolderApi
 	const folderRef = useRef(folder)
 
 	useEffect(() => {
-		buttonRef.current = folderRef.current.addButton(paramsRef.current)
-			.on('click', ({ target }) => {
-				onClickRef.current?.(target)
-				setValue(prev => !prev)
-			})
+		buttonRef.current = folderRef.current.addButton(paramsRef.current).on('click', ({ target }) => {
+			onClickRef.current?.(target)
+			setValue((prev) => !prev)
+		})
 		const cleanupFolder = folderRef.current
 		return () => {
-			if (buttonRef.current)
-				cleanupFolder.remove(buttonRef.current)
+			if (buttonRef.current) cleanupFolder.remove(buttonRef.current)
 		}
 	}, [])
 

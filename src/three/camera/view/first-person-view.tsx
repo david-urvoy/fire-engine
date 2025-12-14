@@ -7,7 +7,7 @@ import { CameraTracking } from './tracking'
 
 function FirstPersonControls() {
 	const { isMobile } = useSnapshot(game)
-	return isMobile ? <TouchControls /> : <PointerLockControls selector='canvas' makeDefault />
+	return isMobile ? <TouchControls /> : <PointerLockControls selector="canvas" makeDefault />
 }
 
 /**
@@ -16,8 +16,10 @@ function FirstPersonControls() {
 export function FirstPersonView() {
 	useEffect(() => () => document.exitPointerLock(), [])
 
-	return <>
-		<CameraTracking />
-		<FirstPersonControls />
-	</>
+	return (
+		<>
+			<CameraTracking />
+			<FirstPersonControls />
+		</>
+	)
 }

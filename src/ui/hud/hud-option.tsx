@@ -23,7 +23,10 @@ export function HudOption({
 	const dMiddleRadius = middleRadius * (hoverRatio - 1)
 
 	const [xAngularProjection, yAngularProjection] = [Math.cos(textRotation), Math.sin(textRotation)]
-	const [x, y] = [hudSize + middleRadius * xAngularProjection, hudSize + middleRadius * yAngularProjection]
+	const [x, y] = [
+		hudSize + middleRadius * xAngularProjection,
+		hudSize + middleRadius * yAngularProjection,
+	]
 	const [dx, dy] = [dMiddleRadius * xAngularProjection, dMiddleRadius * yAngularProjection]
 
 	return (

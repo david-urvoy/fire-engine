@@ -1,8 +1,9 @@
 import { useRapier } from '@react-three/rapier'
 import { useEffect, useRef, type RefObject } from 'react'
 
-export function useCharacterController(): RefObject<
-	ReturnType<ReturnType<typeof useRapier>['world']['createCharacterController']> | null> {
+export function useCharacterController(): RefObject<ReturnType<
+	ReturnType<typeof useRapier>['world']['createCharacterController']
+> | null> {
 	const { world } = useRapier()
 	const controller = useRef<ReturnType<typeof world.createCharacterController> | null>(null)
 

@@ -8,7 +8,7 @@ import {
 	type ComponentPropsWithoutRef,
 	type ReactElement,
 	type ReactNode,
-	type RefObject
+	type RefObject,
 } from 'react'
 import { Mesh } from 'three'
 import { useSnapshot } from 'valtio'
@@ -17,7 +17,11 @@ import { interactable } from './interactable.store'
 type R3FChild = ReactElement<ThreeElements['mesh'] | ThreeElements['group']>
 
 // Fonction récursive typée pour injecter Outlines
-function injectOutlinesRecursively(child: R3FChild, active: Omit<Set<string>, 'add' | 'delete' | 'clear'>, style?: ComponentPropsWithoutRef<typeof Outlines>): ReactNode {
+function injectOutlinesRecursively(
+	child: R3FChild,
+	active: Omit<Set<string>, 'add' | 'delete' | 'clear'>,
+	style?: ComponentPropsWithoutRef<typeof Outlines>,
+): ReactNode {
 	if (!isValidElement(child)) return child
 
 	const { type, props } = child
@@ -25,23 +29,34 @@ function injectOutlinesRecursively(child: R3FChild, active: Omit<Set<string>, 'a
 
 	// Mesh → injecte Outlines
 	if (type === 'mesh') {
-		return cloneElement(child, {}, <>
-			<Outlines visible={active.has(selected)} color="hotpink" thickness={5} {...style} />
-			{props.children}
-		</>)
+		return cloneElement(
+			child,
+			{},
+			<>
+				<Outlines visible={active.has(selected)} color="hotpink" thickness={5} {...style} />
+				{props.children}
+			</>,
+		)
 	}
 
 	// Group ou autre → traverse récursivement ses enfants
 	if (props.children) {
-		return cloneElement(child, {}, Children.map(props.children, (c) =>
-			isValidElement(c) ? injectOutlinesRecursively(c as R3FChild, active) : c
-		))
+		return cloneElement(
+			child,
+			{},
+			Children.map(props.children, (c) =>
+				isValidElement(c) ? injectOutlinesRecursively(c as R3FChild, active) : c,
+			),
+		)
 	}
 
 	return child
 }
 
-export function Interactable({ children, ...props }: { children: R3FChild } & ComponentPropsWithoutRef<typeof Outlines>) {
+export function Interactable({
+	children,
+	...props
+}: { children: R3FChild } & ComponentPropsWithoutRef<typeof Outlines>) {
 	const ref = children.props.ref as RefObject<Mesh>
 
 	const interactive = useSnapshot(interactable).active
@@ -60,5 +75,7 @@ export function Interactable({ children, ...props }: { children: R3FChild } & Co
 	}, [ref])
 
 	// cloneElement pour injecter Outlines à l'intérieur du mesh
-	return Children.map(children, (c) => isValidElement(c) ? injectOutlinesRecursively(c as R3FChild, interactive, props) : c)
+	return Children.map(children, (c) =>
+		isValidElement(c) ? injectOutlinesRecursively(c as R3FChild, interactive, props) : c,
+	)
 }

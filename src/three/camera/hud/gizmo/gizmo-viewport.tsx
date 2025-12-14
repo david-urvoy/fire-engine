@@ -125,9 +125,9 @@ export const GizmoViewport = ({
 		axisHeadScale,
 		onPointerDown: !disabled
 			? (e: ThreeEvent<PointerEvent>) => {
-				tweenCamera(e.object.position)
-				e.stopPropagation()
-			}
+					tweenCamera(e.object.position)
+					e.stopPropagation()
+				}
 			: undefined,
 	}
 	return (

@@ -19,12 +19,11 @@ export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
 		groupRef.current?.position.set(roundedX, 0, roundedZ)
 	})
 
-	const folder = Tweaks.folder({ title: 'Debug' })
-		.folder({ title: '𖣯 Grid' })
+	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid' })
 	const { gridSize } = useAddBinding({
 		folder,
 		param: { gridSize: 12 },
-		options: { min: 2, max: 20, step: 2 }
+		options: { min: 2, max: 20, step: 2 },
 	})
 
 	return (

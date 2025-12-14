@@ -20,8 +20,7 @@ export function PointerLock({ controls }: { controls: RefObject<OrbitControlsImp
 	)
 
 	const handleClick = useCallback((event: MouseEvent) => {
-		if ((event.target as HTMLElement).tagName === 'CANVAS')
-			document.body.requestPointerLock()
+		if ((event.target as HTMLElement).tagName === 'CANVAS') document.body.requestPointerLock()
 	}, [])
 
 	useEffect(() => {

@@ -8,7 +8,7 @@ export function ActionPad() {
 				toggleFullscreen()
 				e.stopPropagation()
 			}}
-			onKeyUp={() => { }}
+			onKeyUp={() => {}}
 		/>
 	)
 }

@@ -15,7 +15,6 @@ jobs:
       contents: read
       packages: write
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -32,7 +31,7 @@ jobs:
 
       - name: Authenticate with GitHub Package Registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-        
+
       - name: Get package name from package.json
         id: package_name
         run: echo "PACKAGE_NAME=$(node -p "require('./package.json').name.replace(/^@.*\//, '')")" >> $GITHUB_ENV
@@ -42,7 +41,7 @@ jobs:
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Delete existing alpha version (if exists)
-        if: contains(env.VERSION, '-alpha')  # Only delete if version is an alpha version
+        if: contains(env.VERSION, '-alpha') # Only delete if version is an alpha version
         run: |
           echo "Detected alpha version: $VERSION. Checking if it exists..."
           RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.NPM_TOKEN }}" \

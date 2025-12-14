@@ -5,7 +5,7 @@ import { FirstPersonView } from './first-person-view'
 import { ThirdPersonView } from './third-person-view'
 
 type ControlsType = 'first-person' | 'third-person' | 'orbit'
-export const ControlsType: { type: ControlsType } = proxy({ type: 'third-person' })
+export const ControlsType: { type: ControlsType } = proxy({ type: 'first-person' })
 
 const controlsMap = {
 	'first-person': <FirstPersonView />,

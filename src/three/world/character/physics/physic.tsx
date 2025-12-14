@@ -1,5 +1,11 @@
 import { useFrame } from '@react-three/fiber'
-import { CapsuleCollider, type RapierRigidBody, RigidBody, type RigidBodyProps, useRapier } from '@react-three/rapier'
+import {
+	CapsuleCollider,
+	type RapierRigidBody,
+	RigidBody,
+	type RigidBodyProps,
+	useRapier,
+} from '@react-three/rapier'
 import { type RefObject, useCallback, useRef } from 'react'
 import { type Group, type Object3DEventMap, Quaternion, Vector3 } from 'three'
 import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../../game'
@@ -34,7 +40,10 @@ export function Physic({
 		if (!body.current || !controller.current) return
 
 		translation.copy(velocity).y += gravityComponent.current
-		controller.current.computeColliderMovement(body.current.collider(0), translation.multiplyScalar(delta))
+		controller.current.computeColliderMovement(
+			body.current.collider(0),
+			translation.multiplyScalar(delta),
+		)
 		translation.copy(controller.current.computedMovement()).add(body.current.translation())
 
 		body.current.setNextKinematicTranslation(translation)
@@ -48,8 +57,6 @@ export function Physic({
 
 		anchor?.current?.position.copy(body.current.translation())
 		anchor?.current?.quaternion.copy(body.current.rotation())
-
-
 	}, 50)
 
 	return (
@@ -63,7 +70,10 @@ export function Physic({
 
 /* oxlint-disable no-unused-vars */
 // @ts-ignore
-function useExtractFromGround(bodyRef: RefObject<RapierRigidBody>, { halfHeight, radius }: CharacterDimensions) {
+function useExtractFromGround(
+	bodyRef: RefObject<RapierRigidBody>,
+	{ halfHeight, radius }: CharacterDimensions,
+) {
 	const { rapier, world } = useRapier()
 
 	const rayOrigin = useRef(new Vector3())

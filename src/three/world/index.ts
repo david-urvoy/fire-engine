@@ -5,4 +5,3 @@ export * from './character/skinned-mesh'
 export * from './environment'
 export * from './objects'
 export * from './section'
-
