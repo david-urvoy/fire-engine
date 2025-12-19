@@ -1,3 +1,4 @@
+export * from './entity/entity.store'
 export * from './game.store'
 
 export * from './controls'

@@ -17,7 +17,7 @@ export function ThirdPersonView() {
 
 	return (
 		<>
-			<CameraTracking target={target} />
+			<CameraTracking />
 			<PointerLock controls={orbit} />
 			<OrbitControls
 				ref={orbit}

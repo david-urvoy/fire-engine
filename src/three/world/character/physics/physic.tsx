@@ -7,26 +7,25 @@ import {
 	useRapier,
 } from '@react-three/rapier'
 import { type RefObject, useCallback, useRef } from 'react'
-import { type Group, type Object3DEventMap, Quaternion, Vector3 } from 'three'
+import { Vector3 } from 'three'
 import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../../game'
+import type { ControlsState, PhysicState } from '../../../../game/entity/entity.store'
 import { timer } from '../../../../game/time/timer'
 import { useCharacterController } from './character-controller'
 
 interface PhysicProps {
-	velocity: Vector3
-	orientation: Quaternion
+	controls: ControlsState
+	physic: PhysicState
 	dimensions?: CharacterDimensions
-	anchor?: RefObject<Group<Object3DEventMap> | null>
 }
 
 const translation = new Vector3()
 
 export function Physic({
-	velocity = new Vector3(),
-	orientation = new Quaternion(),
+	controls,
+	physic,
 	dimensions: { halfHeight, radius } = characterDimensions,
 	children,
-	anchor,
 	...props
 }: PhysicProps & RigidBodyProps) {
 	const body = useRef<RapierRigidBody>(null)
@@ -39,7 +38,7 @@ export function Physic({
 
 		if (!body.current || !controller.current) return
 
-		translation.copy(velocity).y += gravityComponent.current
+		translation.copy(controls.velocity).y += gravityComponent.current
 		controller.current.computeColliderMovement(
 			body.current.collider(0),
 			translation.multiplyScalar(delta),
@@ -47,7 +46,7 @@ export function Physic({
 		translation.copy(controller.current.computedMovement()).add(body.current.translation())
 
 		body.current.setNextKinematicTranslation(translation)
-		body.current.setRotation(orientation, false)
+		body.current.setRotation(controls.orientation, false)
 
 		if (controller.current.computedGrounded() !== grounded.current) {
 			grounded.current = controller.current.computedGrounded()
@@ -55,13 +54,12 @@ export function Physic({
 		if (grounded.current) gravityComponent.current = 0
 		gravityComponent.current -= GRAVITY_CONST * delta
 
-		anchor?.current?.position.copy(body.current.translation())
-		anchor?.current?.quaternion.copy(body.current.rotation())
+		physic.position.copy(body.current.translation())
+		physic.orientation.copy(body.current.rotation())
 	}, 50)
 
 	return (
 		<RigidBody ref={body} type="kinematicPosition" colliders={false} {...props}>
-			<group ref={anchor} />
 			{children}
 			<CapsuleCollider args={[halfHeight, radius]} activeCollisionTypes={8704} />
 		</RigidBody>
