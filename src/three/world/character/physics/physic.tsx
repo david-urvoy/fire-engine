@@ -6,47 +6,49 @@ import {
 	type RigidBodyProps,
 	useRapier,
 } from '@react-three/rapier'
-import { type RefObject, useCallback, useRef } from 'react'
+import { type PropsWithChildren, type RefObject, useCallback, useRef } from 'react'
 import { Vector3 } from 'three'
-import { type CharacterDimensions, GRAVITY_CONST, characterDimensions } from '../../../../game'
-import type { ControlsState, PhysicState } from '../../../../game/entity/entity.store'
+import {
+	type CharacterDimensions,
+	GRAVITY_CONST,
+	characterDimensions,
+	game,
+	useEntity,
+} from '../../../../game'
 import { timer } from '../../../../game/time/timer'
 import { useCharacterController } from './character-controller'
 
-interface PhysicProps {
-	controls: ControlsState
-	physic: PhysicState
-	dimensions?: CharacterDimensions
-}
-
-const translation = new Vector3()
-
 export function Physic({
-	controls,
-	physic,
 	dimensions: { halfHeight, radius } = characterDimensions,
 	children,
 	...props
-}: PhysicProps & RigidBodyProps) {
+}: PropsWithChildren<{ dimensions?: CharacterDimensions } & RigidBodyProps>) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
 	const gravityComponent = useRef(0)
 	const grounded = useRef(false)
+	const translation = useRef(new Vector3())
+
+	const { id } = useEntity()
+
+	const entity = game.entities[id]
+	if (!entity) throw new Error(`Entity "${id}" not found`)
 
 	useFrame(() => {
-		const delta = timer.getDelta()
-
 		if (!body.current || !controller.current) return
 
-		translation.copy(controls.velocity).y += gravityComponent.current
+		const delta = timer.getDelta()
+		translation.current.copy(entity.controls.velocity)
+		translation.current.y += gravityComponent.current
+
 		controller.current.computeColliderMovement(
 			body.current.collider(0),
-			translation.multiplyScalar(delta),
+			translation.current.multiplyScalar(delta),
 		)
-		translation.copy(controller.current.computedMovement()).add(body.current.translation())
+		translation.current.copy(controller.current.computedMovement()).add(body.current.translation())
 
-		body.current.setNextKinematicTranslation(translation)
-		body.current.setRotation(controls.orientation, false)
+		body.current.setNextKinematicTranslation(translation.current)
+		body.current.setRotation(entity.controls.orientation, false)
 
 		if (controller.current.computedGrounded() !== grounded.current) {
 			grounded.current = controller.current.computedGrounded()
@@ -54,8 +56,8 @@ export function Physic({
 		if (grounded.current) gravityComponent.current = 0
 		gravityComponent.current -= GRAVITY_CONST * delta
 
-		physic.position.copy(body.current.translation())
-		physic.orientation.copy(body.current.rotation())
+		entity.physic.position.copy(body.current.translation())
+		entity.physic.orientation.copy(body.current.rotation())
 	}, 50)
 
 	return (

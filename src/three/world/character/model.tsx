@@ -1,33 +1,34 @@
 import { useFrame } from '@react-three/fiber'
-import { useRef, type PropsWithChildren } from 'react'
+import { type PropsWithChildren, type RefObject } from 'react'
 import type { Object3D } from 'three'
-import type { EntityState } from '../../../game'
+import { game, useEntity } from '../../../game'
 
 export function Model({
-	source,
 	smoothing = 20,
 	children,
+	ref,
 	...props
-}: {
-	source: EntityState
+}: PropsWithChildren<{
 	smoothing?: number
-} & PropsWithChildren) {
-	const target = useRef<Object3D | null>(null)
+	ref: RefObject<Object3D | null>
+}>) {
+	const { id } = useEntity()
+	const entity = game.entities[id]
 
 	useFrame((_, delta) => {
-		if (!target.current || !source.physic) return
+		if (!ref.current || !entity) return
 
 		const alpha = 1 - Math.exp(-delta * smoothing)
 
-		source.visual.position.copy(source.physic.position)
-		source.visual.orientation.copy(source.physic.orientation)
+		entity.visual.position.copy(entity.physic.position)
+		entity.visual.orientation.copy(entity.physic.orientation)
 
-		target.current.position.lerp(source.physic.position, alpha)
-		target.current.quaternion.slerp(source.physic.orientation, alpha)
+		ref.current.position.lerp(entity.physic.position, alpha)
+		ref.current.quaternion.slerp(entity.physic.orientation, alpha)
 	})
 
 	return (
-		<group ref={target} {...props}>
+		<group ref={ref} {...props}>
 			{children}
 		</group>
 	)

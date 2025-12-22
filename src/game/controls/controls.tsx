@@ -1,9 +1,6 @@
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
-import { Group, Quaternion, Vector3 } from 'three'
 import { useSnapshot } from 'valtio'
-import { playableCharacters, useControlledCharacter } from '../entity/entity.store'
-import { game } from '../game.store'
+import { game, useControlledCharacter } from '../game.store'
 import { timer } from '../time/timer'
 import { useFullscreen } from './bindings/fullscreen'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
@@ -42,31 +39,6 @@ export function Controls() {
 	return isMobile ? <Gamepad /> : <KeyboardControls map={Keymap} />
 }
 
-export function useControlled(name: string) {
-	const groupRef = useRef<Group>(null)
-
-	if (!playableCharacters.entities[name]) {
-		playableCharacters.controlled = name
-		playableCharacters.entities[name] = {
-			ref: groupRef,
-			name,
-			controls: {
-				name,
-				velocity: new Vector3(),
-				orientation: new Quaternion(),
-			},
-			physic: {
-				position: new Vector3(),
-				orientation: new Quaternion(),
-			},
-			visual: {
-				position: new Vector3(),
-				orientation: new Quaternion(),
-			},
-		}
-	}
-
-	const isControlled = playableCharacters.controlled === name
-
-	return { isControlled, ...playableCharacters.entities[name] }
+export function Controllable() {
+	return <></>
 }

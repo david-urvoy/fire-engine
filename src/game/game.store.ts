@@ -1,6 +1,7 @@
-import { type RefObject, createRef } from 'react'
+import { createRef } from 'react'
 import { Vector3 } from 'three'
-import { proxy } from 'valtio'
+import { proxy, ref, useSnapshot } from 'valtio'
+import type { EntityState } from './entity/entity.context'
 
 export const isDev = import.meta.env.MODE === 'development'
 
@@ -11,13 +12,19 @@ export const FORWARD = new Vector3(0, 0, -1)
 export const characterDimensions = { halfHeight: 0.1, radius: 0.05, offset: 0.01 }
 export type CharacterDimensions = typeof characterDimensions
 
-export const game: {
-	isDebug: boolean
-	isMobile?: boolean
-	debug?: string | number | object
-	canvas: RefObject<HTMLDivElement | null>
-} = proxy({
+export const game = proxy({
 	isDebug: false,
 	isMobile: 'ontouchstart' in window,
 	canvas: createRef<HTMLDivElement>(),
+	entities: ref<Record<string, EntityState>>({}),
+	activeInteractable: '',
+	controlledCharacter: '',
+	debug: undefined,
 })
+
+export function useControlledCharacter() {
+	const controlledCharacterName = useSnapshot(game).controlledCharacter
+	const controlledCharacter = game.entities[controlledCharacterName]
+
+	return controlledCharacter
+}
