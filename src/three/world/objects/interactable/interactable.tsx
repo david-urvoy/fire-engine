@@ -1,19 +1,17 @@
-import { useEffect } from 'react'
-import { game, useEntity } from '../../../../game'
+import { useEffect, type RefObject } from 'react'
+import { type Object3D } from 'three'
+import { useEntity } from '../../../../game'
+import { sceneRegistry } from '../../../../game/scene-registry'
 
-export function Interactable() {
+export function Interactable({ ref }: { ref: RefObject<Object3D | null> }) {
 	const { id } = useEntity()
 
 	useEffect(() => {
-		const entity = game.entities[id]
-		if (!entity) return
+		const object = { threeObject: ref }
+		sceneRegistry.add(id, object)
 
-		entity.interaction = { isInteracting: false }
-
-		return () => {
-			delete entity.interaction
-		}
-	}, [id])
+		return () => sceneRegistry.remove(id, object)
+	}, [id, ref])
 
 	return null
 }

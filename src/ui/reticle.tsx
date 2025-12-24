@@ -1,7 +1,8 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
-import { interactable } from '../three/world/objects/interactable/interactable.store'
+import { game } from '../game'
+import { sceneRegistry } from '../game/scene-registry'
 
 export function Reticle() {
 	return (
@@ -22,23 +23,33 @@ export function useReticleInteraction() {
 	useFrame(() => {
 		raycaster.current.setFromCamera(CENTER, camera)
 
-		const intersections = raycaster.current.intersectObjects(
-			Array.from(interactable._map.values()),
-			true,
-		)
+		const objects = sceneRegistry
+			.getAllObjects()
+			.map((ref) => ref.current)
+			.filter((e) => !!e)
+		const intersections = raycaster.current.intersectObjects(objects, true)
 
 		const hit = intersections[0]?.object ?? null
 
 		if (hit !== lastHit.current) {
 			if (lastHit.current) {
-				interactable.active.delete(lastHit.current.uuid)
+				const prevEntityId = lastHit.current.userData.entityId
+				if (prevEntityId && game.entities[prevEntityId]?.interaction)
+					game.entities[prevEntityId].interaction.isInteracting = false
 			}
 
-			if (hit && intersections[0] && intersections[0]?.distance < 3) {
-				interactable.active.add(hit.uuid)
+			if (hit) {
+				const entityId = hit.userData.entityId
+				if (entityId && game.entities[entityId]?.interaction)
+					game.entities[entityId].interaction.isInteracting = true
+				game.activeInteractable = entityId ?? null
+			} else {
+				game.activeInteractable = ''
 			}
 
 			lastHit.current = hit
+			game.debug = hit?.userData.entityId
+			game.activeInteractable = hit?.userData.entityId
 		}
 	})
 }
