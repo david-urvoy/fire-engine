@@ -9,7 +9,7 @@ export function useCharacterController(): RefObject<ReturnType<
 
 	useEffect(() => {
 		if (!controller.current) {
-			controller.current = world.createCharacterController(0.2)
+			controller.current = world.createCharacterController(0.01)
 			controller.current.setMaxSlopeClimbAngle((80 * Math.PI) / 180)
 			controller.current.setMinSlopeSlideAngle((80 * Math.PI) / 180)
 			controller.current.enableSnapToGround(1)

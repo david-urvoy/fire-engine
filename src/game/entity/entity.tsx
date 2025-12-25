@@ -1,4 +1,4 @@
-import { useEffect, useRef, type PropsWithChildren } from 'react'
+import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Quaternion, Vector3 } from 'three'
 import { Interactable, Model, Physic } from '../../three'
 import { Controllable } from '../controls'
@@ -10,23 +10,28 @@ export function Entity({
 	interactable,
 	controllable,
 	physic,
+	model = true,
 	initialPosition,
+	ref,
 	children,
 }: PropsWithChildren<{
 	name: string
 	interactable?: true
 	controllable?: true
 	physic?: true
+	model?: boolean
+	ref?: RefObject<Object3D>
 	initialPosition?: [number, number, number]
 }>) {
-	const ref = useRef<Object3D>(null)
+	const defaultRef = useRef<Object3D>(null)
+	const resolvedRef = ref || defaultRef
 
 	useEffect(() => {
-		if (!ref.current) return
-		ref.current.traverse((child) => {
+		if (!resolvedRef.current) return
+		resolvedRef.current.traverse((child) => {
 			child.userData.entityId = name
 		})
-	}, [name, ref])
+	}, [name, resolvedRef])
 
 	if (!game.entities[name]) {
 		game.entities[name] = {
@@ -50,8 +55,8 @@ export function Entity({
 		<EntityContext.Provider value={{ id: name }}>
 			{controllable && <Controllable />}
 			{physic && <Physic position={initialPosition} />}
-			{interactable && <Interactable ref={ref} />}
-			<Model ref={ref}>{children}</Model>
+			{interactable && <Interactable ref={resolvedRef} />}
+			{model ? <Model ref={resolvedRef}>{children}</Model> : children}
 		</EntityContext.Provider>
 	)
 }

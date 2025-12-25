@@ -20,11 +20,11 @@ export function Model({
 
 		const alpha = 1 - Math.exp(-delta * smoothing)
 
-		entity.visual.position.copy(entity.physic.position)
-		entity.visual.orientation.copy(entity.physic.orientation)
+		entity.visual.position.lerp(entity.physic.position, alpha)
+		entity.visual.orientation.slerp(entity.physic.orientation, alpha)
 
-		ref.current.position.lerp(entity.physic.position, alpha)
-		ref.current.quaternion.slerp(entity.physic.orientation, alpha)
+		ref.current.position.copy(entity.physic.position)
+		ref.current.quaternion.copy(entity.physic.orientation)
 	})
 
 	return (
