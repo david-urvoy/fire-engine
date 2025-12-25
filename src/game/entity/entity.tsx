@@ -1,6 +1,7 @@
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Quaternion, Vector3 } from 'three'
 import { Interactable, Model, Physic } from '../../three'
+import { Gravity } from '../../three/world/character/physics/gravity'
 import { Controllable } from '../controls'
 import { game } from '../game.store'
 import { EntityContext } from './entity.context'
@@ -10,6 +11,8 @@ export function Entity({
 	interactable,
 	controllable,
 	physic,
+	gravity = true,
+	fixed,
 	model = true,
 	initialPosition,
 	ref,
@@ -19,6 +22,8 @@ export function Entity({
 	interactable?: true
 	controllable?: true
 	physic?: true
+	gravity?: boolean
+	fixed?: true
 	model?: boolean
 	ref?: RefObject<Object3D>
 	initialPosition?: [number, number, number]
@@ -54,7 +59,8 @@ export function Entity({
 	return (
 		<EntityContext.Provider value={{ id: name }}>
 			{controllable && <Controllable />}
-			{physic && <Physic position={initialPosition} />}
+			{physic && <Physic {...(fixed && { type: 'fixed' })} position={initialPosition} />}
+			{gravity && <Gravity />}
 			{interactable && <Interactable ref={resolvedRef} />}
 			{model ? <Model ref={resolvedRef}>{children}</Model> : children}
 		</EntityContext.Provider>
