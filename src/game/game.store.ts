@@ -19,7 +19,7 @@ export const game = proxy({
 	entities: ref<Record<string, EntityState>>({}),
 	activeInteractable: '',
 	controlledCharacter: '',
-	debug: undefined,
+	debug: undefined as unknown,
 })
 
 export function useControlledCharacter() {

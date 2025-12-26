@@ -26,6 +26,7 @@
 		"@types/three": "^0.182.0",
 		"@vitest/ui": "^4.0.16",
 		"babel-plugin-react-compiler": "^19.1.0-rc.3",
+		"bun-plugin-tailwind": "^0.1.2",
 		"oxc-parser": "^0.105.0",
 		"oxlint": "^1.35.0",
 		"tweakpane": "^4.0.5",
@@ -51,7 +52,7 @@
 		"valtio": "^2.2.0",
 		"vite-plugin-glsl": "^1.5.4"
 	},
-	"keywords": [],
+	"keywords": [ ],
 	"author": "",
 	"license": "ISC"
 }
