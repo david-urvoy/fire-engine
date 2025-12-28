@@ -9,6 +9,7 @@ export function CameraTracking() {
 		if (!controlledCharacter) return
 
 		camera.position.copy(controlledCharacter.visual.position)
+		camera.position.y += 0.4
 
 		controlledCharacter.controls.orientation.setFromUnitVectors(
 			FORWARD,
