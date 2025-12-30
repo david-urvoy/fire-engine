@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { type PropsWithChildren, type RefObject } from 'react'
 import type { Object3D } from 'three'
-import { game, useEntity } from '../../../game'
+import { game, timer, useEntity } from '../../../game'
 
 export function Model({
 	smoothing = 20,
@@ -15,10 +15,10 @@ export function Model({
 	const { id } = useEntity()
 	const entity = game.entities[id]
 
-	useFrame((_, delta) => {
+	useFrame(() => {
 		if (!ref.current || !entity) return
 
-		const alpha = 1 - Math.exp(-delta * smoothing)
+		const alpha = 1 - Math.exp(-timer.getDelta() * smoothing)
 
 		entity.visual.position.lerp(entity.physic.position, alpha)
 		entity.visual.orientation.slerp(entity.physic.orientation, alpha)

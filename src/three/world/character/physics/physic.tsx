@@ -5,9 +5,9 @@ import {
 	RigidBody,
 	type RigidBodyProps,
 } from '@react-three/rapier'
-import { type PropsWithChildren, useRef } from 'react'
+import { type PropsWithChildren, useEffect, useRef } from 'react'
 import { type CharacterDimensions, characterDimensions, game, useEntity } from '../../../../game'
-import { timer } from '../../../../game/time/timer'
+import { GameLoopSystem } from '../../../../game/entity/system'
 import { useCharacterController } from './character-controller'
 
 export function Physic({
@@ -23,24 +23,25 @@ export function Physic({
 	const entity = game.entities[id]
 	if (!entity) throw new Error(`Entity "${id}" not found`)
 
-	useFrame(() => {
+	useEffect(() => {
 		if (!body.current || !controller.current) return
 
-		const delta = timer.getDelta()
+		GameLoopSystem.systems.characterController.register({
+			entity,
+			controller: controller.current,
+			collider: body.current.collider(0),
+		})
 
-		controller.current.computeColliderMovement(
-			body.current.collider(0),
-			entity.controls.velocity.multiplyScalar(delta),
-		)
-		entity.controls.velocity
-			.copy(controller.current.computedMovement())
-			.add(body.current.translation())
+		return () => {
+			GameLoopSystem.systems.characterController.unregister(entity.id)
+		}
+	}, [entity, controller])
 
-		body.current.setNextKinematicTranslation(entity.controls.velocity)
-		body.current.setRotation(entity.controls.orientation, false)
+	useFrame(() => {
+		if (!body.current) return
 
-		entity.physic.position.copy(body.current.translation())
-		entity.physic.orientation.copy(body.current.rotation())
+		body.current.setNextKinematicTranslation(entity.physic.position)
+		body.current.setRotation(entity.physic.orientation, false)
 	}, 50)
 
 	return (

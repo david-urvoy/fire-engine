@@ -1,6 +1,6 @@
 import { createRef } from 'react'
 import { Vector3 } from 'three'
-import { proxy, ref, useSnapshot } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
 import type { EntityState } from './entity/entity.context'
 
 export const isDev = import.meta.env.MODE === 'development'
@@ -16,7 +16,7 @@ export const game = proxy({
 	isDebug: false,
 	isMobile: 'ontouchstart' in window,
 	canvas: createRef<HTMLDivElement>(),
-	entities: ref<Record<string, EntityState>>({}),
+	entities: {} as Record<string, EntityState>,
 	activeInteractable: '',
 	controlledCharacter: '',
 	debug: undefined as unknown,

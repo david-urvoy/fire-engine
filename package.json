@@ -20,6 +20,7 @@
 		"url": "https://github.com/david-urvoy/fire-engine.git"
 	},
 	"devDependencies": {
+		"@dimforge/rapier3d-compat": "0.19.2",
 		"@tweakpane/core": "^2.0.5",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",

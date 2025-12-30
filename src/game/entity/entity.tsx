@@ -14,8 +14,8 @@ export function Entity({
 	gravity = true,
 	fixed,
 	model = true,
-	initialPosition,
-	ref,
+	initialPosition = [0, 0, 0],
+	ref: entityRef,
 	children,
 }: PropsWithChildren<{
 	name: string
@@ -29,7 +29,7 @@ export function Entity({
 	initialPosition?: [number, number, number]
 }>) {
 	const defaultRef = useRef<Object3D>(null)
-	const resolvedRef = ref || defaultRef
+	const resolvedRef = entityRef || defaultRef
 
 	useEffect(() => {
 		if (!resolvedRef.current) return
@@ -46,11 +46,13 @@ export function Entity({
 				orientation: new Quaternion(),
 			},
 			physic: {
-				position: new Vector3(),
+				position: new Vector3(...initialPosition),
 				orientation: new Quaternion(),
+				grounded: false,
+				velocity: new Vector3(),
 			},
 			visual: {
-				position: new Vector3(),
+				position: new Vector3(...initialPosition),
 				orientation: new Quaternion(),
 			},
 		}
@@ -62,7 +64,13 @@ export function Entity({
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={initialPosition} />}
 			{gravity && <Gravity />}
 			{interactable && <Interactable ref={resolvedRef} />}
-			{model ? <Model ref={resolvedRef}>{children}</Model> : children}
+			{model ? (
+				<Model ref={resolvedRef} smoothing={10}>
+					{children}
+				</Model>
+			) : (
+				children
+			)}
 		</EntityContext.Provider>
 	)
 }
