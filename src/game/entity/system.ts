@@ -1,7 +1,7 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
 import type { RapierRigidBody } from '@react-three/rapier'
 import { Vector3 } from 'three'
-import { type EntityState, GRAVITY_CONST } from '..'
+import { type EntityState, GRAVITY_CONST, MAX_FALLING_SPEED } from '..'
 
 type Collider = ReturnType<RapierRigidBody['collider']>
 
@@ -15,7 +15,9 @@ const GravitySystem = {
 				return
 			}
 
-			entity.physic.velocity.y -= GRAVITY_CONST * delta
+			if (entity.physic.velocity.y > -MAX_FALLING_SPEED) {
+				entity.physic.velocity.y -= GRAVITY_CONST * delta
+			}
 		})
 	},
 

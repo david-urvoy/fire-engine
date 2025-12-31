@@ -6,6 +6,7 @@ import type { EntityState } from './entity/entity.context'
 export const isDev = import.meta.env.MODE === 'development'
 
 export const GRAVITY_CONST = 9.81
+export const MAX_FALLING_SPEED = 14
 export const VERTICAL = new Vector3(0, 1, 0)
 export const ZERO = new Vector3(0, 0, 0)
 export const FORWARD = new Vector3(0, 0, -1)
