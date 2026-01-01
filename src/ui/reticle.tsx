@@ -48,7 +48,6 @@ export function useReticleInteraction() {
 			}
 
 			lastHit.current = hit
-			game.debug = hit?.userData.entityId
 			game.activeInteractable = hit?.userData.entityId
 		}
 	})

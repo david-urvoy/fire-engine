@@ -1,4 +1,3 @@
-export * from '../../game/entity/system'
 export * from './character/animation/animate'
 export * from './character/model'
 export * from './character/physics/physic'

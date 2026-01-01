@@ -1,10 +1,10 @@
 import { useFrame } from '@react-three/fiber'
 import { type PropsWithChildren, type RefObject } from 'react'
 import type { Object3D } from 'three'
-import { game, timer, useEntity } from '../../../game'
+import { game, MOVEMENT_SMOOTHING, timer, useEntity } from '../../../game'
 
 export function Model({
-	smoothing = 20,
+	smoothing = MOVEMENT_SMOOTHING,
 	children,
 	ref,
 	...props
