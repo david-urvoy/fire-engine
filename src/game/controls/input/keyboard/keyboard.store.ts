@@ -1,26 +1,29 @@
-import { derive } from 'derive-valtio'
 import { Vector2 } from 'three'
-import { proxy } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
+import { computed } from 'valtio-reactive'
 import { Keymap } from './keymap'
 
-const direction = new Vector2()
+const _dir = new Vector2()
 
-const keyboardBase = proxy({
-	state: Object.fromEntries(Object.keys(Keymap).map((key) => [key, false])) as Record<
+export const keyboardKeys = proxy(
+	Object.fromEntries(Object.keys(Keymap).map((k) => [k, false])) as Record<
 		keyof typeof Keymap,
 		boolean
 	>,
+)
+
+const keyboardCommands = computed({
+	direction: () => {
+		const { up, down, left, right, shift } = keyboardKeys
+		const z = +up - +down
+		const x = +left - +right
+		const speed = (!shift ? 2 : 1) * 0.2
+		return _dir.set(x, z).multiplyScalar(speed)
+	},
 })
 
-export const keyboard = derive(
-	{
-		direction: (get) => {
-			const { up, down, right, left, shift } = get(keyboardBase).state
-			const z = +up - +down
-			const x = +left - +right
-			const speed = (!shift ? 2 : 1) * 0.2
-			return direction.set(x, z).multiplyScalar(speed)
-		},
-	},
-	{ proxy: keyboardBase },
-)
+export function useKeyboard() {
+	const keys = useSnapshot(keyboardKeys)
+	const commands = useSnapshot(keyboardCommands)
+	return { ...keys, direction: commands.direction }
+}

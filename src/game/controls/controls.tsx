@@ -5,11 +5,12 @@ import { timer } from '../time/timer'
 import { useFullscreen } from './bindings/fullscreen'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
 import { KeyboardControls } from './input/keyboard/keyboard-controls'
-import { keyboard } from './input/keyboard/keyboard.store'
+import { useKeyboard } from './input/keyboard/keyboard.store'
 import { Keymap } from './input/keyboard/keymap'
 
 function usePlayerDirection() {
 	const { isMobile } = useSnapshot(game)
+	const keyboard = useKeyboard()
 	const control = isMobile ? gamepad : keyboard
 	return control.direction
 }

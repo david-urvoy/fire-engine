@@ -3,7 +3,7 @@ import { proxy, useSnapshot } from 'valtio'
 import { ActionPad } from './action-pad'
 import { Joystick } from './joystick'
 
-export const gamepad: { direction: Vector2 } = proxy({
+export const gamepad = proxy({
 	direction: new Vector2(),
 })
 

@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
 import { KeyboardActions } from './keyboard-actions'
-import { keyboard } from './keyboard.store'
+import { keyboardKeys } from './keyboard.store'
 import type { Keymap } from './keymap'
 
 export function KeyboardControls({
@@ -16,7 +16,7 @@ export function KeyboardControls({
 			if (!obj) return
 
 			const command = obj[0] as keyof typeof keymap
-			keyboard.state[command] = value
+			keyboardKeys[command] = value
 			if (value) KeyboardActions[command]?.()
 		},
 		[keymap],
