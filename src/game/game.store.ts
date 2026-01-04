@@ -19,6 +19,7 @@ export type CharacterDimensions = typeof characterDimensions
 export const game = proxy({
 	isDebug: false,
 	isMobile: 'ontouchstart' in window,
+	isPaused: true,
 	canvas: createRef<HTMLDivElement>(),
 	entities: {} as Record<string, EntityState>,
 	activeInteractable: '',

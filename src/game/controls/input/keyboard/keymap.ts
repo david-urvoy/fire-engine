@@ -5,10 +5,12 @@ export const Keymap = {
 	left: ['ArrowLeft', 'KeyA'],
 	right: ['ArrowRight', 'KeyD'],
 	shift: ['ShiftLeft'],
+	pause: ['KeyT'],
 	mobile: ['KeyM'],
 	meta: ['MetaLeft'],
 	alt: ['AltLeft'],
 	holoHud: ['KeyI'],
 	toggleDebug: ['KeyK'],
 	switchCameraType: ['KeyP'],
+	fullscreen: ['KeyO'],
 } as const
