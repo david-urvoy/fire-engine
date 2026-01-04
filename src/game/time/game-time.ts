@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { proxy } from 'valtio'
 import { useWindowFocus } from '../../lib/hooks/useWindowFocus'
 import { Tweaks } from '../../ui'
+import { game } from '../game.store'
 import { Period, PERIODS, type PeriodName } from './periods/period'
 import type { Time } from './time'
 import { timer } from './timer'
@@ -14,17 +15,22 @@ const INITIAL_TIME = localStorage.getItem(TIME_STORE_KEY)
 	: { day: 0, hour: 8, minute: 0 }
 
 export const gameTime = proxy({
-	...INITIAL_TIME,
+	day: INITIAL_TIME.day,
+	hour: INITIAL_TIME.hour,
+	minute: INITIAL_TIME.minute,
 	GAME_SPEED: 1,
-	frozen: false,
+	_frozen: false,
+	get frozen() {
+		return game.isPaused || this._frozen
+	},
 	freeze() {
-		gameTime.frozen = true
+		gameTime._frozen = true
 	},
 	resume() {
-		gameTime.frozen = false
+		gameTime._frozen = false
 	},
 	toggle() {
-		gameTime.frozen = !gameTime.frozen
+		gameTime._frozen = !gameTime._frozen
 	},
 	save() {
 		const { day, hour, minute } = gameTime
