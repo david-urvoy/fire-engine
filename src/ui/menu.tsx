@@ -16,7 +16,8 @@ export function Menu() {
 				'm-0 p-0 border-none bg-transparent',
 				'flex justify-center items-center',
 				'transition-opacity duration-200',
-				!isPaused && 'pointer-events-none opacity-0',
+				'pointer-events-none ',
+				!isPaused && 'opacity-0',
 			)}
 		>
 			<div
@@ -29,6 +30,7 @@ export function Menu() {
 					'shadow-[0_0_40px_rgba(56,189,248,0.15)]',
 					'flex flex-col',
 					'px-10 py-8',
+					'pointer-events-auto',
 				)}
 			>
 				<span
