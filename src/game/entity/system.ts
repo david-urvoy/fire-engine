@@ -10,7 +10,7 @@ const GravitySystem = {
 
 	step(delta: number) {
 		this.entities.forEach((entity) => {
-			if (entity.physic.grounded && entity.physic.velocity.y <= 0) {
+			if (entity.physic.wasGrounded && entity.physic.velocity.y <= 0) {
 				entity.physic.velocity.y = 0
 				return
 			}
@@ -79,6 +79,7 @@ const CharacterControllerSystem = {
 			const translation = controller.computedMovement()
 			entity.physic.position.add(translation)
 
+			entity.physic.wasGrounded = entity.physic.grounded
 			entity.physic.grounded = controller.computedGrounded()
 		})
 	},

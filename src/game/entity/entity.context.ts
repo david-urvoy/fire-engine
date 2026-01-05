@@ -10,6 +10,7 @@ export type PhysicState = {
 	position: Vector3
 	orientation: Quaternion
 	grounded: boolean
+	wasGrounded: boolean
 	velocity: Vector3
 }
 
