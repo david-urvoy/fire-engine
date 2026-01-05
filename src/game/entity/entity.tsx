@@ -49,7 +49,6 @@ export function Entity({
 				position: new Vector3(...initialPosition),
 				orientation: new Quaternion(),
 				grounded: false,
-				wasGrounded: false,
 				velocity: new Vector3(),
 			},
 			visual: {
