@@ -1,7 +1,6 @@
 import { type Action, game } from '../../..'
 import { ControlsType } from '../../../../three'
 import { toggleFullscreen } from '../../bindings/fullscreen'
-import { pauseGame } from '../../bindings/pause'
 
 export const KeyboardActions: Partial<Record<Action, () => void>> = {
 	mobile: () => {
@@ -18,6 +17,6 @@ export const KeyboardActions: Partial<Record<Action, () => void>> = {
 					? 'third-person'
 					: 'first-person'
 	},
-	pause: pauseGame,
+	pause: game.pause,
 	fullscreen: () => toggleFullscreen(),
 }

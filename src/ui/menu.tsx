@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useSnapshot } from 'valtio'
 import { game } from '../game'
-import { resumeGame } from '../game/controls/bindings/pause'
 
 export function Menu() {
-	const { isPaused } = useSnapshot(game)
+	const { uiMode } = useSnapshot(game)
+	const isPaused = uiMode === 'pause'
 
 	return (
 		<div
@@ -157,14 +157,6 @@ function ResumeButton({ isPaused }: { isPaused: boolean }) {
 	}, [isPaused])
 
 	return (
-		<MenuButton
-			disabled={!isResumeReady}
-			label="Resume"
-			onClick={() => {
-				game.canvas.current?.focus()
-				resumeGame()
-			}}
-			variant="green"
-		/>
+		<MenuButton disabled={!isResumeReady} label="Resume" onClick={game.resume} variant="green" />
 	)
 }

@@ -5,7 +5,7 @@ export const Keymap = {
 	left: ['ArrowLeft', 'KeyA'],
 	right: ['ArrowRight', 'KeyD'],
 	shift: ['ShiftLeft'],
-	pause: ['KeyT'],
+	pause: ['Escape'],
 	mobile: ['KeyM'],
 	meta: ['MetaLeft'],
 	alt: ['AltLeft'],

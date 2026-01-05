@@ -1,8 +1,9 @@
-import { game } from '../../game.store'
+import { GameRefs } from '../../game.store'
 
 export function toggleFullscreen() {
 	if (!document.fullscreenEnabled) return
+
 	return !document.fullscreenElement
-		? game.canvas.current?.requestFullscreen()
+		? GameRefs.canvas.current?.requestFullscreen()
 		: document.exitFullscreen()
 }

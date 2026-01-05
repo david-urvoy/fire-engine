@@ -21,7 +21,7 @@ export const gameTime = proxy({
 	GAME_SPEED: 1,
 	_frozen: false,
 	get frozen() {
-		return game.isPaused || this._frozen
+		return game.uiMode === 'pause' || this._frozen
 	},
 	freeze() {
 		gameTime._frozen = true
