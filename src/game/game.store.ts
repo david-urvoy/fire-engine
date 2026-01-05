@@ -20,7 +20,7 @@ export type CharacterDimensions = typeof characterDimensions
 export const game = proxy({
 	isDebug: false,
 	isMobile: 'ontouchstart' in window,
-	uiMode: 'pause' as GameUIMode,
+	uiMode: 'gameplay' as GameUIMode,
 	pause() {
 		game.uiMode = 'pause'
 	},

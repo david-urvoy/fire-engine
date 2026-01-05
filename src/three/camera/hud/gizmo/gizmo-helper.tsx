@@ -28,7 +28,10 @@ const [q1, q2] = [/* @__PURE__ */ new Quaternion(), /* @__PURE__ */ new Quaterni
 const target = /* @__PURE__ */ new Vector3()
 const targetPosition = /* @__PURE__ */ new Vector3()
 
-type ControlsProto = { update(delta?: number): void; target: Vector3 }
+type ControlsProto = {
+	update(delta?: number): void
+	target: Vector3
+}
 
 export type GizmoHelperProps = ThreeElements['group'] & {
 	alignment?:
@@ -51,13 +54,13 @@ export type GizmoHelperProps = ThreeElements['group'] & {
 }
 
 const isOrbitControls = (controls: ControlsProto): controls is OrbitControlsType => {
-	return 'minPolarAngle' in (controls as OrbitControlsType)
+	return controls && 'minPolarAngle' in (controls as OrbitControlsType)
 }
 
 const isCameraControls = (
 	controls: CameraControlsType | ControlsProto,
 ): controls is CameraControlsType => {
-	return 'getTarget' in (controls as CameraControlsType)
+	return controls && 'getTarget' in (controls as CameraControlsType)
 }
 
 export const GizmoHelper = ({
@@ -129,7 +132,7 @@ export const GizmoHelper = ({
 						)
 
 					if (onUpdate) onUpdate()
-					else if (defaultControls.update) defaultControls.update(delta)
+					else if (defaultControls && defaultControls.update) defaultControls.update(delta)
 					invalidate()
 				}
 			}
