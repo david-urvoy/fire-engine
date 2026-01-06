@@ -7,12 +7,18 @@ import { usePointerLock } from '../lock/usePointerLock'
 import { CameraTracking } from './tracking'
 
 function FirstPersonControls() {
-	const { isMobile } = useSnapshot(game)
+	const { isMobile, isPaused } = useSnapshot(game)
 	const controlsRef = usePointerLock()
 
 	if (isMobile) return <TouchControls />
 
-	return <PointerLockControls ref={controlsRef} pointerSpeed={POINTER_SPEED} selector="#resume" />
+	return (
+		<PointerLockControls
+			ref={controlsRef}
+			pointerSpeed={POINTER_SPEED}
+			selector={isPaused ? '#resume' : undefined}
+		/>
+	)
 }
 
 /**

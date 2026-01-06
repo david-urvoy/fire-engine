@@ -1,45 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { PointerLockControls as ThreePLC } from 'three-stdlib'
-import { game, GameRefs, useSubscribeKey } from '../../../game'
+import { useSnapshot } from 'valtio'
+import { game, useSubscribeKey } from '../../../game'
 
 export function usePointerLock() {
 	const controlsRef = useRef<ThreePLC>(null)
-	const shouldMenuOpen = useRef(true)
+	const { isPaused } = useSnapshot(game)
 
 	useSubscribeKey('KeyL', () => {
 		if (game.uiMode === 'pause') return
-		shouldMenuOpen.current = false
 		controlsRef.current?.lock()
 	})
 
-	useSubscribeKey('KeyU', () => {
-		if (game.uiMode !== 'gameplay') return
-		shouldMenuOpen.current = false
-		controlsRef.current?.unlock()
-	})
-
-	useEffect(() => {
-		const handlePointerLockChange = () => {
-			const locked = controlsRef.current?.isLocked
-
-			if (locked) {
-				game.resume()
-				shouldMenuOpen.current = true
-				return
-			}
-
-			if (shouldMenuOpen.current) {
-				game.pause()
-			}
-		}
-
-		document.addEventListener('pointerlockchange', handlePointerLockChange)
-		return () => {
-			document.removeEventListener('pointerlockchange', handlePointerLockChange)
-		}
-	}, [])
-
-	GameRefs.pointerLockControls.current = controlsRef.current
+	if (isPaused) controlsRef.current?.unlock()
 
 	return controlsRef
 }

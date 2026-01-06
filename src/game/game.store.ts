@@ -1,6 +1,5 @@
 import { createRef } from 'react'
 import { Vector3 } from 'three'
-import type { PointerLockControls } from 'three-stdlib'
 import { proxy, useSnapshot } from 'valtio'
 import type { EntityState } from './entity/entity.context'
 
@@ -35,7 +34,6 @@ export const game = proxy({
 	resume() {
 		game.isPaused = false
 		GameRefs.canvas.current?.focus()
-		GameRefs.pointerLockControls.current?.lock()
 	},
 
 	get uiMode(): GameUIMode {
@@ -61,5 +59,4 @@ type GameUIMode = 'gameplay' | 'pause'
 
 export const GameRefs = {
 	canvas: createRef<HTMLDivElement>(),
-	pointerLockControls: createRef<PointerLockControls>(),
 }
