@@ -1,6 +1,6 @@
 export * from './entity/entity'
 export * from './entity/entity.context'
-export * from './entity/system'
+export * from './entity/game-loop.system'
 export * from './game.store'
 
 export * from './controls'
