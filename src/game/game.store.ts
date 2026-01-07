@@ -18,25 +18,35 @@ export const characterDimensions = { halfHeight: 0.1, radius: 0.05, offset: 0.01
 export type CharacterDimensions = typeof characterDimensions
 
 export const game = proxy({
-	isDebug: false,
-	toggleDebug() {
-		game.isDebug = !game.isDebug
-	},
 	isMobile: 'ontouchstart' in window,
 	toggleMobile() {
 		game.isMobile = !game.isMobile
 	},
-	uiMode: 'gameplay' as GameUIMode,
+
+	isDebug: false,
+	toggleDebug() {
+		game.isDebug = !game.isDebug
+	},
+
+	isPaused: false,
 	pause() {
-		game.uiMode = 'pause'
+		game.isPaused = true
 	},
 	resume() {
+		game.isPaused = false
 		GameRefs.canvas.current?.focus()
 		GameRefs.pointerLockControls.current?.lock()
 	},
+
+	get uiMode(): GameUIMode {
+		if (this.isPaused) return 'pause'
+		return 'gameplay'
+	},
+
 	entities: {} as Record<string, EntityState>,
 	activeInteractable: '',
 	controlledCharacter: '',
+
 	debug: undefined as unknown,
 })
 
@@ -47,7 +57,7 @@ export function useControlledCharacter() {
 	return controlledCharacter
 }
 
-type GameUIMode = 'gameplay' | 'pause' | 'debug'
+type GameUIMode = 'gameplay' | 'pause'
 
 export const GameRefs = {
 	canvas: createRef<HTMLDivElement>(),

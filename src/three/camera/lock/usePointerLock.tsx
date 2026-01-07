@@ -14,7 +14,6 @@ export function usePointerLock() {
 
 	useSubscribeKey('KeyU', () => {
 		if (game.uiMode !== 'gameplay') return
-		game.uiMode = 'debug'
 		shouldMenuOpen.current = false
 		controlsRef.current?.unlock()
 	})
@@ -24,8 +23,7 @@ export function usePointerLock() {
 			const locked = controlsRef.current?.isLocked
 
 			if (locked) {
-				game.uiMode = 'gameplay'
-
+				game.resume()
 				shouldMenuOpen.current = true
 				return
 			}
