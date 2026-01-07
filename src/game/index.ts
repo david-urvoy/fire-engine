@@ -4,6 +4,5 @@ export * from './entity/game-loop.system'
 export * from './game.store'
 
 export * from './controls'
-export * from './time/game-time'
+export * from './time/game-time.store'
 export * from './time/time'
-export * from './time/timer'

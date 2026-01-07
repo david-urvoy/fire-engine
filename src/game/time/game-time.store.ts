@@ -1,12 +1,10 @@
 import { useFrame } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { proxy } from 'valtio'
-import { useWindowFocus } from '../../lib/hooks/useWindowFocus'
 import { Tweaks } from '../../ui'
 import { game } from '../game.store'
 import { Period, PERIODS, type PeriodName } from './periods/period'
 import type { Time } from './time'
-import { timer } from './timer'
 
 const TIME_STORE_KEY = 'game-time'
 
@@ -19,9 +17,9 @@ export const gameTime = proxy({
 	hour: INITIAL_TIME.hour,
 	minute: INITIAL_TIME.minute,
 	GAME_SPEED: 1,
-	_frozen: false,
+	_frozen: game.isPaused,
 	get frozen() {
-		return game.uiMode === 'pause' || this._frozen
+		return game.isPaused || this._frozen
 	},
 	freeze() {
 		gameTime._frozen = true
@@ -74,24 +72,11 @@ function timeToMinutes(time: Time): number {
 }
 
 export function useGameTime() {
-	const visibility = useWindowFocus()
 	const elapsed = useRef(0)
 
-	useEffect(() => {
-		if (!visibility) {
-			timer.update()
-			gameTime.freeze()
-		} else {
-			timer.reset()
-			gameTime.resume()
-		}
-	}, [visibility])
-
-	useFrame(() => {
-		timer.update()
-
+	useFrame((_, delta) => {
 		if (!gameTime.frozen) {
-			const gameTimeDelta = timer.getDelta() * gameTime.GAME_SPEED
+			const gameTimeDelta = delta * gameTime.GAME_SPEED
 			elapsed.current += gameTimeDelta
 			if (elapsed.current >= 1) {
 				const floorElapsed = Math.floor(elapsed.current)
