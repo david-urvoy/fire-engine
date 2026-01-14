@@ -3,8 +3,6 @@ import { Vector3 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
 import type { EntityState } from './entity/entity.context'
 
-export const isDev = import.meta.env.MODE === 'development'
-
 export const MOVEMENT_SMOOTHING = 20
 export const POINTER_SPEED = 0.8
 

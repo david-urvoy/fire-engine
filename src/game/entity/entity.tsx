@@ -1,8 +1,8 @@
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Quaternion, Vector3 } from 'three'
-import { Interactable, Model, Physic } from '../../three'
-import { Gravity } from '../../three/world/character/physics/gravity'
-import { Controllable } from '../controls'
+import { Interactable, Model, Physic } from '../../3d'
+import { Gravity } from '../../3d/world/character/physics/gravity'
+import { Controllable } from '../../controls'
 import { game } from '../game.store'
 import { EntityContext } from './entity.context'
 
