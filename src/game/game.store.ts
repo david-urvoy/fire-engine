@@ -1,4 +1,3 @@
-import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
 import type { EntityState } from './entity/entity.context'
@@ -31,7 +30,6 @@ export const game = proxy({
 	},
 	resume() {
 		game.isPaused = false
-		GameRefs.canvas.current?.focus()
 	},
 
 	get uiMode(): GameUIMode {
@@ -54,7 +52,3 @@ export function useControlledCharacter() {
 }
 
 type GameUIMode = 'gameplay' | 'pause'
-
-export const GameRefs = {
-	canvas: createRef<HTMLDivElement>(),
-}
