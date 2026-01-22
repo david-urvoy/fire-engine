@@ -32,7 +32,7 @@ export const game = proxy({
 		game.isPaused = false
 	},
 
-	get uiMode(): GameUIMode {
+	get uiMode(): 'gameplay' | 'pause' {
 		if (this.isPaused) return 'pause'
 		return 'gameplay'
 	},
@@ -50,5 +50,3 @@ export function useControlledCharacter() {
 
 	return controlledCharacter
 }
-
-type GameUIMode = 'gameplay' | 'pause'

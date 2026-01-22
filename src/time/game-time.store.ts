@@ -49,7 +49,7 @@ export const gameTime = proxy({
 	},
 })
 
-function _increment(minutes: number = 1) {
+function increment(minutes: number = 1) {
 	const totalMinutes = timeToMinutes(gameTime) + minutes
 
 	gameTime.day = Math.floor(totalMinutes / (24 * 60))
@@ -75,14 +75,15 @@ export function useGameTime() {
 	const elapsed = useRef(0)
 
 	useFrame((_, delta) => {
-		if (!gameTime.frozen) {
-			const gameTimeDelta = delta * gameTime.GAME_SPEED
-			elapsed.current += gameTimeDelta
-			if (elapsed.current >= 1) {
-				const floorElapsed = Math.floor(elapsed.current)
-				_increment(floorElapsed)
-				elapsed.current = elapsed.current - floorElapsed
-			}
+		if (gameTime.frozen) return
+
+		const gameTimeDelta = delta * gameTime.GAME_SPEED
+		elapsed.current += gameTimeDelta
+
+		if (elapsed.current >= 1) {
+			const floorElapsed = Math.floor(elapsed.current)
+			increment(floorElapsed)
+			elapsed.current = elapsed.current - floorElapsed
 		}
 	})
 }
