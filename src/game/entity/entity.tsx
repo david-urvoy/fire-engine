@@ -42,14 +42,8 @@ export function Entity({
 		game.entities[name] = {
 			id: name,
 			controls: {
-				velocity: new Vector3(),
-				orientation: new Quaternion(),
-			},
-			physic: {
-				position: new Vector3(...initialPosition),
-				orientation: new Quaternion(),
-				grounded: false,
-				velocity: new Vector3(),
+				move: new Vector3(),
+				look: new Quaternion(),
 			},
 			visual: {
 				position: new Vector3(...initialPosition),

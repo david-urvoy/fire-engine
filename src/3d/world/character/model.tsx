@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
-import { type PropsWithChildren, type RefObject } from 'react'
+import { useEffect, type PropsWithChildren, type RefObject } from 'react'
 import type { Object3D } from 'three'
-import { game, MOVEMENT_SMOOTHING, useEntity } from '../../../game'
+import { game, GameLoopSystem, MOVEMENT_SMOOTHING, useEntity } from '../../../game'
 
 export function Model({
 	smoothing = MOVEMENT_SMOOTHING,
@@ -15,16 +15,15 @@ export function Model({
 	const { id } = useEntity()
 	const entity = game.entities[id]
 
-	useFrame((_, delta) => {
+	useEffect(() => {
+		if (entity) GameLoopSystem.systems.visual.register(entity)
+	}, [entity, smoothing])
+
+	useFrame(() => {
 		if (!ref.current || !entity) return
 
-		const alpha = 1 - Math.exp(-delta * smoothing)
-
-		entity.visual.position.lerp(entity.physic.position, alpha)
-		entity.visual.orientation.slerp(entity.physic.orientation, alpha)
-
-		ref.current.position.copy(entity.physic.position)
-		ref.current.quaternion.copy(entity.physic.orientation)
+		ref.current.position.copy(entity.visual.position)
+		ref.current.quaternion.copy(entity.visual.orientation)
 	})
 
 	return (

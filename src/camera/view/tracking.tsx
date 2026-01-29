@@ -11,7 +11,7 @@ export function CameraTracking() {
 		camera.position.copy(controlledCharacter.visual.position)
 		camera.position.y += 0.4
 
-		controlledCharacter.controls.orientation.setFromUnitVectors(
+		controlledCharacter.controls.look.setFromUnitVectors(
 			FORWARD,
 			camera.getWorldDirection(new Vector3()).setY(0).negate().normalize(),
 		)

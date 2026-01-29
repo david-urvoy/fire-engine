@@ -6,6 +6,7 @@ import {
 	type RigidBodyProps,
 } from '@react-three/rapier'
 import { type PropsWithChildren, useEffect, useRef } from 'react'
+import { Quaternion, Vector3 } from 'three'
 import { type CharacterDimensions, characterDimensions, game, useEntity } from '../../../../game'
 import { GameLoopSystem } from '../../../../game/entity/game-loop.system'
 import { useCharacterController } from './character-controller'
@@ -26,6 +27,15 @@ export function Physic({
 	useEffect(() => {
 		if (!body.current || !controller.current) return
 
+		if (!entity.physic) {
+			entity.physic = {
+				position: new Vector3().copy(body.current.translation()),
+				orientation: new Quaternion(),
+				grounded: false,
+				velocity: new Vector3(),
+			}
+		}
+
 		GameLoopSystem.systems.characterController.register({
 			entity,
 			controller: controller.current,
@@ -38,7 +48,7 @@ export function Physic({
 	}, [entity, controller])
 
 	useFrame(() => {
-		if (!body.current) return
+		if (!body.current || !entity.physic) return
 
 		body.current.setNextKinematicTranslation(entity.physic.position)
 		body.current.setRotation(entity.physic.orientation, false)

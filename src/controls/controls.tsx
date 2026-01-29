@@ -20,10 +20,10 @@ function useCharacterMove() {
 	useFrame((_, delta) => {
 		if (!controlledCharacter?.controls) return
 		// set velocity to player direction
-		controlledCharacter.controls.velocity
+		controlledCharacter.controls.move
 			.setX(direction.x)
 			.setZ(direction.y)
-			.applyQuaternion(controlledCharacter.controls.orientation)
+			.applyQuaternion(controlledCharacter.controls.look)
 			.setY(0)
 			.multiplyScalar(7.5 * delta * 60)
 	})

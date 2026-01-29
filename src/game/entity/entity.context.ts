@@ -2,8 +2,9 @@ import { createContext, useContext } from 'react'
 import type { Quaternion, Vector3 } from 'three'
 
 export type ControlsState = {
-	velocity: Vector3
-	orientation: Quaternion
+	move: Vector3
+	look: Quaternion
+	teleport?: Vector3
 }
 
 export type PhysicState = {
@@ -25,7 +26,7 @@ export type InteractionState = {
 export type EntityState = {
 	id: string
 	controls: ControlsState
-	physic: PhysicState
+	physic?: PhysicState
 	visual: VisualState
 	interaction?: InteractionState
 }
