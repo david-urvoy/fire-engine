@@ -28,24 +28,23 @@ export function useReticleInteraction() {
 
 		const hit = intersections[0]?.object ?? null
 
-		if (hit !== lastHit.current) {
-			if (lastHit.current) {
-				const prevEntityId = lastHit.current.userData.entityId
-				if (prevEntityId && game.entities[prevEntityId]?.interaction)
-					game.entities[prevEntityId].interaction.isInteracting = false
-			}
+		if (hit === lastHit.current) return
 
-			if (hit) {
-				const entityId = hit.userData.entityId
-				if (entityId && game.entities[entityId]?.interaction)
-					game.entities[entityId].interaction.isInteracting = true
-				game.activeInteractable = entityId ?? null
-			} else {
-				game.activeInteractable = ''
-			}
-
-			lastHit.current = hit
-			game.activeInteractable = hit?.userData.entityId
+		if (lastHit.current) {
+			const prevEntityId = lastHit.current.userData.entityId
+			if (prevEntityId && game.entities[prevEntityId]?.interaction)
+				game.entities[prevEntityId].interaction.isInteracting = false
 		}
+
+		if (hit) {
+			const entityId = hit.userData.entityId
+			if (entityId && game.entities[entityId]?.interaction)
+				game.entities[entityId].interaction.isInteracting = true
+			game.setInteractable(entityId)
+		} else game.clearInteractable()
+
+		lastHit.current = hit
+		game.setInteractable(hit?.userData.entityId)
+		
 	})
 }

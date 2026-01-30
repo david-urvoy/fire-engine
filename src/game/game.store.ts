@@ -38,8 +38,16 @@ export const game = proxy({
 	},
 
 	entities: {} as Record<string, EntityState>,
-	activeInteractable: '',
+
 	controlledCharacter: '',
+
+	activeInteractable: '',
+	setInteractable(entityId: string) {
+		game.activeInteractable = entityId
+	},
+	clearInteractable() {
+		game.activeInteractable = ''
+	},
 
 	debug: undefined as unknown,
 })
