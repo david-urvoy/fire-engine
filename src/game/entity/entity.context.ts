@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react'
-import type { Quaternion, Vector3 } from 'three'
+import { createContext, createRef, useContext, type RefObject } from 'react'
+import type { Object3D, Quaternion, Vector3 } from 'three'
 
 export type ControlsState = {
 	move: Vector3
@@ -31,8 +31,9 @@ export type EntityState = {
 	interaction?: InteractionState
 }
 
-export const EntityContext = createContext({
+export const EntityContext = createContext<{ id: string; ref: RefObject<Object3D | null> }>({
 	id: '',
+	ref: createRef<Object3D | null>(),
 })
 
 export function useEntity() {

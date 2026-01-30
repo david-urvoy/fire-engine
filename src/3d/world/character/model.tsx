@@ -1,18 +1,15 @@
 import { useFrame } from '@react-three/fiber'
-import { useEffect, type PropsWithChildren, type RefObject } from 'react'
-import type { Object3D } from 'three'
+import { useEffect, type PropsWithChildren } from 'react'
 import { game, GameLoopSystem, MOVEMENT_SMOOTHING, useEntity } from '../../../game'
 
 export function Model({
 	smoothing = MOVEMENT_SMOOTHING,
 	children,
-	ref,
 	...props
 }: PropsWithChildren<{
 	smoothing?: number
-	ref: RefObject<Object3D | null>
 }>) {
-	const { id } = useEntity()
+	const { id, ref } = useEntity()
 	const entity = game.entities[id]
 
 	useEffect(() => {

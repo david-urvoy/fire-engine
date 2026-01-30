@@ -23,10 +23,7 @@ export function useReticleInteraction() {
 	useFrame(() => {
 		raycaster.current.setFromCamera(CENTER, camera)
 
-		const objects = sceneRegistry
-			.getAllObjects()
-			.map((ref) => ref.current)
-			.filter((e) => !!e)
+		const objects = sceneRegistry.getAllObjects()
 		const intersections = raycaster.current.intersectObjects(objects, true)
 
 		const hit = intersections[0]?.object ?? null

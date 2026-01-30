@@ -2,7 +2,7 @@ import type { RefObject } from 'react'
 import type { Object3D } from 'three'
 
 type InteractableEntry = {
-	threeObject: RefObject<Object3D | null>
+	ref: RefObject<Object3D | null>
 	metadata?: Record<string, any>
 }
 
@@ -32,6 +32,7 @@ export const sceneRegistry = {
 	getAllObjects() {
 		return Array.from(this._interactables.values())
 			.flatMap((set) => Array.from(set))
-			.map((e) => e.threeObject)
+			.map((e) => e.ref.current)
+			.filter((e) => !!e)
 	},
 }

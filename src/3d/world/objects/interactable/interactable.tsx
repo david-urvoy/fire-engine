@@ -1,13 +1,12 @@
-import { useEffect, type RefObject } from 'react'
-import { type Object3D } from 'three'
+import { useEffect } from 'react'
 import { useEntity } from '../../../../game'
 import { sceneRegistry } from '../../../../game/entity/scene-registry'
 
-export function Interactable({ ref }: { ref: RefObject<Object3D | null> }) {
-	const { id } = useEntity()
+export function Interactable() {
+	const { id, ref } = useEntity()
 
 	useEffect(() => {
-		const object = { threeObject: ref }
+		const object = { ref }
 		sceneRegistry.add(id, object)
 
 		return () => sceneRegistry.remove(id, object)

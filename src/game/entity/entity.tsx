@@ -53,18 +53,12 @@ export function Entity({
 	}
 
 	return (
-		<EntityContext.Provider value={{ id: name }}>
+		<EntityContext.Provider value={{ id: name, ref: resolvedRef }}>
 			{controllable && <Controllable />}
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={initialPosition} />}
 			{gravity && <Gravity />}
-			{interactable && <Interactable ref={resolvedRef} />}
-			{model ? (
-				<Model ref={resolvedRef} smoothing={10}>
-					{children}
-				</Model>
-			) : (
-				children
-			)}
+			{interactable && <Interactable />}
+			{model ? <Model smoothing={10}>{children}</Model> : children}
 		</EntityContext.Provider>
 	)
 }
