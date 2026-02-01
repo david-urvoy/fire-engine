@@ -37,14 +37,14 @@ export function Physic({
 			}
 		}
 
-		GameLoopSystem.systems.characterController.register({
+		GameLoopSystem.systems.physic.register({
 			entity,
 			controller: controller.current,
 			collider: body.current.collider(0),
 		})
 
 		return () => {
-			GameLoopSystem.systems.characterController.unregister(entity.id)
+			GameLoopSystem.systems.physic.unregister(entity.id)
 		}
 	}, [entity, controller, props.type])
 

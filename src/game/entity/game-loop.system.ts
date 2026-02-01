@@ -101,7 +101,6 @@ export const GameLoopSystem = {
 	systems: {
 		gravity: GravitySystem,
 		physic: PhysicSystem,
-		characterController: PhysicSystem,
 		visual: VisualSystem,
 	},
 }
