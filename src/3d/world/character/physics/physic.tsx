@@ -31,8 +31,9 @@ export function Physic({
 			entity.physic = {
 				position: new Vector3().copy(body.current.translation()),
 				orientation: new Quaternion(),
-				grounded: false,
+				isGrounded: true,
 				velocity: new Vector3(),
+				dynamic: props.type !== 'fixed',
 			}
 		}
 
@@ -45,7 +46,7 @@ export function Physic({
 		return () => {
 			GameLoopSystem.systems.characterController.unregister(entity.id)
 		}
-	}, [entity, controller])
+	}, [entity, controller, props.type])
 
 	useFrame(() => {
 		if (!body.current || !entity.physic) return

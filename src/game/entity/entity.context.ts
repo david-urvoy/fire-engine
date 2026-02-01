@@ -10,8 +10,9 @@ export type ControlsState = {
 export type PhysicState = {
 	position: Vector3
 	orientation: Quaternion
-	grounded: boolean
 	velocity: Vector3
+	isGrounded: boolean
+	dynamic?: boolean
 }
 
 export type VisualState = {

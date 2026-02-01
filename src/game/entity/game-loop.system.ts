@@ -10,16 +10,16 @@ const GravitySystem = {
 
 	step(delta: number) {
 		this.entities.forEach((entity) => {
-			if (!entity.physic) return
+			if (!entity.physic || !entity.physic.dynamic) return
 
-			if (entity.physic.grounded && entity.physic.velocity.y <= 0) {
-				entity.physic.velocity.y = 0
+			const { velocity, isGrounded } = entity.physic
+
+			if (isGrounded && velocity.y <= 0) {
+				velocity.y = 0
 				return
 			}
 
-			if (entity.physic.velocity.y > -MAX_FALLING_SPEED) {
-				entity.physic.velocity.y -= GRAVITY_CONST * delta
-			}
+			velocity.y = Math.max(velocity.y - GRAVITY_CONST * delta, -MAX_FALLING_SPEED)
 		})
 	},
 
@@ -43,7 +43,7 @@ const PhysicSystem = {
 
 	step(delta: number) {
 		this.characters.forEach(({ entity, controller, collider, tmpVelocity }) => {
-			if (!entity.physic) return
+			if (!entity.physic || !entity.physic.dynamic) return
 
 			tmpVelocity
 				.copy(entity.controls.move)
@@ -55,7 +55,7 @@ const PhysicSystem = {
 			const translation = controller.computedMovement()
 			entity.physic.position.add(translation)
 
-			entity.physic.grounded = controller.computedGrounded()
+			entity.physic.isGrounded = controller.computedGrounded()
 		})
 	},
 
@@ -93,8 +93,8 @@ const VisualSystem = {
 
 export const GameLoopSystem = {
 	step(delta: number) {
-		PhysicSystem.step(delta)
 		GravitySystem.step(delta)
+		PhysicSystem.step(delta)
 		VisualSystem.step(delta)
 	},
 
