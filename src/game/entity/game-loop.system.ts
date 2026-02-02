@@ -1,9 +1,5 @@
-import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
-import type { RapierRigidBody } from '@react-three/rapier'
 import { Vector3 } from 'three'
 import { type EntityState, GRAVITY_CONST, MAX_FALLING_SPEED, MOVEMENT_SMOOTHING } from '..'
-
-type Collider = ReturnType<RapierRigidBody['collider']>
 
 const GravitySystem = {
 	entities: new Set<EntityState>(),
@@ -34,15 +30,14 @@ const GravitySystem = {
 
 type CharacterEntry = {
 	entity: EntityState
-	controller: KinematicCharacterController
-	collider: Collider
+	move: (delta: Vector3) => void
 }
 
 const PhysicSystem = {
 	characters: new Map<string, CharacterEntry & { tmpVelocity: Vector3 }>(),
 
 	step(delta: number) {
-		this.characters.forEach(({ entity, controller, collider, tmpVelocity }) => {
+		this.characters.forEach(({ entity, tmpVelocity, move }) => {
 			if (!entity.physic || !entity.physic.dynamic) return
 
 			tmpVelocity
@@ -50,12 +45,7 @@ const PhysicSystem = {
 				.addScaledVector(entity.physic.velocity, 1)
 				.multiplyScalar(delta)
 
-			controller.computeColliderMovement(collider, tmpVelocity)
-
-			const translation = controller.computedMovement()
-			entity.physic.position.add(translation)
-
-			entity.physic.isGrounded = controller.computedGrounded()
+			move(tmpVelocity)
 		})
 	},
 

@@ -1,11 +1,10 @@
-import { useFrame } from '@react-three/fiber'
 import {
 	CapsuleCollider,
 	type RapierRigidBody,
 	RigidBody,
 	type RigidBodyProps,
 } from '@react-three/rapier'
-import { type PropsWithChildren, useEffect, useRef } from 'react'
+import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Quaternion, Vector3 } from 'three'
 import { type CharacterDimensions, characterDimensions, game, useEntity } from '../../../../game'
 import { GameLoopSystem } from '../../../../game/entity/game-loop.system'
@@ -24,6 +23,19 @@ export function Physic({
 	const entity = game.entities[id]
 	if (!entity) throw new Error(`Entity "${id}" not found`)
 
+	const move = useCallback(
+		(delta: Vector3) => {
+			if (!body.current || !entity.physic || !controller.current) return
+
+			controller.current.computeColliderMovement(body.current.collider(0), delta)
+
+			body.current.setNextKinematicTranslation(entity.physic.position.add(controller.current.computedMovement()))
+			body.current.setRotation(entity.physic.orientation, false)
+			entity.physic.isGrounded = controller.current.computedGrounded()
+		},
+		[entity.physic, controller],
+	)
+
 	useEffect(() => {
 		if (!body.current || !controller.current) return
 
@@ -39,21 +51,13 @@ export function Physic({
 
 		GameLoopSystem.systems.physic.register({
 			entity,
-			controller: controller.current,
-			collider: body.current.collider(0),
+			move,
 		})
 
 		return () => {
 			GameLoopSystem.systems.physic.unregister(entity.id)
 		}
-	}, [entity, controller, props.type])
-
-	useFrame(() => {
-		if (!body.current || !entity.physic) return
-
-		body.current.setNextKinematicTranslation(entity.physic.position)
-		body.current.setRotation(entity.physic.orientation, false)
-	}, 50)
+	}, [entity, controller, props.type, move])
 
 	return (
 		<RigidBody ref={body} type={props.type ?? 'kinematicPosition'} colliders={false} {...props}>
