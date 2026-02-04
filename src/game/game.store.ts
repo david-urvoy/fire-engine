@@ -1,6 +1,6 @@
-import { Quaternion, Vector3 } from 'three'
+import { Vector3 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
-import type { EntityState } from './entity/entity.context'
+import { entityStore } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
 export const POINTER_SPEED = 0.8
@@ -37,23 +37,6 @@ export const game = proxy({
 		return 'gameplay'
 	},
 
-	entities: {} as Record<string, EntityState>,
-	entity(id: string) {
-		const entity = game.entities[id]
-		if (!entity) throw new Error(`Entity "${id}" not found`)
-		return entity
-	},
-	createEntity(name: string, position: [number, number, number]): EntityState {
-		if (game.entities[name]) return game.entities[name]
-		const entity = {
-			id: name,
-			controls: { move: new Vector3(), look: new Quaternion() },
-			visual: { position: new Vector3(...position), orientation: new Quaternion() },
-		}
-		game.entities[name] = entity
-		return entity
-	},
-
 	controlledCharacter: '',
 
 	activeInteractable: '',
@@ -65,6 +48,7 @@ export const game = proxy({
 	},
 
 	debug: undefined as unknown,
+	...entityStore,
 })
 
 export function useControlledCharacter() {
