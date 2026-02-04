@@ -41,12 +41,12 @@ export function Entity({
 	}, [name, resolvedRef])
 
 	useEffect(() => {
-		game.entity(name).controls.teleport = new Vector3(...position)
+		game.entities.get(name).controls.teleport = new Vector3(...position)
 	}, [name, position])
 
 	return (
 		<EntityContext.Provider
-			value={{ id: name, ref: resolvedRef, entity: game.createEntity(name, position) }}
+			value={{ id: name, ref: resolvedRef, entity: game.entities.create(name, position) }}
 		>
 			{controllable && <Controllable />}
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}

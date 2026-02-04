@@ -1,6 +1,6 @@
 import { Vector3 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
-import { entityStore } from './entity/entity.store'
+import { entities } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
 export const POINTER_SPEED = 0.8
@@ -48,12 +48,12 @@ export const game = proxy({
 	},
 
 	debug: undefined as unknown,
-	...entityStore,
+	entities,
 })
 
 export function useControlledCharacter() {
 	const controlledCharacterName = useSnapshot(game).controlledCharacter
-	const controlledCharacter = game.entities[controlledCharacterName]
+	const controlledCharacter = game.entities.map[controlledCharacterName]
 
 	return controlledCharacter
 }

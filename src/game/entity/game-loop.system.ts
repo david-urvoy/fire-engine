@@ -1,5 +1,6 @@
 import { Vector3 } from 'three'
-import { type EntityState, GRAVITY_CONST, MAX_FALLING_SPEED, MOVEMENT_SMOOTHING } from '..'
+import { GRAVITY_CONST, MAX_FALLING_SPEED, MOVEMENT_SMOOTHING } from '..'
+import type { EntityState } from './entity.types'
 
 const GravitySystem = {
 	entities: new Set<EntityState>(),

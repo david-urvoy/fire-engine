@@ -1,5 +1,11 @@
 {
 	"semi": false,
 	"useTabs": true,
-	"singleQuote": true
+	"singleQuote": true,
+
+	"experimentalTailwindcss": {
+		"attributes": [ "class", "className" ],
+		"functions": [ "clsx", "cn" ],
+		"preserveWhitespace": true
+	}
 }

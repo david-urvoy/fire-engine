@@ -12,9 +12,9 @@ export function Menu() {
 		<div
 			className={clsx(
 				'fixed inset-0 z-100',
-				'w-screen h-screen max-w-none max-h-none',
-				'm-0 p-0 border-none bg-transparent',
-				'flex justify-center items-center',
+				'h-screen max-h-none w-screen max-w-none',
+				'm-0 border-none bg-transparent p-0',
+				'flex items-center justify-center',
 				'transition-opacity duration-200',
 				'pointer-events-none ',
 				!isPaused && 'opacity-0',
@@ -22,7 +22,7 @@ export function Menu() {
 		>
 			<div
 				className={clsx(
-					'w-2/5 h-1/2 min-w-fit',
+					'h-1/2 w-2/5 min-w-fit',
 					'rounded-2xl',
 					'border border-cyan-400/30',
 					'bg-linear-to-br from-slate-800/90 to-slate-900/90',
@@ -43,16 +43,16 @@ export function Menu() {
 						'uppercase',
 						'relative',
 						'after:content-[""]',
-						'after:absolute after:left-1/2 after:-bottom-1',
+						'after:absolute after:-bottom-1 after:left-1/2',
 						'after:-translate-x-1/2',
-						'after:w-24 after:h-px',
+						'after:h-px after:w-24',
 						'after:bg-linear-to-r after:from-transparent after:via-cyan-400 after:to-transparent',
 					)}
 				>
 					Menu
 				</span>
 
-				<ul className="flex flex-col items-center gap-6 flex-1">
+				<ul className="flex flex-1 flex-col items-center gap-6">
 					<li>
 						<ResumeButton isPaused={isPaused} />
 					</li>

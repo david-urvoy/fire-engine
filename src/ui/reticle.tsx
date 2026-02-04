@@ -31,12 +31,12 @@ export function useReticleInteraction() {
 		if (hit === lastHit.current) return
 
 		if (lastHit.current) {
-			const prevEntity = game.entity(lastHit.current.userData.entityId)
+			const prevEntity = game.entities.get(lastHit.current.userData.entityId)
 			if (prevEntity.interaction?.isInteracting) prevEntity.interaction.isInteracting = false
 		}
 
 		if (hit) {
-			const entity = game.entity(hit.userData.entityId)
+			const entity = game.entities.get(hit.userData.entityId)
 			if (entity.interaction) entity.interaction.isInteracting = true
 			game.setInteractable(entity.id)
 		} else game.clearInteractable()
