@@ -27,13 +27,30 @@ export function Physic({
 
 	const move = useCallback(
 		(delta: Vector3) => {
-			if (!body.current || !controller.current) return
+			if (!body.current || !entity.physic) return
+
+			if (entity.controls.teleport) {
+				const target = entity.controls.teleport
+
+				body.current.setTranslation(target, false)
+
+				entity.physic.position.copy(target)
+				entity.physic.velocity.set(0, 0, 0)
+				entity.physic.isGrounded = false
+
+				entity.visual.snap = true
+				entity.controls.teleport = undefined
+
+				return
+			}
+
+			if (!controller.current) return
 
 			controller.current.computeColliderMovement(body.current.collider(0), delta)
 			next.current.copy(body.current.translation()).add(controller.current.computedMovement())
 			body.current.setNextKinematicTranslation(next.current)
 		},
-		[controller],
+		[controller, entity],
 	)
 
 	useFrame(() => {

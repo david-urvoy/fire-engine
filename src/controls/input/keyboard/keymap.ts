@@ -11,6 +11,6 @@ export const Keymap = {
 	alt: ['AltLeft'],
 	holoHud: ['KeyI'],
 	toggleDebug: ['KeyK'],
-	switchCameraType: ['keyM'],
+	switchCameraType: ['KeyM'],
 	fullscreen: ['KeyO'],
 } as const

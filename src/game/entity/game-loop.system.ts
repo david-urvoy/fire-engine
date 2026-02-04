@@ -73,6 +73,13 @@ const VisualSystem = {
 		this.entities.forEach((entity) => {
 			if (!entity.physic) return
 
+			if (entity.visual.snap) {
+				entity.visual.position.copy(entity.physic.position)
+				entity.visual.orientation.copy(entity.physic.orientation)
+				entity.visual.snap = false
+				return
+			}
+
 			const alpha = 1 - Math.exp(-delta * MOVEMENT_SMOOTHING)
 
 			entity.visual.position.lerp(entity.physic.position, alpha)

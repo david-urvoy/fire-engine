@@ -40,9 +40,12 @@ export function Entity({
 		})
 	}, [name, resolvedRef])
 
-	if (game.entities[name]) {
-		delete game.entities[name]
-	}
+	useEffect(() => {
+		const entity = game.entities[name]
+		if (!entity) return
+
+		entity.controls.teleport = new Vector3(...position)
+	}, [name, position])
 
 	if (!game.entities[name]) {
 		game.entities[name] = {

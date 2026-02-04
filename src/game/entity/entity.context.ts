@@ -18,6 +18,7 @@ export type PhysicState = {
 export type VisualState = {
 	position: Vector3
 	orientation: Quaternion
+	snap?: boolean
 }
 
 export type InteractionState = {
