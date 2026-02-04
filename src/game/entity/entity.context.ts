@@ -1,5 +1,5 @@
 import { createContext, createRef, useContext, type RefObject } from 'react'
-import type { Object3D, Quaternion, Vector3 } from 'three'
+import { Object3D, Quaternion, Vector3 } from 'three'
 
 export type ControlsState = {
 	move: Vector3
@@ -33,9 +33,24 @@ export type EntityState = {
 	interaction?: InteractionState
 }
 
-export const EntityContext = createContext<{ id: string; ref: RefObject<Object3D | null> }>({
+export const EntityContext = createContext<{
+	id: string
+	ref: RefObject<Object3D | null>
+	entity: EntityState
+}>({
 	id: '',
 	ref: createRef<Object3D | null>(),
+	entity: {
+		id: '',
+		controls: {
+			move: new Vector3(),
+			look: new Quaternion(),
+		},
+		visual: {
+			position: new Vector3(),
+			orientation: new Quaternion(),
+		},
+	},
 })
 
 export function useEntity() {

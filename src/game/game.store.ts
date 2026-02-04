@@ -1,4 +1,4 @@
-import { Vector3 } from 'three'
+import { Quaternion, Vector3 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
 import type { EntityState } from './entity/entity.context'
 
@@ -38,6 +38,21 @@ export const game = proxy({
 	},
 
 	entities: {} as Record<string, EntityState>,
+	entity(id: string) {
+		const entity = game.entities[id]
+		if (!entity) throw new Error(`Entity "${id}" not found`)
+		return entity
+	},
+	createEntity(name: string, position: [number, number, number]): EntityState {
+		if (game.entities[name]) return game.entities[name]
+		const entity = {
+			id: name,
+			controls: { move: new Vector3(), look: new Quaternion() },
+			visual: { position: new Vector3(...position), orientation: new Quaternion() },
+		}
+		game.entities[name] = entity
+		return entity
+	},
 
 	controlledCharacter: '',
 

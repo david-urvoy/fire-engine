@@ -1,5 +1,5 @@
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
-import { Object3D, Quaternion, Vector3 } from 'three'
+import { Object3D, Vector3 } from 'three'
 import { Interactable, Model, Physic } from '../../3d'
 import { Gravity } from '../../3d/world/character/physics/gravity'
 import { Controllable } from '../../controls'
@@ -41,28 +41,13 @@ export function Entity({
 	}, [name, resolvedRef])
 
 	useEffect(() => {
-		const entity = game.entities[name]
-		if (!entity) return
-
-		entity.controls.teleport = new Vector3(...position)
+		game.entity(name).controls.teleport = new Vector3(...position)
 	}, [name, position])
 
-	if (!game.entities[name]) {
-		game.entities[name] = {
-			id: name,
-			controls: {
-				move: new Vector3(),
-				look: new Quaternion(),
-			},
-			visual: {
-				position: new Vector3(...position),
-				orientation: new Quaternion(),
-			},
-		}
-	}
-
 	return (
-		<EntityContext.Provider value={{ id: name, ref: resolvedRef }}>
+		<EntityContext.Provider
+			value={{ id: name, ref: resolvedRef, entity: game.createEntity(name, position) }}
+		>
 			{controllable && <Controllable />}
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
 			{gravity && <Gravity />}

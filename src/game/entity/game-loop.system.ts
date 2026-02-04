@@ -34,10 +34,10 @@ type CharacterEntry = {
 }
 
 const PhysicSystem = {
-	characters: new Map<string, CharacterEntry & { tmpVelocity: Vector3 }>(),
+	entities: new Map<string, CharacterEntry & { tmpVelocity: Vector3 }>(),
 
 	step(delta: number) {
-		this.characters.forEach(({ entity, tmpVelocity, move }) => {
+		this.entities.forEach(({ entity, tmpVelocity, move }) => {
 			if (!entity.physic) return
 
 			tmpVelocity
@@ -50,11 +50,11 @@ const PhysicSystem = {
 	},
 
 	register(character: CharacterEntry) {
-		this.characters.set(character.entity.id, { ...character, tmpVelocity: new Vector3() })
+		this.entities.set(character.entity.id, { ...character, tmpVelocity: new Vector3() })
 	},
 
 	unregister(entityId: string) {
-		this.characters.delete(entityId)
+		this.entities.delete(entityId)
 	},
 }
 
@@ -73,17 +73,19 @@ const VisualSystem = {
 		this.entities.forEach((entity) => {
 			if (!entity.physic) return
 
-			if (entity.visual.snap) {
-				entity.visual.position.copy(entity.physic.position)
-				entity.visual.orientation.copy(entity.physic.orientation)
-				entity.visual.snap = false
+			const { visual, physic } = entity
+
+			if (visual.snap) {
+				visual.position.copy(physic.position)
+				visual.orientation.copy(physic.orientation)
+				visual.snap = false
 				return
 			}
 
 			const alpha = 1 - Math.exp(-delta * MOVEMENT_SMOOTHING)
 
-			entity.visual.position.lerp(entity.physic.position, alpha)
-			entity.visual.orientation.slerp(entity.physic.orientation, alpha)
+			visual.position.lerp(physic.position, alpha)
+			visual.orientation.slerp(physic.orientation, alpha)
 		})
 	},
 }

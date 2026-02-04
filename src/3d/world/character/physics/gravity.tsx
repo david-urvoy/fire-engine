@@ -1,12 +1,9 @@
 import { useEffect } from 'react'
-import { game, useEntity } from '../../../../game'
+import { useEntity } from '../../../../game'
 import { GameLoopSystem } from '../../../../game/entity/game-loop.system'
 
 export function Gravity() {
-	const { id } = useEntity()
-	const entity = game.entities[id]
-
-	if (!entity) throw new Error(`Entity "${id}" not found`)
+	const { entity } = useEntity()
 
 	useEffect(() => {
 		GameLoopSystem.systems.gravity.register(entity)
