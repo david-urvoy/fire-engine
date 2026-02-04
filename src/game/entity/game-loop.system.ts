@@ -38,7 +38,7 @@ const PhysicSystem = {
 
 	step(delta: number) {
 		this.characters.forEach(({ entity, tmpVelocity, move }) => {
-			if (!entity.physic || !entity.physic.dynamic) return
+			if (!entity.physic) return
 
 			tmpVelocity
 				.copy(entity.controls.move)

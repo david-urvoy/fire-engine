@@ -6,18 +6,7 @@ import { Controllable } from '../../controls'
 import { game } from '../game.store'
 import { EntityContext } from './entity.context'
 
-export function Entity({
-	name,
-	interactable,
-	controllable,
-	physic,
-	gravity = true,
-	fixed,
-	model = true,
-	initialPosition = [0, 0, 0],
-	ref: entityRef,
-	children,
-}: PropsWithChildren<{
+type EntityProps = {
 	name: string
 	interactable?: true
 	controllable?: true
@@ -26,8 +15,21 @@ export function Entity({
 	fixed?: true
 	model?: boolean
 	ref?: RefObject<Object3D>
-	initialPosition?: [number, number, number]
-}>) {
+	position?: [number, number, number]
+}
+
+export function Entity({
+	name,
+	interactable,
+	controllable,
+	physic,
+	gravity = true,
+	fixed,
+	model = true,
+	position = [0, 0, 0],
+	ref: entityRef,
+	children,
+}: PropsWithChildren<EntityProps>) {
 	const defaultRef = useRef<Object3D>(null)
 	const resolvedRef = entityRef || defaultRef
 
@@ -38,6 +40,10 @@ export function Entity({
 		})
 	}, [name, resolvedRef])
 
+	if (game.entities[name]) {
+		delete game.entities[name]
+	}
+
 	if (!game.entities[name]) {
 		game.entities[name] = {
 			id: name,
@@ -46,7 +52,7 @@ export function Entity({
 				look: new Quaternion(),
 			},
 			visual: {
-				position: new Vector3(...initialPosition),
+				position: new Vector3(...position),
 				orientation: new Quaternion(),
 			},
 		}
@@ -55,7 +61,7 @@ export function Entity({
 	return (
 		<EntityContext.Provider value={{ id: name, ref: resolvedRef }}>
 			{controllable && <Controllable />}
-			{physic && <Physic {...(fixed && { type: 'fixed' })} position={initialPosition} />}
+			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
 			{gravity && <Gravity />}
 			{interactable && <Interactable />}
 			{model ? <Model smoothing={10}>{children}</Model> : children}

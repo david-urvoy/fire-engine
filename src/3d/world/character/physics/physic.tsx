@@ -1,3 +1,4 @@
+import { useFrame } from '@react-three/fiber'
 import {
 	CapsuleCollider,
 	type RapierRigidBody,
@@ -17,6 +18,7 @@ export function Physic({
 }: PropsWithChildren<{ dimensions?: CharacterDimensions } & RigidBodyProps>) {
 	const body = useRef<RapierRigidBody>(null)
 	const controller = useCharacterController()
+	const next = useRef(new Vector3())
 
 	const { id } = useEntity()
 
@@ -25,21 +27,28 @@ export function Physic({
 
 	const move = useCallback(
 		(delta: Vector3) => {
-			if (!body.current || !entity.physic || !controller.current) return
+			if (!body.current || !controller.current) return
 
 			controller.current.computeColliderMovement(body.current.collider(0), delta)
-
-			body.current.setNextKinematicTranslation(entity.physic.position.add(controller.current.computedMovement()))
-			body.current.setRotation(entity.physic.orientation, false)
-			entity.physic.isGrounded = controller.current.computedGrounded()
+			next.current.copy(body.current.translation()).add(controller.current.computedMovement())
+			body.current.setNextKinematicTranslation(next.current)
 		},
-		[entity.physic, controller],
+		[controller],
 	)
 
-	useEffect(() => {
-		if (!body.current || !controller.current) return
+	useFrame(() => {
+		if (!body.current || !entity.physic) return
 
-		if (!entity.physic) {
+		entity.physic.position.copy(body.current.translation())
+		entity.physic.isGrounded = controller.current?.computedGrounded() ?? false
+
+		body.current.setRotation(entity.physic.orientation, false)
+	})
+
+	useEffect(() => {
+		if (!body.current) return
+
+		if (!entity.physic)
 			entity.physic = {
 				position: new Vector3().copy(body.current.translation()),
 				orientation: new Quaternion(),
@@ -47,7 +56,6 @@ export function Physic({
 				velocity: new Vector3(),
 				dynamic: props.type !== 'fixed',
 			}
-		}
 
 		GameLoopSystem.systems.physic.register({
 			entity,
@@ -57,7 +65,7 @@ export function Physic({
 		return () => {
 			GameLoopSystem.systems.physic.unregister(entity.id)
 		}
-	}, [entity, controller, props.type, move])
+	}, [entity, props.type, move])
 
 	return (
 		<RigidBody ref={body} type={props.type ?? 'kinematicPosition'} colliders={false} {...props}>
