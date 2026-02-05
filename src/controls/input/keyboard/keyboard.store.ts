@@ -15,8 +15,8 @@ export const keyboardKeys = proxy(
 const keyboardCommands = computed({
 	direction: () => {
 		const { up, down, left, right, shift } = keyboardKeys
-		const z = +up - +down
-		const x = +left - +right
+		const z = -up + +down
+		const x = -left + +right
 		const speed = (!shift ? 2 : 1) * 0.2
 		return _dir.set(x, z).multiplyScalar(speed)
 	},

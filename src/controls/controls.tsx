@@ -23,8 +23,8 @@ function useCharacterMove() {
 		controlledCharacter.controls.move
 			.setX(direction.x)
 			.setZ(direction.y)
-			.applyQuaternion(controlledCharacter.controls.look)
 			.setY(0)
+			.applyQuaternion(controlledCharacter.controls.look)
 			.multiplyScalar(7.5 * delta * 60)
 	})
 }

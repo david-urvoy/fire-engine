@@ -5,7 +5,7 @@ import {
 	type RigidBodyProps,
 } from '@react-three/rapier'
 import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { Quaternion, Vector3 } from 'three'
+import { Vector3 } from 'three'
 import { type CharacterDimensions, characterDimensions, useEntity } from '../../../../game'
 import { GameLoopSystem } from '../../../../game/entity/game-loop.system'
 import { useCharacterController } from './character-controller'
@@ -19,60 +19,54 @@ export function Physic({
 	const controller = useCharacterController()
 	const body = useRef<RapierRigidBody>(null)
 
+	const applyTeleport = useCallback(() => {
+		const { physic, visual, controls } = entity
+
+		if (!body.current || !physic || !controls.teleport) return
+
+		body.current.setTranslation(controls.teleport, false)
+
+		physic.position.copy(controls.teleport)
+		physic.velocity.set(0, 0, 0)
+		physic.isGrounded = false
+
+		visual.snap = true
+		controls.teleport = undefined
+	}, [entity.physic, entity.visual, entity.controls])
+
+	const applyComputedMovement = useCallback(() => {
+		if (!body.current || !entity.physic || !controller.current) return
+
+		entity.physic.position
+			.copy(body.current.translation())
+			.add(controller.current.computedMovement())
+		entity.physic.isGrounded = controller.current.computedGrounded()
+
+		body.current.setRotation(entity.physic.orientation, false)
+		body.current.setNextKinematicTranslation(entity.physic.position)
+	}, [controller, entity.physic])
+
 	const move = useCallback(
 		(delta: Vector3) => {
-			if (!body.current || !entity.physic) return
+			applyTeleport()
 
-			const { physic, controls, visual } = entity
-
-			if (controls.teleport) {
-				const target = controls.teleport
-
-				body.current.setTranslation(target, false)
-
-				physic.position.copy(target)
-				physic.velocity.set(0, 0, 0)
-				physic.isGrounded = false
-
-				visual.snap = true
-				controls.teleport = undefined
-
-				return
-			}
-
-			if (!controller.current) return
+			if (!body.current || !controller.current) return
 
 			controller.current.computeColliderMovement(body.current.collider(0), delta)
-			physic.position.copy(body.current.translation()).add(controller.current.computedMovement())
 
-			physic.isGrounded = controller.current?.computedGrounded() ?? false
-			body.current.setRotation(physic.orientation, false)
-
-			body.current.setNextKinematicTranslation(physic.position)
+			applyComputedMovement()
 		},
-		[controller, entity.physic, entity.controls, entity.visual],
+		[controller, applyTeleport, applyComputedMovement],
 	)
 
 	useEffect(() => {
-		if (!body.current) return
-
-		if (!entity.physic)
-			entity.physic = {
-				position: new Vector3().copy(body.current.translation()),
-				orientation: new Quaternion(),
-				isGrounded: true,
-				velocity: new Vector3(),
-				dynamic: props.type !== 'fixed',
-			}
-
+		entity.initPhysic(props.type !== 'fixed')
 		GameLoopSystem.systems.physic.register({
 			entity,
 			move,
 		})
 
-		return () => {
-			GameLoopSystem.systems.physic.unregister(entity.id)
-		}
+		return () => GameLoopSystem.systems.physic.unregister(entity.id)
 	}, [entity, props.type, move])
 
 	return (

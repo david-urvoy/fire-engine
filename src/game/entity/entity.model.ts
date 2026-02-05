@@ -1,13 +1,15 @@
 import { Quaternion, Vector3 } from 'three'
+import { UP } from '../game.store'
 import type {
 	ControlsState,
+	EntityApi,
 	EntityState,
 	InteractionState,
 	PhysicState,
 	VisualState,
 } from './entity.types'
 
-export class Entity implements EntityState {
+export class Entity implements EntityState, EntityApi {
 	readonly id: string
 	readonly controls: ControlsState
 	readonly visual: VisualState
@@ -38,30 +40,51 @@ export class Entity implements EntityState {
 				dynamic,
 			}
 		}
+		return this
 	}
 
-	move(delta: Vector3) {
-		if (!this.physic) return
-		this.physic.position.add(delta)
-		this.visual.snap = true
+	move(delta: [number, number, number]) {
+		this.controls.move.set(...delta)
+		return this
 	}
 
 	teleportTo(target: Vector3) {
-		if (!this.physic) return
-		this.physic.position.copy(target)
-		this.physic.velocity.set(0, 0, 0)
-		this.physic.isGrounded = false
-		this.visual.position.copy(target)
-		this.visual.snap = true
-		this.controls.teleport = undefined
+		this.controls.teleport = target.clone()
+		return this
 	}
 
 	applyVelocity(vel: Vector3) {
-		if (!this.physic) return
+		if (!this.physic) return this
 		this.physic.velocity.copy(vel)
+		return this
 	}
 
-	getPosition(): Vector3 {
+	look(q: Quaternion) {
+		const yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z))
+		this.controls.look.setFromAxisAngle(UP, yaw)
+		return this
+	}
+
+	lookAtDirection(dir: Vector3) {
+		const x = -dir.x
+		const z = -dir.z
+
+		if (x === 0 && z === 0) return this
+
+		const yaw = Math.atan2(x, z)
+		this.controls.look.setFromAxisAngle(UP, yaw)
+		return this
+	}
+
+	get position() {
 		return this.physic?.position ?? this.visual.position
+	}
+
+	get orientation(): Quaternion {
+		throw new Error('Method not implemented.')
+	}
+
+	get velocity(): Vector3 {
+		return this.physic?.velocity ?? new Vector3()
 	}
 }

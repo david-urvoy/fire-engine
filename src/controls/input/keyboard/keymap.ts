@@ -13,4 +13,5 @@ export const Keymap = {
 	toggleDebug: ['KeyK'],
 	switchCameraType: ['KeyM'],
 	fullscreen: ['KeyO'],
+	snap: ['KeyN'],
 } as const

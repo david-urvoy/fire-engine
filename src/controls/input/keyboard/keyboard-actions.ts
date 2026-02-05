@@ -1,3 +1,4 @@
+import { Vector3 } from 'three'
 import { ControlsType } from '../../../camera'
 import { game } from '../../../game'
 import { useToggleFullscreen } from '../../bindings/fullscreen'
@@ -19,5 +20,9 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 		},
 		pause: game.pause,
 		fullscreen: toggleFullscreen,
+		snap: () => {
+			const sphere = game.entities.get('sphere')
+			sphere.teleportTo(new Vector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
+		},
 	}
 }

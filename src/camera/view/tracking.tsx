@@ -1,6 +1,8 @@
 import { useFrame } from '@react-three/fiber'
 import { Vector3 } from 'three'
-import { FORWARD, useControlledCharacter } from '../../game'
+import { useControlledCharacter } from '../../game'
+
+const tmpDir = new Vector3()
 
 export function CameraTracking() {
 	const controlledCharacter = useControlledCharacter()
@@ -10,11 +12,10 @@ export function CameraTracking() {
 
 		camera.position.copy(controlledCharacter.visual.position)
 		camera.position.y += 0.4
+		camera.getWorldDirection(tmpDir)
+		tmpDir.y = 0
 
-		controlledCharacter.controls.look.setFromUnitVectors(
-			FORWARD,
-			camera.getWorldDirection(new Vector3()).setY(0).negate().normalize(),
-		)
+		controlledCharacter.lookAtDirection(tmpDir)
 	})
 
 	return <></>

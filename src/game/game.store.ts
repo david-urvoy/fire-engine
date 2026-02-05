@@ -9,6 +9,7 @@ export const GRAVITY_CONST = 9.81
 export const MAX_FALLING_SPEED = Infinity
 
 export const FORWARD = new Vector3(0, 0, -1)
+export const UP = new Vector3(0, 1, 0)
 
 export const characterDimensions = { halfHeight: 0.1, radius: 0.05, offset: 0.01 }
 export type CharacterDimensions = typeof characterDimensions

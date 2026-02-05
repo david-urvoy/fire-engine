@@ -9,7 +9,7 @@ export const EntityContext = createContext<{
 	entity: EntityState
 }>({
 	id: '',
-	ref: createRef<Object3D | null>(),
+	ref: createRef(),
 	entity: new Entity(''),
 })
 
