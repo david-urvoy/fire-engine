@@ -1,8 +1,8 @@
 import { Entity } from './entity.model'
-import type { EntityState } from './entity.types'
+import type { EntityApi, EntityState } from './entity.types'
 
 class EntityStore {
-	map: Record<string, EntityState> = {}
+	map: Record<string, EntityState & EntityApi> = {}
 
 	all(): EntityState[] {
 		return Object.values(this.map)

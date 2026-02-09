@@ -1,5 +1,7 @@
+import { createRef } from 'react'
 import { Vector3 } from 'three'
-import { proxy, useSnapshot } from 'valtio'
+import { PointerLockControls } from 'three-stdlib'
+import { proxy, ref, useSnapshot } from 'valtio'
 import { entities } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
@@ -47,6 +49,8 @@ export const game = proxy({
 	clearInteractable() {
 		game.activeInteractable = ''
 	},
+
+	pointerLockControls: ref(createRef<PointerLockControls | null>()),
 
 	debug: undefined as unknown,
 	entities,

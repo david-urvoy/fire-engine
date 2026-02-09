@@ -15,5 +15,7 @@ export function usePointerLock() {
 
 	if (isPaused) controlsRef.current?.unlock()
 
+	game.pointerLockControls.current = controlsRef.current
+
 	return controlsRef
 }

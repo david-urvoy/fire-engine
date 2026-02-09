@@ -1,6 +1,7 @@
 import { Quaternion, Vector3 } from 'three'
 import { UP } from '../game.store'
 import type {
+	ControlsApi,
 	ControlsState,
 	EntityApi,
 	EntityState,
@@ -9,20 +10,47 @@ import type {
 	VisualState,
 } from './entity.types'
 
+class Controls implements ControlsState, ControlsApi {
+	constructor(
+		public move: Vector3 = new Vector3(),
+		public orientation: Quaternion = new Quaternion(),
+		public teleport?: Vector3,
+		// private cameraProxy?: CameraProxy,
+	) {}
+
+	moveTo(delta: [number, number, number]) {
+		this.move.set(...delta)
+	}
+
+	teleportTo(target: Vector3) {
+		this.teleport = target.clone()
+	}
+
+	lookAt(target: Vector3) {
+		// this.cameraProxy?.lookAt(target)
+	}
+
+	lookInDirection(direction: Vector3) {
+		const x = -direction.x
+		const z = -direction.z
+
+		if (x === 0 && z === 0) return this
+
+		const yaw = Math.atan2(x, z)
+		this.orientation.setFromAxisAngle(UP, yaw)
+	}
+}
+
 export class Entity implements EntityState, EntityApi {
 	readonly id: string
-	readonly controls: ControlsState
+	readonly controls: Controls
 	readonly visual: VisualState
 	physic?: PhysicState
 	interaction?: InteractionState
 
 	constructor(id: string, position: [number, number, number] = [0, 0, 0]) {
 		this.id = id
-		this.controls = {
-			move: new Vector3(),
-			look: new Quaternion(),
-			teleport: undefined,
-		}
+		this.controls = new Controls()
 		this.visual = {
 			position: new Vector3(...position),
 			orientation: new Quaternion(),
@@ -59,20 +87,13 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	look(q: Quaternion) {
-		const yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z))
-		this.controls.look.setFromAxisAngle(UP, yaw)
+	lookAt(target: Vector3) {
+		this.controls?.lookAt(target)
 		return this
 	}
 
-	lookAtDirection(dir: Vector3) {
-		const x = -dir.x
-		const z = -dir.z
-
-		if (x === 0 && z === 0) return this
-
-		const yaw = Math.atan2(x, z)
-		this.controls.look.setFromAxisAngle(UP, yaw)
+	lookInDirection(direction: Vector3) {
+		this.controls.lookInDirection(direction)
 		return this
 	}
 
@@ -81,7 +102,7 @@ export class Entity implements EntityState, EntityApi {
 	}
 
 	get orientation(): Quaternion {
-		throw new Error('Method not implemented.')
+		return this.controls.orientation
 	}
 
 	get velocity(): Vector3 {

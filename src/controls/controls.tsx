@@ -1,4 +1,6 @@
 import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
+import { Vector3 } from 'three/src/math/Vector3.js'
 import { useSnapshot } from 'valtio'
 import { game, useControlledCharacter } from '../game/game.store'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
@@ -16,16 +18,16 @@ function usePlayerDirection() {
 function useCharacterMove() {
 	const controlledCharacter = useControlledCharacter()
 	const direction = usePlayerDirection()
+	const vec = useRef(new Vector3())
 
 	useFrame((_, delta) => {
 		if (!controlledCharacter?.controls) return
 		// set velocity to player direction
-		controlledCharacter.controls.move
-			.setX(direction.x)
-			.setZ(direction.y)
-			.setY(0)
-			.applyQuaternion(controlledCharacter.controls.look)
+		vec.current
+			.set(direction.x, 0, direction.y)
+			.applyQuaternion(controlledCharacter.controls.orientation)
 			.multiplyScalar(7.5 * delta * 60)
+		controlledCharacter.move([vec.current.x, vec.current.y, vec.current.z])
 	})
 }
 

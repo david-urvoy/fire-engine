@@ -11,7 +11,6 @@ export function TouchControls() {
 	const yaw = useRef(0)
 	const activeTouchId = useRef<number | null>(null)
 
-	// Your joystick root selector
 	const isTouchOnJoystick = useMemo(
 		() =>
 			(target: EventTarget | null): boolean => {
@@ -22,13 +21,11 @@ export function TouchControls() {
 	)
 
 	useEffect(() => {
-		// Initialize pitch/yaw from camera
 		const euler = new Euler().copy(camera.rotation)
 		pitch.current = euler.x
 		yaw.current = euler.y
 
 		const onTouchStart = (e: TouchEvent) => {
-			// Skip if touching joystick or already tracking a touch
 			if (activeTouchId.current !== null) return
 
 			const t = e.changedTouches[0]

@@ -4,19 +4,19 @@ import { useReticleInteraction } from '../../ui'
 import { FirstPersonView } from './first-person-view'
 import { ThirdPersonView } from './third-person-view'
 
-type ControlsType = 'first-person' | 'third-person' | 'orbit'
-export const ControlsType: { type: ControlsType } = proxy({ type: 'first-person' })
+type CameraType = 'first-person' | 'third-person' | 'orbit'
+export const CameraType: { type: CameraType } = proxy({ type: 'first-person' })
 
-const controlsMap = {
+const cameraTypesMap = {
 	'first-person': <FirstPersonView />,
 	'third-person': <ThirdPersonView />,
 	orbit: <OrbitControls />,
 }
 
-export function CameraControls() {
-	const { type } = useSnapshot(ControlsType)
+export function Camera() {
+	const { type } = useSnapshot(CameraType)
 
 	useReticleInteraction()
 
-	return controlsMap[type]
+	return cameraTypesMap[type]
 }

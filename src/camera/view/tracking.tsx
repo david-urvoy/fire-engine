@@ -15,7 +15,7 @@ export function CameraTracking() {
 		camera.getWorldDirection(tmpDir)
 		tmpDir.y = 0
 
-		controlledCharacter.lookAtDirection(tmpDir)
+		controlledCharacter.lookInDirection(tmpDir)
 	})
 
 	return <></>

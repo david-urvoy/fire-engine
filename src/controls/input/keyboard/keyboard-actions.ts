@@ -1,5 +1,5 @@
 import { Vector3 } from 'three'
-import { ControlsType } from '../../../camera'
+import { CameraType } from '../../../camera'
 import { game } from '../../../game'
 import { useToggleFullscreen } from '../../bindings/fullscreen'
 import type { Action } from './keymap'
@@ -11,10 +11,10 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 		mobile: game.toggleMobile,
 		toggleDebug: game.toggleDebug,
 		switchCameraType: () => {
-			ControlsType.type =
-				ControlsType.type === 'first-person'
+			CameraType.type =
+				CameraType.type === 'first-person'
 					? 'orbit'
-					: ControlsType.type === 'orbit'
+					: CameraType.type === 'orbit'
 						? 'third-person'
 						: 'first-person'
 		},
