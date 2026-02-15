@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, type PropsWithChildren } from 'react'
 import { GameLoopSystem, MOVEMENT_SMOOTHING, useEntity } from '../../../game'
 
-export function Model({
+export function Visual({
 	smoothing = MOVEMENT_SMOOTHING,
 	children,
 	...props

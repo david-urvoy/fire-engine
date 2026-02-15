@@ -1,7 +1,7 @@
 import { Quaternion, Vector3 } from 'three'
+import { CameraProxy } from '../../camera/camera-proxy'
 import { UP } from '../game.store'
 import type {
-	ControlsApi,
 	ControlsState,
 	EntityApi,
 	EntityState,
@@ -10,35 +10,12 @@ import type {
 	VisualState,
 } from './entity.types'
 
-class Controls implements ControlsState, ControlsApi {
+class Controls implements ControlsState {
 	constructor(
 		public move: Vector3 = new Vector3(),
 		public orientation: Quaternion = new Quaternion(),
 		public teleport?: Vector3,
-		// private cameraProxy?: CameraProxy,
 	) {}
-
-	moveTo(delta: [number, number, number]) {
-		this.move.set(...delta)
-	}
-
-	teleportTo(target: Vector3) {
-		this.teleport = target.clone()
-	}
-
-	lookAt(target: Vector3) {
-		// this.cameraProxy?.lookAt(target)
-	}
-
-	lookInDirection(direction: Vector3) {
-		const x = -direction.x
-		const z = -direction.z
-
-		if (x === 0 && z === 0) return this
-
-		const yaw = Math.atan2(x, z)
-		this.orientation.setFromAxisAngle(UP, yaw)
-	}
 }
 
 export class Entity implements EntityState, EntityApi {
@@ -47,6 +24,7 @@ export class Entity implements EntityState, EntityApi {
 	readonly visual: VisualState
 	physic?: PhysicState
 	interaction?: InteractionState
+	private cameraProxy = CameraProxy
 
 	constructor(id: string, position: [number, number, number] = [0, 0, 0]) {
 		this.id = id
@@ -71,7 +49,7 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	move(delta: [number, number, number]) {
+	moveBy(delta: [number, number, number]) {
 		this.controls.move.set(...delta)
 		return this
 	}
@@ -81,19 +59,29 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	applyVelocity(vel: Vector3) {
+	setVelocity(vel: Vector3) {
 		if (!this.physic) return this
 		this.physic.velocity.copy(vel)
 		return this
 	}
 
 	lookAt(target: Vector3) {
-		this.controls?.lookAt(target)
+		this.cameraProxy?.lookAt(target)
 		return this
 	}
 
 	lookInDirection(direction: Vector3) {
-		this.controls.lookInDirection(direction)
+		if (!direction) return this
+
+		const x = -direction.x
+		const z = -direction.z
+		if (x !== 0 || z !== 0) {
+			const yaw = Math.atan2(x, z)
+			this.orientation.setFromAxisAngle(UP, yaw)
+		}
+
+		this.cameraProxy?.lookInWorldDirection(direction)
+
 		return this
 	}
 

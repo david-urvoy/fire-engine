@@ -4,7 +4,7 @@ import { useSnapshot } from 'valtio'
 import { game, POINTER_SPEED } from '../../game'
 import { TouchControls } from '../lock/touch-lock'
 import { usePointerLock } from '../lock/usePointerLock'
-import { CameraTracking } from './tracking'
+import { CameraOrientation, CameraTracking } from './tracking'
 
 function FirstPersonControls() {
 	const { isMobile, isPaused } = useSnapshot(game)
@@ -30,6 +30,7 @@ export function FirstPersonView() {
 	return (
 		<>
 			<CameraTracking />
+			<CameraOrientation />
 			<FirstPersonControls />
 		</>
 	)

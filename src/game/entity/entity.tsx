@@ -1,6 +1,6 @@
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Vector3 } from 'three'
-import { Interactable, Model, Physic } from '../../3d'
+import { Interactable, Physic, Visual } from '../../3d'
 import { Gravity } from '../../3d/world/character/physics/gravity'
 import { Controllable } from '../../controls'
 import { game } from '../game.store'
@@ -13,7 +13,7 @@ type EntityProps = {
 	physic?: true
 	gravity?: boolean
 	fixed?: true
-	model?: boolean
+	visual?: boolean
 	ref?: RefObject<Object3D>
 	position?: [number, number, number]
 }
@@ -25,7 +25,7 @@ export function Entity({
 	physic,
 	gravity = true,
 	fixed,
-	model = true,
+	visual = true,
 	position = [0, 0, 0],
 	ref: entityRef,
 	children,
@@ -52,7 +52,7 @@ export function Entity({
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
 			{gravity && <Gravity />}
 			{interactable && <Interactable />}
-			{model ? <Model smoothing={10}>{children}</Model> : children}
+			{visual ? <Visual smoothing={10}>{children}</Visual> : children}
 		</EntityContext.Provider>
 	)
 }

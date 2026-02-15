@@ -1,8 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { Vector3 } from 'three'
-import { useControlledCharacter } from '../../game'
-
-const tmpDir = new Vector3()
+import { game, UP, useControlledCharacter } from '../../game'
 
 export function CameraTracking() {
 	const controlledCharacter = useControlledCharacter()
@@ -12,10 +9,24 @@ export function CameraTracking() {
 
 		camera.position.copy(controlledCharacter.visual.position)
 		camera.position.y += 0.4
-		camera.getWorldDirection(tmpDir)
-		tmpDir.y = 0
+	})
 
-		controlledCharacter.lookInDirection(tmpDir)
+	return <></>
+}
+
+export function CameraOrientation() {
+	const controlledCharacter = useControlledCharacter()
+
+	useFrame(() => {
+		if (!controlledCharacter) return
+
+		const controls = game.pointerLockControls.current
+		if (!controls) return
+
+		const q = controls.getObject().quaternion
+		const yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z))
+
+		controlledCharacter.orientation.setFromAxisAngle(UP, yaw)
 	})
 
 	return <></>

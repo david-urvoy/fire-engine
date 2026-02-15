@@ -25,9 +25,10 @@ function useCharacterMove() {
 		// set velocity to player direction
 		vec.current
 			.set(direction.x, 0, direction.y)
-			.applyQuaternion(controlledCharacter.controls.orientation)
-			.multiplyScalar(7.5 * delta * 60)
-		controlledCharacter.move([vec.current.x, vec.current.y, vec.current.z])
+			.applyQuaternion(controlledCharacter.orientation)
+			.multiplyScalar(450 * delta)
+
+		controlledCharacter.moveBy([vec.current.x, vec.current.y, vec.current.z])
 	})
 }
 

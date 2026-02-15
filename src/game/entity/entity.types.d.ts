@@ -35,19 +35,12 @@ export type EntityState = {
 //#endregion
 
 //#region API
-export type ControlsApi = {
-	moveTo: (delta: [number, number, number]) => void
-	teleportTo: (target: Vector3) => void
-	// lookAt(target: Vector3): void
-	lookInDirection(direction: Vector3): void
+export type EntityApi = {
+	initPhysic: (dynamic?: boolean) => EntityState
+	moveBy: (delta: [number, number, number]) => EntityState
+	teleportTo: (target: Vector3) => EntityState
+	lookAt(target: Vector3): EntityState
+	lookInDirection(direction: Vector3): EntityState
+	setVelocity: (vel: Vector3) => EntityState
 }
-
-type PhysicApi = {
-	applyVelocity: (vel: Vector3) => EntityState
-}
-
-export type EntityApi = ControlsApi &
-	PhysicApi & {
-		initPhysic: (dynamic?: boolean) => EntityState
-	} & VisualApi
 //#endregion

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { PointerLockControls as ThreePLC } from 'three-stdlib'
 import { useSnapshot } from 'valtio'
 import { useSubscribeKey } from '../../controls'
@@ -15,7 +15,13 @@ export function usePointerLock() {
 
 	if (isPaused) controlsRef.current?.unlock()
 
-	game.pointerLockControls.current = controlsRef.current
+	console.log('setting')
+
+	useEffect(() => {
+		game.pointerLockControls.current = controlsRef.current
+	}, [controlsRef])
+
+	console.log(game.pointerLockControls.current)
 
 	return controlsRef
 }
