@@ -11,12 +11,7 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 		mobile: game.toggleMobile,
 		toggleDebug: game.toggleDebug,
 		switchCameraType: () => {
-			CameraType.type =
-				CameraType.type === 'first-person'
-					? 'orbit'
-					: CameraType.type === 'orbit'
-						? 'third-person'
-						: 'first-person'
+			CameraType.type = CameraType.type === 'first-person' ? 'orbit' : 'first-person'
 		},
 		pause: game.pause,
 		fullscreen: toggleFullscreen,

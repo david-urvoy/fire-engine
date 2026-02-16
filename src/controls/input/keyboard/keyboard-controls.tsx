@@ -55,11 +55,3 @@ export function KeyboardControls({
 
 	return children
 }
-
-export function useSubscribeKey(key: string, callback: () => void) {
-	useEffect(() => {
-		const handler = (event: KeyboardEvent) => event.code === key && !event.repeat && callback()
-		window.addEventListener('keydown', handler)
-		return () => window.removeEventListener('keydown', handler)
-	})
-}
