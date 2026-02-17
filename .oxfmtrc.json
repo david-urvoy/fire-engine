@@ -5,7 +5,6 @@
 
 	"experimentalTailwindcss": {
 		"attributes": ["class", "className"],
-		"functions": ["clsx", "cn"],
-		"preserveWhitespace": true
+		"functions": ["clsx", "cn"]
 	}
 }
