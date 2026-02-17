@@ -13,7 +13,7 @@
 		"lib": [
 			"ESNext",
 			"DOM",
-			"DOM.Iterable",
+			"DOM.Iterable"
 		] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
 		"jsx": "react-jsx" /* Specify what JSX code is generated. */,
 		// "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
@@ -43,7 +43,7 @@
 			"vite-plugin-glsl/ext",
 			"vitest/globals",
 			"vitest/importMeta",
-			"./types/import-meta",
+			"./types/import-meta"
 		] /* Specify type package names to be included without being referenced in a source file. */,
 		// "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
 		// "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
@@ -125,8 +125,8 @@
 		"noImplicitOverride": true,
 
 		// Some stricter flags (disabled by default)
-		"noPropertyAccessFromIndexSignature": false,
+		"noPropertyAccessFromIndexSignature": false
 	},
-	"include": [ "./src" ],
-	"exclude": [ "./dist", "./node_modules/**/*" ],
+	"include": ["./src"],
+	"exclude": ["./dist", "./node_modules/**/*"]
 }

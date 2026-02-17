@@ -1,45 +1,37 @@
-import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
-import type { Group } from 'three'
+import { Grid as DreiGrid } from '@react-three/drei'
 import { useSnapshot } from 'valtio'
 import { game } from '../../game'
-import { Tweaks, useAddBinding } from '../../ui'
+import { Tweaks, useAddBindings } from '../../ui'
 
-function roundToNearestTens(num: number) {
-	return Math.round(num / 10) * 10
-}
-
-export function ExtendedGridHelper({ count = 5 }: { count?: number }) {
+export function Grid() {
 	const { isDebug } = useSnapshot(game)
-	const groupRef = useRef<Group>(null)
-	useFrame(({ camera }) => {
-		const { x, z } = camera.position
-		const roundedX = roundToNearestTens(x)
-		const roundedZ = roundToNearestTens(z)
-		groupRef.current?.position.set(roundedX, 0, roundedZ)
-	})
 
 	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid' })
-	const { gridSize } = useAddBinding({
+	const test = useAddBindings({
 		folder,
-		param: { gridSize: 12 },
-		options: { min: 2, max: 20, step: 2 },
+		bindings: [
+			{ param: { sectionSize: 12 }, options: { min: 2, max: 20, step: 2 } },
+			{ param: { sectionThickness: 1.5 }, options: { min: 0.5, max: 5, step: 0.5 } },
+			{ param: { sectionColor: '#9d4b4b' } },
+			{ param: { cellSize: 0.5 }, options: { min: 0.1, max: 2, step: 0.1 } },
+			{ param: { cellThickness: 0.5 }, options: { min: 0.1, max: 5, step: 0.1 } },
+			{ param: { cellColor: '#6f6f6f' } },
+		],
 	})
 
 	return (
-		<group ref={groupRef} visible={isDebug}>
-			{Array.from({ length: count }, (_, i) =>
-				Array.from({ length: count }, (_, j) => {
-					const key = `g-${i}-${j}`
-					return (
-						<gridHelper
-							key={key}
-							args={[gridSize, gridSize, 'red', 'green']}
-							position={[gridSize * (i - count * 0.5), 0, gridSize * (j - count * 0.5)]}
-						/>
-					)
-				}),
-			)}
-		</group>
+		<DreiGrid
+			visible={isDebug}
+			infiniteGrid
+			followCamera
+			sectionSize={test[0].sectionSize}
+			sectionColor={test[2].sectionColor}
+			sectionThickness={test[1].sectionThickness}
+			cellColor={test[5].cellColor}
+			cellThickness={test[4].cellThickness}
+			cellSize={test[3].cellSize}
+			fadeDistance={25}
+			fadeStrength={1}
+		/>
 	)
 }

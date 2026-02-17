@@ -17,6 +17,12 @@ type Folders = '💡 Lights' | '🕒 Time'
 type FolderName = Folders[number] | (string & {})
 type FolderParams = Omit<TweakpaneFolderParams, 'title'> & { title: FolderName }
 
+type BindingParam<T extends Bindable> = {
+	param: T
+	key?: keyof T
+	options?: BindingParams
+}
+
 function ensureRegistry(parent: FolderApi | Pane) {
 	if (!folderRegistry.has(parent)) {
 		folderRegistry.set(parent, new Map())
@@ -47,17 +53,14 @@ export const Tweaks = {
 	},
 }
 
-export function useAddBinding<T extends Bindable, Key extends keyof T | undefined = undefined>({
+export function useAddBinding<T extends Bindable>({
 	folder,
 	param,
 	key,
 	options,
 }: {
 	folder: FolderApi
-	param: T
-	key?: Key
-	options?: BindingParams
-}) {
+} & BindingParam<T>) {
 	const [value, setValue] = useState<T>(() => (param.clone ? param.clone() : param))
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
 	const paramsRef = useRef([param, key ?? (Object.keys(param)[0] as keyof T), options] as const)
@@ -79,6 +82,61 @@ export function useAddBinding<T extends Bindable, Key extends keyof T | undefine
 	}, [])
 
 	return value
+}
+
+export function useAddBindings<T extends Bindable>({
+	folder,
+	bindings,
+}: {
+	folder: FolderApi
+	bindings: BindingParam<T>[]
+}) {
+	const defsRef = useRef<BindingParam<T>[]>(
+		bindings.map(({ param, key, options }) => ({
+			id: Symbol(),
+			param,
+			key: key ?? (Object.keys(param)[0] as keyof T),
+			options,
+		})),
+	)
+
+	const [values, setValues] = useState(() =>
+		defsRef.current.map(({ param }) => (param.clone ? param.clone() : { ...param })),
+	)
+
+	const folderRef = useRef(folder)
+
+	useEffect(() => {
+		const created: BindingApi<unknown, unknown>[] = []
+
+		defsRef.current.forEach((def, index) => {
+			const key = def.key ?? (Object.keys(def.param)[0] as keyof T)
+			const binding = folderRef.current
+				.addBinding(def.param, key, def.options)
+				.on('change', ({ value }) => {
+					setValues((prev) =>
+						prev.map((v, i) =>
+							i === index
+								? {
+										...v,
+										[key]: value?.clone ? value.clone() : value,
+									}
+								: v,
+						),
+					)
+				})
+
+			created.push(binding)
+		})
+
+		const folders = folderRef.current
+
+		return () => {
+			created.forEach((b) => folders.remove(b))
+		}
+	}, [])
+
+	return values
 }
 
 export function useAddButton({

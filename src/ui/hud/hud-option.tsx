@@ -58,7 +58,7 @@ export function HudOption({
 				x={x}
 				y={y + 1}
 				textAnchor="middle"
-				className="pointer-events-none cursor-default select-none duration-500 ease-in-out"
+				className="pointer-events-none cursor-default duration-500 ease-in-out select-none"
 				style={{
 					...(mouseOver && {
 						translate: `${dx}px ${dy}px`,

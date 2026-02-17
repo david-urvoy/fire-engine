@@ -2,22 +2,25 @@
 	"name": "@david-urvoy/fire-engine",
 	"version": "0.0.1-alpha",
 	"description": "",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"keywords": [],
+	"license": "ISC",
+	"author": "",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/david-urvoy/fire-engine.git"
+	},
 	"files": [
 		"dist"
 	],
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com/"
+	},
 	"scripts": {
 		"dev": "bun --hot src/index.ts",
 		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
 		"watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
-	},
-	"publishConfig": {
-		"registry": "https://npm.pkg.github.com/"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/david-urvoy/fire-engine.git"
 	},
 	"devDependencies": {
 		"@dimforge/rapier3d-compat": "0.19.2",
@@ -53,8 +56,5 @@
 		"valtio": "^2.3.0",
 		"valtio-reactive": "^0.1.2",
 		"vite-plugin-glsl": "^1.5.4"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC"
+	}
 }

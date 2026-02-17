@@ -1,1 +1,1 @@
-export { ExtendedGridHelper } from './extended-grid-helper'
+export { Grid as ExtendedGridHelper } from './extended-grid-helper'

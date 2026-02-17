@@ -4,8 +4,8 @@
 	"singleQuote": true,
 
 	"experimentalTailwindcss": {
-		"attributes": [ "class", "className" ],
-		"functions": [ "clsx", "cn" ],
+		"attributes": ["class", "className"],
+		"functions": ["clsx", "cn"],
 		"preserveWhitespace": true
 	}
 }
