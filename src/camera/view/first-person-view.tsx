@@ -16,7 +16,7 @@ function FirstPersonControls() {
 		<PointerLockControls
 			ref={controlsRef}
 			pointerSpeed={POINTER_SPEED}
-			selector={isPaused ? '#resume' : undefined}
+			selector={isPaused ? '#resume' : 'canvas'}
 		/>
 	)
 }
