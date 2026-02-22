@@ -16,7 +16,7 @@ export const DialogueBox = () => {
 				'text-white backdrop-blur-sm',
 			)}
 		>
-			{activeDialogue.nodes[activeDialogue.currentNodeId]?.lines[0]?.text || '...'}
+			{activeDialogue.nodes[activeDialogue.currentNodeId]?.lines[0] || '...'}
 		</div>
 	)
 }

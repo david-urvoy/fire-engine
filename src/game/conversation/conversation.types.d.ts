@@ -1,6 +1,9 @@
-import type { EntityState } from '../entity/entity.types'
+import type { MultiDialogue } from './multi-dialogue.types'
+import type { SimpleDialogue } from './simple-dialogue.types'
 
-type ConversationBase = {
+interface ConversationBase<C extends Character<string>> {
 	id: string
-	speakerId: EntityState['id']
+	speakerId?: C['id']
 }
+
+export type Dialogue<C extends Character<string>> = SimpleDialogue<C> | MultiDialogue<C>

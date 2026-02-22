@@ -1,5 +1,6 @@
 import { Quaternion, Vector3 } from 'three'
 import { CameraProxy } from '../../camera/camera-proxy'
+import type { EntityType } from '../character/character.types'
 import { UP } from '../game.store'
 import type {
 	ControlsState,
@@ -18,7 +19,7 @@ class Controls implements ControlsState {
 	) {}
 }
 
-export class Entity implements EntityState, EntityApi {
+export class Entity implements EntityType<string>, EntityState, EntityApi {
 	readonly id: string
 	readonly controls: Controls
 	readonly visual: VisualState

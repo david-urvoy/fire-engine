@@ -1,6 +1,6 @@
 import type { Bark } from './bark.types'
 import type { BarkRepository, DialogueRepository } from './conversation.repository'
-import type { DialogueState } from './dialogue.types'
+import type { DialogueState } from './simple-dialogue.types'
 
 class DialogueStore {
 	activeDialogue?: DialogueState
