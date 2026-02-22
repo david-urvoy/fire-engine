@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import { useEntity } from '../../../../game'
-import { GameLoopSystem } from '../../../../game/game-loop.system'
+import { GameLoopSystem, useEntity } from '../game'
 
 export function Gravity() {
 	const { entity } = useEntity()

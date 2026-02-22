@@ -3,5 +3,5 @@ export * from './entity/entity.context'
 
 export * from './conversation'
 
-export * from './game-loop.system'
 export * from './game.store'
+export * from './system/game-loop.system'

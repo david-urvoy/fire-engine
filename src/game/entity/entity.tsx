@@ -1,10 +1,12 @@
 import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Vector3 } from 'three'
-import { Interactable, Physic, Visual } from '../../3d'
-import { Gravity } from '../../3d/world/character/physics/gravity'
+import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
+import { Physic } from '../../physics'
+import { Gravity } from '../../physics/gravity'
 import { game } from '../game.store'
 import { EntityContext } from './entity.context'
+import { Interactable } from './interactable/interactable'
 
 type EntityProps = {
 	name: string

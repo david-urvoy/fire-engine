@@ -6,8 +6,7 @@ import {
 } from '@react-three/rapier'
 import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Vector3 } from 'three'
-import { type CharacterDimensions, characterDimensions, useEntity } from '../../../../game'
-import { GameLoopSystem } from '../../../../game/game-loop.system'
+import { type CharacterDimensions, characterDimensions, GameLoopSystem, useEntity } from '../game'
 import { useCharacterController } from './character-controller'
 
 export function Physic({

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useEntity } from '../../../../game'
-import { sceneRegistry } from '../../../../game/scene-registry'
+import { useEntity } from '../..'
+import { sceneRegistry } from '../../system/scene-registry'
 
 export function Interactable() {
 	const { id, ref } = useEntity()

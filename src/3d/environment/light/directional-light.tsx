@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { Color, type DirectionalLight, DirectionalLightHelper, type Group } from 'three'
 import { useSnapshot } from 'valtio'
-import { gameTime } from '../../../../time'
+import { gameTime } from '../../../time'
 import { useLight } from './use-light'
 
 // export const light = {

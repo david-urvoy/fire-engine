@@ -1,7 +1,0 @@
-export * from './character/animation/animate'
-export * from './character/physics/physic'
-export * from './character/skinned-mesh'
-export * from './character/visual'
-export * from './environment'
-export * from './objects'
-export * from './section'

@@ -1,5 +1,5 @@
 import { Color } from 'three'
-import { Tweaks, useAddBinding } from '../../../../ui'
+import { Tweaks, useAddBinding } from '../../../ui'
 import type { Light } from './light'
 
 export const useLight = ({ light }: { folderName: string; light: Light }) => {
