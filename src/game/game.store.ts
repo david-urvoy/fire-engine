@@ -2,6 +2,7 @@ import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { PointerLockControls } from 'three-stdlib'
 import { proxy, ref, useSnapshot } from 'valtio'
+import { barks, dialogue } from './conversation/conversation.store'
 import { entities } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
@@ -53,7 +54,14 @@ export const game = proxy({
 	pointerLockControls: ref(createRef<PointerLockControls | null>()),
 
 	debug: undefined as unknown,
-	entities,
+
+	entities: entities,
+
+	dialogue: dialogue,
+	get isDialogueMode(): boolean {
+		return !!game.dialogue.activeDialogue
+	},
+	barks: barks,
 })
 
 export function useControlledCharacter() {

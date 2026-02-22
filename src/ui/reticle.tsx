@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
 import { game } from '../game'
-import { sceneRegistry } from '../game/entity/scene-registry'
+import { sceneRegistry } from '../game/scene-registry'
 
 export function Reticle() {
 	return (

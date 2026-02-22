@@ -7,7 +7,7 @@ import {
 import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Vector3 } from 'three'
 import { type CharacterDimensions, characterDimensions, useEntity } from '../../../../game'
-import { GameLoopSystem } from '../../../../game/entity/game-loop.system'
+import { GameLoopSystem } from '../../../../game/game-loop.system'
 import { useCharacterController } from './character-controller'
 
 export function Physic({
