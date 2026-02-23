@@ -6,7 +6,12 @@ import {
 } from '@react-three/rapier'
 import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Vector3 } from 'three'
-import { type CharacterDimensions, characterDimensions, GameLoopSystem, useEntity } from '../game'
+import {
+	type CharacterDimensions,
+	characterDimensions,
+	useEntity,
+	useGameLoopSystem,
+} from '../game'
 import { useCharacterController } from './character-controller'
 
 export function Physic({
@@ -17,6 +22,7 @@ export function Physic({
 	const { entity } = useEntity()
 	const controller = useCharacterController()
 	const body = useRef<RapierRigidBody>(null)
+	const { physic } = useGameLoopSystem()
 
 	const applyTeleport = useCallback(() => {
 		const { physic, visual, controls } = entity
@@ -60,13 +66,13 @@ export function Physic({
 
 	useEffect(() => {
 		entity.initPhysic(props.type !== 'fixed')
-		GameLoopSystem.systems.physic.register({
+		physic.register({
 			entity,
 			move,
 		})
 
-		return () => GameLoopSystem.systems.physic.unregister(entity.id)
-	}, [entity, props.type, move])
+		return () => physic.unregister(entity.id)
+	}, [physic, entity, props.type, move])
 
 	return (
 		<RigidBody ref={body} type={props.type ?? 'kinematicPosition'} colliders={false} {...props}>

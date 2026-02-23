@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { useEffect, type PropsWithChildren } from 'react'
-import { GameLoopSystem, MOVEMENT_SMOOTHING, useEntity } from '../../game'
+import { MOVEMENT_SMOOTHING, useEntity, useGameLoopSystem } from '../../game'
 
 export function Visual({
 	smoothing = MOVEMENT_SMOOTHING,
@@ -10,11 +10,12 @@ export function Visual({
 	smoothing?: number
 }>) {
 	const { ref, entity } = useEntity()
+	const { visual } = useGameLoopSystem()
 
 	useEffect(() => {
-		GameLoopSystem.systems.visual.register(entity)
-		return () => entity && GameLoopSystem.systems.visual.unregister(entity)
-	}, [entity, smoothing])
+		visual.register(entity)
+		return () => entity && visual.unregister(entity)
+	}, [visual, entity, smoothing])
 
 	useFrame(() => {
 		if (!ref.current) return

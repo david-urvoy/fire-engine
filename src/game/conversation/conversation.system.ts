@@ -1,7 +1,13 @@
+import type { DialogueRepository } from './conversation.repository'
 import type { DialogueState } from './simple-dialogue.types'
 
-export const DialogueSystem = {
-	dialogues: new Set<DialogueState>(),
+export class DialogueSystem {
+	private dialogues = new Set<DialogueState>()
+	private repository: DialogueRepository<string>
+
+	constructor(repository: DialogueRepository<string>) {
+		this.repository = repository
+	}
 
 	step(delta: number) {
 		this.dialogues.forEach((dialogue) => {
@@ -21,13 +27,13 @@ export const DialogueSystem = {
 				}
 			}
 		})
-	},
+	}
 
-	register(dialogue: DialogueState) {
-		this.dialogues.add(dialogue)
-	},
+	register(dialogueId: string) {
+		this.dialogues.add(this.repository(dialogueId))
+	}
 
 	unregister(dialogue: DialogueState) {
 		this.dialogues.delete(dialogue)
-	},
+	}
 }

@@ -1,16 +1,8 @@
 import { MOVEMENT_SMOOTHING } from '../game'
 import type { EntityState } from '../game/entity/entity.types'
 
-export const VisualSystem = {
-	entities: new Set<EntityState>(),
-
-	register(entity: EntityState) {
-		this.entities.add(entity)
-	},
-
-	unregister(entity: EntityState) {
-		this.entities.delete(entity)
-	},
+export class VisualSystem {
+	private entities = new Set<EntityState>()
 
 	step(delta: number) {
 		this.entities.forEach((entity) => {
@@ -30,5 +22,13 @@ export const VisualSystem = {
 			visual.position.lerp(physic.position, alpha)
 			visual.orientation.slerp(physic.orientation, alpha)
 		})
-	},
+	}
+
+	register(entity: EntityState) {
+		this.entities.add(entity)
+	}
+
+	unregister(entity: EntityState) {
+		this.entities.delete(entity)
+	}
 }
