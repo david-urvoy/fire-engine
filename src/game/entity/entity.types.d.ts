@@ -1,13 +1,12 @@
 import type { Quaternion, Vector3 } from 'three'
 
-//#region State
-export type ControlsState = {
+export interface ControlsState {
 	move: Vector3
 	orientation: Quaternion
 	teleport?: Vector3
 }
 
-export type PhysicState = {
+export interface PhysicState {
 	position: Vector3
 	orientation: Quaternion
 	velocity: Vector3
@@ -15,32 +14,32 @@ export type PhysicState = {
 	dynamic?: boolean
 }
 
-export type VisualState = {
+export interface VisualState {
 	position: Vector3
 	orientation: Quaternion
 	snap?: boolean
 }
 
-export type InteractionState = {
+export interface InteractionState {
 	isInteracting: boolean
 }
 
-export type EntityState = {
+export interface EntityState {
 	id: string
 	controls: ControlsState
 	physic?: PhysicState
 	visual: VisualState
 	interaction?: InteractionState
 }
-//#endregion
 
-//#region API
-export type EntityApi = {
+export interface EntityApi {
 	initPhysic: (dynamic?: boolean) => EntityState
 	moveBy: (delta: [number, number, number]) => EntityState
 	teleportTo: (target: Vector3) => EntityState
 	lookAt(target: Vector3): EntityState
 	lookInDirection(direction: Vector3): EntityState
 	setVelocity: (vel: Vector3) => EntityState
+	speakWith(entity: Entity)
+	bark(message: string)
+	barkAt(entity: Entity, message: string)
 }
-//#endregion

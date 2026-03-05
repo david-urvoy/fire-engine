@@ -19,6 +19,16 @@ class Controls implements ControlsState {
 	) {}
 }
 
+class Visual implements VisualState {
+	public position: Vector3 = new Vector3()
+	public orientation: Quaternion = new Quaternion()
+	public snap = false
+
+	constructor(position?: [number, number, number]) {
+		if (position) this.position.set(...position)
+	}
+}
+
 export class Entity implements EntityType<string>, EntityState, EntityApi {
 	readonly id: string
 	readonly controls: Controls
@@ -30,11 +40,7 @@ export class Entity implements EntityType<string>, EntityState, EntityApi {
 	constructor(id: string, position: [number, number, number] = [0, 0, 0]) {
 		this.id = id
 		this.controls = new Controls()
-		this.visual = {
-			position: new Vector3(...position),
-			orientation: new Quaternion(),
-			snap: false,
-		}
+		this.visual = new Visual(position)
 	}
 
 	initPhysic(dynamic = true) {
@@ -85,6 +91,12 @@ export class Entity implements EntityType<string>, EntityState, EntityApi {
 
 		return this
 	}
+
+	speakWith(entity: Entity) {}
+
+	bark(message: string) {}
+
+	barkAt(entity: Entity, message: string) {}
 
 	get position() {
 		return this.physic?.position ?? this.visual.position
