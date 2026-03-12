@@ -16,12 +16,13 @@ function usePlayerDirection() {
 }
 
 function useCharacterMove() {
+	const { uiMode } = useSnapshot(game)
 	const controlledCharacter = useControlledCharacter()
 	const direction = usePlayerDirection()
 	const vec = useRef(new Vector3())
 
 	useFrame((_, delta) => {
-		if (!controlledCharacter?.controls) return
+		if (!controlledCharacter?.controls || uiMode !== 'gameplay') return
 		// set velocity to player direction
 		vec.current
 			.set(direction.x, 0, direction.y)

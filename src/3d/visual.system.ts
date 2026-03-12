@@ -1,5 +1,5 @@
 import { MOVEMENT_SMOOTHING } from '../game'
-import type { EntityState } from '../game/entity/entity.types'
+import type { EntityState } from '../game/entity/types/entity'
 
 export class VisualSystem {
 	private entities = new Set<EntityState>()

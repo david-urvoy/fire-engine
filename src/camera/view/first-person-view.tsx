@@ -7,7 +7,7 @@ import { usePointerLock } from '../lock/usePointerLock'
 import { CameraOrientation, CameraTracking } from './tracking'
 
 function FirstPersonControls() {
-	const { isMobile, isPaused } = useSnapshot(game)
+	const { isMobile, uiMode } = useSnapshot(game)
 	const controlsRef = usePointerLock()
 
 	if (isMobile) return <TouchControls />
@@ -16,7 +16,7 @@ function FirstPersonControls() {
 		<PointerLockControls
 			ref={controlsRef}
 			pointerSpeed={POINTER_SPEED}
-			selector={isPaused ? '#resume' : 'canvas'}
+			selector={uiMode === 'pause' ? '#resume' : uiMode === 'dialogue' ? '#none' : 'canvas'}
 		/>
 	)
 }

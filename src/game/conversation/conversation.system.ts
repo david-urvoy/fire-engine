@@ -1,39 +1,32 @@
-import type { DialogueRepository } from './conversation.repository'
-import type { DialogueState } from './simple-dialogue.types'
+import type { Character } from '../character/character'
+import { game } from '../game.store'
+import { AbstractDialogue, NpcDialogue, PlayerDialogue } from './dialogue'
+import type { DialogueRepository } from './types/conversation.repository'
 
 export class DialogueSystem {
-	private dialogues = new Set<DialogueState>()
-	private repository: DialogueRepository<string>
-
-	constructor(repository: DialogueRepository<string>) {
+	constructor(private repository: DialogueRepository<string, Character<string>>) {
 		this.repository = repository
 	}
 
-	step(delta: number) {
-		this.dialogues.forEach((dialogue) => {
-			if (dialogue.awaitingChoice) return
-			dialogue.timer = (dialogue.timer || 0) + delta
-			const node = dialogue.nodes[dialogue.currentNodeId]
+	private next({ dialogue, delta }: { dialogue: AbstractDialogue; delta: number }) {
+		dialogue.timer = (dialogue.timer || 0) + delta
 
-			if (dialogue.timer >= 2) {
-				dialogue.timer = 0
-				const next = node?.nextNodeId
-				if (next) {
-					dialogue.currentNodeId = next
-					dialogue.currentLineIndex = 0
-					dialogue.awaitingChoice = !!node.choices?.length
-				} else {
-					this.dialogues.delete(dialogue)
-				}
-			}
-		})
+		if (dialogue.timer >= 10) {
+			dialogue.timer = 0
+			dialogue.next()
+		}
+	}
+
+	step(delta: number) {
+		game.dialogue.all.forEach((dialogue) => this.next({ dialogue, delta }))
+		if (game.dialogue.active) this.next({ dialogue: game.dialogue.active, delta })
 	}
 
 	register(dialogueId: string) {
-		this.dialogues.add(this.repository(dialogueId))
+		game.dialogue.all.push(new NpcDialogue(this.repository(dialogueId)))
 	}
 
-	unregister(dialogue: DialogueState) {
-		this.dialogues.delete(dialogue)
+	registerActive(dialogueId: string) {
+		game.dialogue.active = new PlayerDialogue(this.repository(dialogueId))
 	}
 }

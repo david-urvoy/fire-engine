@@ -1,6 +1,6 @@
 import { Quaternion, Vector3 } from 'three'
 import { CameraProxy } from '../../camera/camera-proxy'
-import type { EntityType } from '../character/character.types'
+import type { EntityType } from '../character/character'
 import { UP } from '../game.store'
 import type {
 	ControlsState,
@@ -9,7 +9,7 @@ import type {
 	InteractionState,
 	PhysicState,
 	VisualState,
-} from './entity.types'
+} from './types/entity'
 
 class Controls implements ControlsState {
 	constructor(
@@ -92,11 +92,17 @@ export class Entity implements EntityType<string>, EntityState, EntityApi {
 		return this
 	}
 
-	speakWith(entity: Entity) {}
+	speakWith(entity: Entity) {
+		console.log(`${this.id} speaks with ${entity.id}`)
+	}
 
-	bark(message: string) {}
+	bark(message: string) {
+		console.log(`${this.id} barks: ${message}`)
+	}
 
-	barkAt(entity: Entity, message: string) {}
+	barkAt(entity: Entity, message: string) {
+		console.log(`${this.id} barks at ${entity.id}: ${message}`)
+	}
 
 	get position() {
 		return this.physic?.position ?? this.visual.position

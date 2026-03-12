@@ -1,4 +1,4 @@
-export type { Character, EntityType } from './character/character.types'
+export type { Character, EntityType } from './character/character'
 
 export * from './entity/entity'
 export * from './entity/entity.context'

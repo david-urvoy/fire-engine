@@ -2,7 +2,7 @@ import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { PointerLockControls } from 'three-stdlib'
 import { proxy, ref, useSnapshot } from 'valtio'
-import { barks, dialogue } from './conversation/conversation.store'
+import { barks, dialogueStore } from './conversation/conversation.store'
 import { entities } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
@@ -36,8 +36,9 @@ export const game = proxy({
 		game.isPaused = false
 	},
 
-	get uiMode(): 'gameplay' | 'pause' {
+	get uiMode(): 'gameplay' | 'pause' | 'dialogue' {
 		if (this.isPaused) return 'pause'
+		if (this.dialogue.active) return 'dialogue'
 		return 'gameplay'
 	},
 
@@ -57,9 +58,9 @@ export const game = proxy({
 
 	entities: entities,
 
-	dialogue: dialogue,
+	dialogue: dialogueStore,
 	get isDialogueMode(): boolean {
-		return !!game.dialogue.activeDialogue
+		return !!game.dialogue.active
 	},
 	barks: barks,
 })

@@ -1,50 +1,15 @@
-import type { Bark } from './bark.types'
-import type { BarkRepository, DialogueRepository } from './conversation.repository'
-import type { DialogueState } from './simple-dialogue.types'
+import type { Character } from '../character/character'
+import type { NpcDialogue, PlayerDialogue } from './dialogue'
+import type { Bark } from './types/bark'
+import type { BarkRepository } from './types/conversation.repository'
 
-class DialogueStore {
-	activeDialogue?: DialogueState
-
-	constructor(public repository?: DialogueRepository<string>) {}
-
-	start(dialogueId: string) {
-		const dialogue = this.repository?.(dialogueId)
-
-		if (!dialogue) {
-			console.error(`Dialogue with id ${dialogueId} not found.`)
-			return
-		}
-
-		this.activeDialogue = {
-			type: 'dialogue',
-			startedAt: Date.now(),
-			awaitingChoice: false,
-			currentNodeId: dialogue.entryNodeId,
-			...dialogue,
-		}
-	}
-
-	next() {
-		if (!this.activeDialogue) return
-
-		const { currentNodeId, nodes } = this.activeDialogue
-		const currentNode = nodes[currentNodeId]
-
-		if (!currentNode) {
-			console.error(`Current node with id ${currentNodeId} not found.`)
-			return
-		}
-
-		if (currentNode.nextNodeId) {
-			this.activeDialogue.currentNodeId = currentNode.nextNodeId
-		} else {
-			this.activeDialogue = undefined
-		}
-	}
+export const dialogueStore = {
+	active: undefined as PlayerDialogue | undefined,
+	all: [] as NpcDialogue[],
 }
 
 class BarkStore {
-	activeBarks = new Map<string, Bark>()
+	activeBarks = new Map<string, Bark<Character<string>>>()
 
 	constructor(public repository?: BarkRepository) {}
 
@@ -64,5 +29,4 @@ class BarkStore {
 	}
 }
 
-export const dialogue = new DialogueStore()
 export const barks = new BarkStore()

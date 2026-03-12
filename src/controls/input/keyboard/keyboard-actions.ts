@@ -19,9 +19,6 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			const sphere = game.entities.get('sphere')
 			sphere.teleportTo(new Vector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
 		},
-		nextDialog: () => {
-			if (!game.isDialogueMode) return
-			game.dialogue.next()
-		},
+		nextDialog: () => game.dialogue.active?.next(),
 	}
 }
