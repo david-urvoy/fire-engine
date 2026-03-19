@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { useMemo } from 'react'
+import { useRef, type PropsWithChildren } from 'react'
 import { useSnapshot } from 'valtio'
 import type { Character } from '../character/character'
 import type { DialogueRepository } from '../conversation'
@@ -7,19 +7,22 @@ import { game } from '../game.store'
 import { GameLoopContext } from './game-loop.context'
 import { GameLoopSystem } from './game-loop.system'
 
-type Props = {
+type GameLoopProviderProps = {
 	dialogRepository: DialogueRepository<string, Character<string>>
-	children: React.ReactNode
 }
 
-export function GameLoopProvider({ dialogRepository, children }: Props) {
+export function GameLoopProvider({
+	dialogRepository,
+	children,
+}: PropsWithChildren<GameLoopProviderProps>) {
 	const { uiMode } = useSnapshot(game)
+	const systemRef = useRef<GameLoopSystem>(null)
 
-	const system = useMemo(() => {
-		const gameLoopSystem = new GameLoopSystem(dialogRepository)
+	if (!systemRef.current) {
+		systemRef.current = new GameLoopSystem(dialogRepository)
+	}
 
-		return gameLoopSystem
-	}, [dialogRepository])
+	const system = systemRef.current
 
 	useFrame((_, delta) => {
 		if (uiMode === 'pause') return

@@ -33,13 +33,9 @@ function useCharacterMove() {
 	})
 }
 
-export function Controls() {
+export function Controllable() {
 	const { isMobile } = useSnapshot(game)
 	useCharacterMove()
 
 	return isMobile ? <Gamepad /> : <KeyboardControls map={Keymap} />
-}
-
-export function Controllable() {
-	return <></>
 }
