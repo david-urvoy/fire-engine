@@ -27,6 +27,11 @@ export class DialogueSystem {
 	}
 
 	registerActive(dialogueId: string) {
-		game.dialogue.active = new PlayerDialogue(this.repository(dialogueId))
+		const dialogue = this.repository(dialogueId)
+		if (!dialogue) {
+			console.warn(`Dialogue with ID ${dialogueId} not found.`)
+			return
+		}
+		game.dialogue.active = new PlayerDialogue(dialogue)
 	}
 }

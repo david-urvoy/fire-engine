@@ -1,18 +1,11 @@
 import type { Character } from '../character/character'
 import { game } from '../game.store'
 import type {
-	DialogueChoice,
+	DialogueDefinition,
 	DialogueNode,
+	DialogueOption,
 	DialogueParticipant,
-	GroupDialogue,
-	SimpleDialogue,
 } from './types/dialogue'
-
-function isGroupDialogue<C extends Character<string>>(
-	dialogue: SimpleDialogue<C> | GroupDialogue<C>,
-): dialogue is GroupDialogue<C> {
-	return dialogue.kind === 'multi'
-}
 
 export abstract class AbstractDialogue {
 	id: string
@@ -24,35 +17,16 @@ export abstract class AbstractDialogue {
 	protected currentLineIndex: number
 	protected participants: readonly DialogueParticipant<string>[]
 
-	constructor(dialogue: SimpleDialogue<Character<string>> | GroupDialogue<Character<string>>) {
+	constructor(dialogue: DialogueDefinition<Character<string>>) {
 		this.id = dialogue.id
 		this.startedAt = Date.now()
-		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choices?.length
+		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.length
 		this.currentNodeId = dialogue.entryNodeId
 		this.timer = 0
 		this.currentLineIndex = 0
 
-		const isGroup = isGroupDialogue(dialogue)
-
-		if (isGroup) {
-			this.participants = dialogue.participants
-			this.nodes = dialogue.nodes
-		} else {
-			this.participants = [{ id: dialogue.speakerId, role: 'npc', required: true }]
-			this.nodes = Object.fromEntries(
-				Object.entries(dialogue.nodes).map(([nodeId, node]) => [
-					nodeId,
-					{
-						lines: node.lines.map((line) => ({
-							speakerId: dialogue.speakerId,
-							text: line,
-						})),
-						choices: node.choices,
-						nextNodeId: node.nextNodeId,
-					},
-				]),
-			)
-		}
+		this.participants = dialogue.participants
+		this.nodes = dialogue.nodes
 	}
 
 	next() {
@@ -65,28 +39,28 @@ export abstract class AbstractDialogue {
 
 		this.currentNodeId = next
 		this.currentLineIndex = 0
-		this.awaitingChoice = !!node.choices?.length
+		this.awaitingChoice = !!node.choice?.length
 
 		return this
 	}
 
-	choose(choice: DialogueChoice) {
+	choose(choice: DialogueOption) {
 		if (!this.awaitingChoice) {
 			console.warn('No choices available at this time.')
 			return this
 		}
 
 		const node = this.nodes[this.currentNodeId]
-		const validChoice = node?.choices?.find(({ label }) => label === choice.label)
+		const validOption = node?.choice?.find(({ label }) => label === choice.label)
 
-		if (!validChoice) {
+		if (!validOption) {
 			console.warn(`Invalid choice: ${choice.label}`)
 			return this
 		}
 
-		this.currentNodeId = validChoice.nextNodeId
+		this.currentNodeId = validOption.nextNodeId
 		this.currentLineIndex = 0
-		this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choices?.length
+		this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.length
 
 		return this
 	}
@@ -98,7 +72,7 @@ export abstract class AbstractDialogue {
 
 	get choices() {
 		const node = this.nodes[this.currentNodeId]
-		return node?.choices
+		return node?.choice
 	}
 }
 
