@@ -8,9 +8,21 @@ import type { Time } from './time'
 
 const TIME_STORE_KEY = 'game-time'
 
-const INITIAL_TIME = localStorage.getItem(TIME_STORE_KEY)
-	? (JSON.parse(localStorage.getItem(TIME_STORE_KEY) ?? '') as Time)
-	: { day: 0, hour: 8, minute: 0 }
+const hasLocalStorage = typeof localStorage !== 'undefined'
+
+function getInitialTime(): Time {
+	if (!hasLocalStorage) return { day: 0, hour: 8, minute: 0 }
+
+	try {
+		const raw = localStorage.getItem(TIME_STORE_KEY)
+		if (!raw) return { day: 0, hour: 8, minute: 0 }
+		return JSON.parse(raw) as Time
+	} catch {
+		return { day: 0, hour: 8, minute: 0 }
+	}
+}
+
+const INITIAL_TIME = getInitialTime()
 
 export const gameTime = proxy({
 	day: INITIAL_TIME.day,
@@ -31,6 +43,8 @@ export const gameTime = proxy({
 		gameTime._frozen = !gameTime._frozen
 	},
 	save() {
+		if (!hasLocalStorage) return
+
 		const { day, hour, minute } = gameTime
 		localStorage.setItem(
 			TIME_STORE_KEY,
@@ -57,15 +71,17 @@ function increment(minutes: number = 1) {
 	gameTime.minute = totalMinutes % 60
 }
 
-Tweaks.folder({ title: '🕒 Time' })
-	.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
-		min: 0,
-		max: 100,
-		step: 1,
-	})
-	.on('change', ({ value }) => {
-		gameTime.GAME_SPEED = value
-	})
+if (typeof document !== 'undefined') {
+	Tweaks.folder({ title: '🕒 Time' })
+		.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
+			min: 0,
+			max: 100,
+			step: 1,
+		})
+		.on('change', ({ value }) => {
+			gameTime.GAME_SPEED = value
+		})
+}
 
 function timeToMinutes(time: Time): number {
 	return time.day * 24 * 60 + time.hour * 60 + time.minute

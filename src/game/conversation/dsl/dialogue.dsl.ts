@@ -1,26 +1,28 @@
-import type { Character } from '../../character/character'
-import type { DialogueDefinition, DialogueNode, DialogueParticipant } from '../types/dialogue'
+import type { Character } from '../../character/types/character'
+import type { DialogueDefinition, DialogueNode } from '../types/dialogue'
 
 export class DialogueBuilder<
-	AllowedId extends string = never,
-	ParticipantId extends AllowedId = never,
+	CharacterId extends string,
+	ParticipantId extends CharacterId = CharacterId,
 > {
 	private nodes: Record<string, DialogueNode<ParticipantId>> = {}
 	private entryNodeId = ''
-	private participants: DialogueParticipant<ParticipantId>[] = []
+	private requiredParticipants: ParticipantId[] = []
+	private optionalParticipants: ParticipantId[] = []
 	private isNpcOnly = true
 
 	constructor(private readonly dialogueId: string) {}
 
-	withParticipants<const Id extends AllowedId>(
-		requiredIds: readonly Id[],
-		optionalIds: readonly Id[] = [],
-	): DialogueBuilder<AllowedId, ParticipantId | Id> {
-		const self = this as DialogueBuilder<AllowedId, ParticipantId | Id>
-		self.participants.push(...requiredIds.map((id) => ({ id, required: true })))
-		self.participants.push(...optionalIds.map((id) => ({ id, required: false })))
-
-		return self
+	withParticipants<
+		RequiredIds extends readonly ParticipantId[],
+		OptionalIds extends readonly ParticipantId[] = readonly [],
+	>(
+		requiredIds: RequiredIds,
+		optionalIds: OptionalIds = [] as any,
+	): DialogueBuilder<CharacterId, RequiredIds[number] | OptionalIds[number]> {
+		this.requiredParticipants.push(...requiredIds)
+		this.optionalParticipants.push(...optionalIds)
+		return this
 	}
 
 	npcOnly() {
@@ -65,7 +67,10 @@ export class DialogueBuilder<
 
 		return {
 			id: this.dialogueId,
-			participants: this.participants,
+			participants: [
+				...this.requiredParticipants.map((id) => ({ id, required: true })),
+				...this.optionalParticipants.map((id) => ({ id, required: false })),
+			],
 			entryNodeId: this.entryNodeId,
 			nodes: this.nodes,
 			isNpcOnly: this.isNpcOnly,

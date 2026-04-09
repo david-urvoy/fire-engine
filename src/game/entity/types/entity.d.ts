@@ -39,7 +39,4 @@ export interface EntityApi {
 	lookAt(target: Vector3): EntityState
 	lookInDirection(direction: Vector3): EntityState
 	setVelocity: (vel: Vector3) => EntityState
-	speakWith(entity: Entity)
-	bark(message: string)
-	barkAt(entity: Entity, message: string)
 }

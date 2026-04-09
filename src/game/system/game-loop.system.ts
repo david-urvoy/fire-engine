@@ -1,7 +1,7 @@
 import { VisualSystem } from '../../3d/visual.system'
 import { GravitySystem } from '../../physics/gravity.system'
 import { PhysicSystem } from '../../physics/physic.system'
-import type { Character } from '../character/character'
+import type { Character } from '../character/types/character'
 import type { DialogueRepository } from '../conversation'
 import { DialogueSystem } from '../conversation/conversation.system'
 

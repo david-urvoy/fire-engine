@@ -18,7 +18,7 @@ export const characterDimensions = { halfHeight: 0.1, radius: 0.05, offset: 0.01
 export type CharacterDimensions = typeof characterDimensions
 
 export const game = proxy({
-	isMobile: 'ontouchstart' in window,
+	isMobile: typeof window !== 'undefined' && 'ontouchstart' in window,
 	toggleMobile() {
 		game.isMobile = !game.isMobile
 	},

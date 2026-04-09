@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber'
 import { useRef, type PropsWithChildren } from 'react'
-import { useSnapshot } from 'valtio'
-import type { Character } from '../character/character'
-import type { DialogueRepository } from '../conversation'
+import { ref, useSnapshot } from 'valtio'
+import type { Character } from '../character/types/character'
+import { dialogueStore, type DialogueRepository } from '../conversation'
 import { game } from '../game.store'
 import { GameLoopContext } from './game-loop.context'
 import { GameLoopSystem } from './game-loop.system'
@@ -20,6 +20,7 @@ export function GameLoopProvider({
 
 	if (!systemRef.current) {
 		systemRef.current = new GameLoopSystem(dialogRepository)
+		dialogueStore.repository = ref(dialogRepository)
 	}
 
 	const system = systemRef.current

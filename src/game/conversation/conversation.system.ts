@@ -1,4 +1,4 @@
-import type { Character } from '../character/character'
+import type { Character } from '../character/types/character'
 import { game } from '../game.store'
 import { AbstractDialogue, NpcDialogue, PlayerDialogue } from './dialogue'
 import type { DialogueRepository } from './types/conversation.repository'

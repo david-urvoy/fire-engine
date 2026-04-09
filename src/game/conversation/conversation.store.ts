@@ -1,11 +1,30 @@
-import type { Character } from '../character/character'
-import type { NpcDialogue, PlayerDialogue } from './dialogue'
+import type { Character } from '../character/types/character'
+import { NpcDialogue, PlayerDialogue } from './dialogue'
 import type { Bark } from './types/bark'
-import type { BarkRepository } from './types/conversation.repository'
+import type { BarkRepository, DialogueRepository } from './types/conversation.repository'
 
 export const dialogueStore = {
 	active: undefined as PlayerDialogue | undefined,
 	all: [] as NpcDialogue[],
+	repository: undefined as unknown as DialogueRepository<string, Character<string>>,
+
+	register(dialogueId: string) {
+		const dialogue = this.repository(dialogueId)
+		if (!dialogue) {
+			console.warn(`Dialogue with ID ${dialogueId} not found.`)
+			return
+		}
+		this.all.push(new NpcDialogue(dialogue))
+	},
+
+	registerActive(dialogueId: string) {
+		const dialogue = this.repository(dialogueId)
+		if (!dialogue) {
+			console.warn(`Dialogue with ID ${dialogueId} not found.`)
+			return
+		}
+		this.active = new PlayerDialogue(dialogue)
+	},
 }
 
 class BarkStore {

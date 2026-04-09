@@ -10,7 +10,11 @@ import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from
 
 // Singleton pane instance
 
-export const pane = new Pane({ title: 'Tweaks', expanded: false })
+const isBrowser = typeof document !== 'undefined'
+
+export const pane = isBrowser
+	? new Pane({ title: 'Tweaks', expanded: false })
+	: (undefined as unknown as Pane)
 const folderRegistry = new WeakMap<FolderApi | Pane, Map<string, FolderApi>>()
 
 type Folders = '💡 Lights' | '🕒 Time'

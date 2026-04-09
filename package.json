@@ -54,7 +54,7 @@
 		"three": ">=0.181.1",
 		"three-stdlib": "^2.36.1",
 		"valtio": "^2.3.0",
-		"valtio-reactive": "^0.1.2",
+		"valtio-reactive": "^0.2.0",
 		"vite-plugin-glsl": "^1.5.4"
 	}
 }
