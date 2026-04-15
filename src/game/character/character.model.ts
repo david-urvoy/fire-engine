@@ -1,22 +1,38 @@
+import { dialogueStore, type DialogueRepository } from '../conversation'
 import type { Entity } from '../entity/entity.model'
 import type { CharacterApi } from './types/character'
 
-export class Character implements CharacterApi {
+export class Character implements CharacterApi<string, string> {
 	id: string
 	firstName: string
 	lastName: string
 	age: number
 	entity?: Entity
+	dialogueRepository: DialogueRepository<string>
 
-	constructor(id: string, firstName: string, lastName: string, age: number) {
+	constructor({
+		id,
+		firstName,
+		lastName,
+		age,
+		dialogueRepository,
+	}: {
+		id: string
+		firstName: string
+		lastName: string
+		age: number
+		dialogueRepository: DialogueRepository<string>
+	}) {
 		this.id = id
 		this.firstName = firstName
 		this.lastName = lastName
 		this.age = age
+		this.dialogueRepository = dialogueRepository
 	}
 
-	speakWith(characterId: string, dialogueId: string) {
-		console.log(`${this.firstName} speaks with ${characterId} about ${dialogueId}`)
+	triggerDialogue(dialogueId: string) {
+		const dialogue = this.dialogueRepository.createPlayerDialogue(dialogueId)
+		if (dialogue) dialogueStore.active = dialogue
 	}
 
 	bark(message: string) {

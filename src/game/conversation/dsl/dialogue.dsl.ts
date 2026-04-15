@@ -1,8 +1,9 @@
 import type { Character } from '../../character/types/character'
 import type { DialogueDefinition, DialogueNode } from '../types/dialogue'
 
-export class DialogueBuilder<
+class DialogueBuilder<
 	CharacterId extends string,
+	DialogueId extends string,
 	ParticipantId extends CharacterId = CharacterId,
 > {
 	private nodes: Record<string, DialogueNode<ParticipantId>> = {}
@@ -11,7 +12,7 @@ export class DialogueBuilder<
 	private optionalParticipants: ParticipantId[] = []
 	private isNpcOnly = true
 
-	constructor(private readonly dialogueId: string) {}
+	constructor(private readonly dialogueId: DialogueId) {}
 
 	withParticipants<
 		RequiredIds extends readonly ParticipantId[],
@@ -19,7 +20,7 @@ export class DialogueBuilder<
 	>(
 		requiredIds: RequiredIds,
 		optionalIds: OptionalIds = [] as any,
-	): DialogueBuilder<CharacterId, RequiredIds[number] | OptionalIds[number]> {
+	): DialogueBuilder<CharacterId, DialogueId, RequiredIds[number] | OptionalIds[number]> {
 		this.requiredParticipants.push(...requiredIds)
 		this.optionalParticipants.push(...optionalIds)
 		return this
@@ -60,7 +61,7 @@ export class DialogueBuilder<
 		return this
 	}
 
-	done(): DialogueDefinition<Character<ParticipantId>, ParticipantId> {
+	done(): DialogueDefinition<Character<ParticipantId>['id'], DialogueId> {
 		if (!this.entryNodeId) {
 			throw new Error('A dialogue must define at least one node before done().')
 		}
@@ -78,5 +79,10 @@ export class DialogueBuilder<
 	}
 }
 
-export const dialogue = <AllowedId extends string>(dialogueId: string) =>
-	new DialogueBuilder<AllowedId>(dialogueId)
+export const dialogue = <AllowedId extends string, Id extends string = string>(dialogueId: Id) =>
+	new DialogueBuilder<AllowedId, Id>(dialogueId)
+
+export const dialogueFor =
+	<AllowedId extends string>() =>
+	<Id extends string>(dialogueId: Id) =>
+		new DialogueBuilder<AllowedId, Id>(dialogueId)

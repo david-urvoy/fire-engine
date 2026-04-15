@@ -1,11 +1,7 @@
-import type { Character } from '../../character/types/character'
-
 export type ParticipantRole = 'npc' | 'player'
 
-export type DialogueId = string
-
-export interface DialogueLine<C extends Character<string>> {
-	speakerId: C
+export interface DialogueLine<Id extends string> {
+	speakerId: Id
 	text: string
 }
 
@@ -25,8 +21,8 @@ export interface DialogueParticipant<Id extends string> {
 	required?: boolean
 }
 
-export interface DialogueDefinition<C extends Character<string>, P extends C['id'] = C['id']> {
-	id: DialogueId
+export interface DialogueDefinition<P extends string, Id extends string = string> {
+	id: Id
 	participants: readonly DialogueParticipant<P>[]
 	isNpcOnly: boolean
 	entryNodeId: string

@@ -7,7 +7,7 @@ export type Bark<C extends Character<string>> = {
 	text: string
 }
 
-type BarkState = Bark & {
+type BarkState<C extends Character<string>> = Bark<C> & {
 	startedAt: number
 	duration: number
 }

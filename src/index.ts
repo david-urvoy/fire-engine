@@ -10,3 +10,5 @@ export * from './physics'
 export * from './settings'
 export * from './time'
 export * from './ui'
+
+export * from './game.context'

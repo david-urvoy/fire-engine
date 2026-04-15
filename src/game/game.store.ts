@@ -2,7 +2,8 @@ import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { PointerLockControls } from 'three-stdlib'
 import { proxy, ref, useSnapshot } from 'valtio'
-import { barks, dialogueStore } from './conversation/conversation.store'
+import { barkStore } from './conversation/bark.store'
+import { dialogueStore } from './conversation/dialogue.store'
 import { entities } from './entity/entity.store'
 
 export const MOVEMENT_SMOOTHING = 20
@@ -28,6 +29,8 @@ export const game = proxy({
 		game.isDebug = !game.isDebug
 	},
 
+	debug: undefined as unknown,
+
 	isPaused: false,
 	pause() {
 		game.isPaused = true
@@ -42,8 +45,11 @@ export const game = proxy({
 		return 'gameplay'
 	},
 
+	pointerLockControls: ref(createRef<PointerLockControls | null>()),
+
 	controlledCharacter: '',
 
+	entities: entities,
 	activeInteractable: '',
 	setInteractable(entityId: string) {
 		game.activeInteractable = entityId
@@ -52,17 +58,8 @@ export const game = proxy({
 		game.activeInteractable = ''
 	},
 
-	pointerLockControls: ref(createRef<PointerLockControls | null>()),
-
-	debug: undefined as unknown,
-
-	entities: entities,
-
 	dialogue: dialogueStore,
-	get isDialogueMode(): boolean {
-		return !!game.dialogue.active
-	},
-	barks: barks,
+	barks: barkStore,
 })
 
 export function useControlledCharacter() {

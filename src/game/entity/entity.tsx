@@ -8,7 +8,7 @@ import { game } from '../game.store'
 import { EntityContext } from './entity.context'
 import { Interactable } from './interactable/interactable'
 
-type EntityProps = {
+export type EntityProps = {
 	name: string
 	interactable?: true
 	controllable?: true

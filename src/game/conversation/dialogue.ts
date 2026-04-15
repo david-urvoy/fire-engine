@@ -17,7 +17,7 @@ export abstract class AbstractDialogue {
 	protected currentLineIndex: number
 	protected participants: readonly DialogueParticipant<string>[]
 
-	constructor(dialogue: DialogueDefinition<Character<string>>) {
+	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
 		this.id = dialogue.id
 		this.startedAt = Date.now()
 		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.length

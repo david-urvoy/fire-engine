@@ -3,9 +3,10 @@ import { useSnapshot } from 'valtio'
 import { game } from '../game'
 
 export const DialogueBox = () => {
-	const { dialogue: gameDialogue } = useSnapshot(game)
+	const {
+		dialogue: { active: dialogue },
+	} = useSnapshot(game)
 
-	const dialogue = gameDialogue.active
 	if (!dialogue || !dialogue.line) {
 		game.pointerLockControls.current?.lock()
 		return null

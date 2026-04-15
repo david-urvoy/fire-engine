@@ -15,6 +15,7 @@ class EntityStore {
 
 	create(name: string, position: [number, number, number]): Entity {
 		if (this.map[name]) return this.map[name]
+
 		const entity = new Entity(name, position)
 		this.map[name] = entity
 		return entity
