@@ -16,7 +16,6 @@ export function Menu() {
 				'm-0 border-none bg-transparent p-0',
 				'flex items-center justify-center',
 				'transition-opacity duration-200',
-				'pointer-events-none',
 				!isPaused && 'opacity-0',
 			)}
 		>

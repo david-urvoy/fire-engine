@@ -7,7 +7,7 @@ export class DialogueSystem<DialogueId extends string = string> {
 		this.repository = repository
 	}
 
-	private next({ dialogue, delta }: { dialogue: AbstractDialogue; delta: number }) {
+	private _step({ dialogue, delta }: { dialogue: AbstractDialogue; delta: number }) {
 		dialogue.timer = (dialogue.timer || 0) + delta
 
 		if (dialogue.timer >= 10) {
@@ -17,27 +17,11 @@ export class DialogueSystem<DialogueId extends string = string> {
 	}
 
 	step(delta: number) {
-		game.dialogue.all.forEach((dialogue) => this.next({ dialogue, delta }))
-		if (game.dialogue.active) this.next({ dialogue: game.dialogue.active, delta })
+		game.dialogue.all.forEach((dialogue) => this._step({ dialogue, delta }))
+		if (game.dialogue.active) this._step({ dialogue: game.dialogue.active, delta })
 	}
 
-	register(dialogueId: DialogueId) {
-		const dialogue = this.repository.createNpcDialogue(dialogueId)
-		if (!dialogue) {
-			console.warn(`Dialogue with ID ${dialogueId} not found.`)
-			return
-		}
-
-		if (game.dialogue.all.includes(dialogue)) return
-		game.dialogue.all.push(dialogue)
-	}
-
-	registerActive(dialogueId: DialogueId) {
-		const dialogue = this.repository.createPlayerDialogue(dialogueId)
-		if (!dialogue) {
-			console.warn(`Dialogue with ID ${dialogueId} not found.`)
-			return
-		}
-		game.dialogue.active = dialogue
+	trigger(dialogueId: DialogueId) {
+		return this.repository.trigger(dialogueId)
 	}
 }

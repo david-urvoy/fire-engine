@@ -1,4 +1,4 @@
-import type { DialogueRepository } from '../..'
+import type { DialogueSystem } from '../conversation/dialogue.system'
 import { Character } from './character.model'
 import type { CharacterApi, Character as CharacterData } from './types/character'
 
@@ -16,7 +16,7 @@ export function createCharacterRepository<
 	const Source extends Readonly<Record<string, CharacterData<string>>>,
 >(
 	source: Source,
-	dialogueRepository: DialogueRepository<string>,
+	dialogueSystem: DialogueSystem<string>,
 ): CharacterRepository<Extract<keyof Source, string>> {
 	type CharacterId = Extract<keyof Source, string>
 	const instances = new Map<CharacterId, Character>()
@@ -33,7 +33,7 @@ export function createCharacterRepository<
 			const data = source[id]
 			if (!data) throw new Error(`Character "${id}" not found in repository`)
 
-			const instance = new Character({ ...data, dialogueRepository })
+			const instance = new Character({ ...data }, dialogueSystem)
 			instances.set(id, instance)
 			return instance
 		},

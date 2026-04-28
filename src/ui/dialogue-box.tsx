@@ -1,5 +1,7 @@
+import { useThree } from '@react-three/fiber'
 import clsx from 'clsx'
-import { useSnapshot } from 'valtio'
+import { useEffect } from 'react'
+import { subscribe, useSnapshot } from 'valtio'
 import { game } from '../game'
 
 export const DialogueBox = () => {
@@ -7,24 +9,24 @@ export const DialogueBox = () => {
 		dialogue: { active: dialogue },
 	} = useSnapshot(game)
 
-	if (!dialogue || !dialogue.line) {
-		game.pointerLockControls.current?.lock()
-		return null
-	} else {
-		game.pointerLockControls.current?.unlock()
-	}
+	// useEffect(() => {
+	// 	if (dialogue?.next()) game.pointerLockControls.current?.unlock()
+	// 	else game.pointerLockControls.current?.lock()
+	// }, [dialogue])
+
+	if (!dialogue?.line) return null
 
 	const { text, speakerId } = dialogue.line
 	const choices = dialogue.choices
 
 	return (
 		<div
+			id="dialogue-box"
 			className={clsx(
-				'font-bebas pointer-events-auto cursor-default select-none',
+				'pointer-events-auto cursor-default select-none',
 				'flex flex-col items-center gap-4',
-				'absolute bottom-12 left-1/2',
-				'-translate-x-1/2 rounded-lg px-6 py-4 text-center text-3xl',
-				'text-white backdrop-blur-sm',
+				'rounded-lg px-6 py-4 text-center text-3xl',
+				'font-bebas text-white backdrop-blur-sm',
 			)}
 		>
 			<p>
@@ -43,4 +45,17 @@ export const DialogueBox = () => {
 			</div>
 		</div>
 	)
+}
+
+export function DialogueEventBlocker() {
+	const { events } = useThree()
+
+	useEffect(() => {
+		return subscribe(game, () => {
+			const blocksScene = game.uiMode === 'dialogue' && !game.dialogue.active?.awaitingChoice
+			events.enabled = !blocksScene
+		})
+	}, [events])
+
+	return null
 }

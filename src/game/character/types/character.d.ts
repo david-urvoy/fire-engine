@@ -11,7 +11,6 @@ export interface CharacterApi<
 	CharacterId extends string = string,
 	DialogueId extends string = string,
 > extends Character<string> {
-	triggerDialogue(dialogueId: DialogueId): void
 	bark(message: string): void
 	barkAt(characterId: CharacterId, message: string): void
 	entity?: Entity

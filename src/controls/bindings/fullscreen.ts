@@ -1,8 +1,7 @@
-import { useContext } from 'react'
-import { AppContext } from '../../lib'
+import { useGame } from '../../game'
 
 export function useToggleFullscreen() {
-	const { canvasRef } = useContext(AppContext)
+	const { canvasRef } = useGame()
 
 	return () => {
 		if (!document.fullscreenEnabled) return

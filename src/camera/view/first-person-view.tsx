@@ -2,12 +2,13 @@ import { PointerLockControls } from '@react-three/drei'
 import { useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 import { game, POINTER_SPEED } from '../../game'
+import { DialogueEventBlocker } from '../../ui'
 import { TouchControls } from '../lock/touch-lock'
 import { usePointerLock } from '../lock/usePointerLock'
 import { CameraOrientation, CameraTracking } from './tracking'
 
 function FirstPersonControls() {
-	const { isMobile, uiMode } = useSnapshot(game)
+	const { isMobile, uiMode, dialogue } = useSnapshot(game)
 	const controlsRef = usePointerLock()
 
 	if (isMobile) return <TouchControls />
@@ -16,7 +17,9 @@ function FirstPersonControls() {
 		<PointerLockControls
 			ref={controlsRef}
 			pointerSpeed={POINTER_SPEED}
-			selector={uiMode === 'pause' ? '#resume' : uiMode === 'dialogue' ? '#none' : 'canvas'}
+			selector={
+				uiMode === 'pause' ? '#resume' : dialogue.active?.awaitingChoice ? '#none' : 'canvas'
+			}
 		/>
 	)
 }
@@ -32,6 +35,7 @@ export function FirstPersonView() {
 			<CameraTracking />
 			<CameraOrientation />
 			<FirstPersonControls />
+			<DialogueEventBlocker />
 		</>
 	)
 }

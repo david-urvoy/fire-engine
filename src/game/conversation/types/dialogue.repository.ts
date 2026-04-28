@@ -1,25 +1,43 @@
 import type { Character } from '../../character/types/character'
+import { game } from '../../game.store'
 import { NpcDialogue, PlayerDialogue } from '../dialogue'
 import type { DialogueDefinition } from './dialogue'
+
+type Dialogue<DialogueId extends string> = DialogueDefinition<Character<string>['id'], DialogueId>
 
 export interface DialogueRepository<DialogueId extends string = string> {
 	get(id: DialogueId): NpcDialogue | PlayerDialogue | undefined
 	has(id: DialogueId): boolean
 	all(): Array<DialogueDefinition<string, DialogueId>>
-	createNpcDialogue(id: DialogueId): NpcDialogue | undefined
-	createPlayerDialogue(id: DialogueId): PlayerDialogue | undefined
+	trigger(id: DialogueId): void
 }
 
 export function createDialogueRepository<DialogueId extends string>(
-	source: Readonly<Record<DialogueId, DialogueDefinition<Character<string>['id'], DialogueId>>>,
+	source: Readonly<Record<DialogueId, Dialogue<DialogueId>>>,
 ): DialogueRepository<DialogueId> {
-	const npcInstances = new Map<DialogueId, NpcDialogue>()
-	let playerInstance: PlayerDialogue | undefined = undefined
+	function createNpcDialogue(dialogue: Dialogue<DialogueId>) {
+		const currentNpcDialogue = game.dialogue.all.find(({ id }) => dialogue.id === id)
+		if (currentNpcDialogue) return currentNpcDialogue
+
+		const instance = new NpcDialogue(dialogue)
+		game.dialogue.all.push(instance)
+		return instance
+	}
+
+	function createPlayerDialogue(dialogue: Dialogue<DialogueId>) {
+		if (game.dialogue.active) return game.dialogue.active
+
+		game.dialogue.active = new PlayerDialogue(dialogue)
+		return game.dialogue.active
+	}
 
 	return {
 		get(id) {
-			const instance = playerInstance?.id === id ? playerInstance : npcInstances.get(id)
-			if (instance) return instance
+			const dialogue =
+				game.dialogue.active?.id === id
+					? game.dialogue.active
+					: game.dialogue.all.find((dialogue) => dialogue?.id === id)
+			if (dialogue) return dialogue
 			throw new Error(`Dialogue with id "${id}" not found in repository`)
 		},
 		has(id) {
@@ -28,24 +46,14 @@ export function createDialogueRepository<DialogueId extends string>(
 		all() {
 			return Object.values(source)
 		},
-		createNpcDialogue(id) {
-			if (npcInstances.has(id)) return npcInstances.get(id)
-
+		trigger(id) {
 			const dialogue = source[id]
-			if (!dialogue) return undefined
+			if (!dialogue) {
+				throw new Error(`Dialogue with id "${id}" not found in repository`)
+			}
 
-			const instance = new NpcDialogue(dialogue)
-			npcInstances.set(id, instance)
-			return instance
-		},
-		createPlayerDialogue(id) {
-			if (playerInstance) return playerInstance
-
-			const dialogue = source[id]
-			if (!dialogue) return undefined
-
-			playerInstance = new PlayerDialogue(dialogue)
-			return playerInstance
+			if (dialogue.isNpcOnly) createNpcDialogue(dialogue)
+			else createPlayerDialogue(dialogue)
 		},
 	}
 }

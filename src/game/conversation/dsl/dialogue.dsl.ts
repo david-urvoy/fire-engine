@@ -10,7 +10,7 @@ class DialogueBuilder<
 	private entryNodeId = ''
 	private requiredParticipants: ParticipantId[] = []
 	private optionalParticipants: ParticipantId[] = []
-	private isNpcOnly = true
+	private isNpcOnly = false
 
 	constructor(private readonly dialogueId: DialogueId) {}
 
@@ -27,7 +27,7 @@ class DialogueBuilder<
 	}
 
 	npcOnly() {
-		this.isNpcOnly = false
+		this.isNpcOnly = true
 		return this
 	}
 

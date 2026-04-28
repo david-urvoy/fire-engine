@@ -29,19 +29,46 @@ export abstract class AbstractDialogue {
 		this.nodes = dialogue.nodes
 	}
 
+	private nextLine() {
+		const node = this.nodes[this.currentNodeId]
+		if (!node) {
+			console.warn(`Node with id "${this.currentNodeId}" not found in dialogue "${this.id}".`)
+			return false
+		}
+
+		if (this.currentLineIndex < node.lines.length - 1) {
+			this.currentLineIndex++
+			return true
+		}
+
+		return false
+	}
+
+	private nextNode() {
+		const node = this.nodes[this.currentNodeId]
+		if (!node) {
+			console.warn(`Node with id "${this.currentNodeId}" not found in dialogue "${this.id}".`)
+			return false
+		}
+
+		if (node.nextNodeId) {
+			this.currentNodeId = node.nextNodeId
+			this.currentLineIndex = 0
+			this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.length
+			return true
+		}
+
+		return false
+	}
+
 	next() {
 		if (this.awaitingChoice) return this
 
-		const node = this.nodes[this.currentNodeId]
-		const next = node?.nextNodeId
+		if (this.nextLine()) return this
+		if (this.nextNode()) return this
 
-		if (!next) return
-
-		this.currentNodeId = next
-		this.currentLineIndex = 0
-		this.awaitingChoice = !!node.choice?.length
-
-		return this
+		console.log(`Dialogue "${this.id}" has ended.`)
+		return undefined
 	}
 
 	choose(choice: DialogueOption) {
@@ -97,10 +124,17 @@ export class NpcDialogue extends AbstractDialogue {
 }
 
 export class PlayerDialogue extends AbstractDialogue {
+	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
+		super(dialogue)
+		game.pointerLockControls.current?.unlock()
+		game.dialogue.active = this
+	}
+
 	override next() {
 		const dialogue = super.next()
 
 		if (!dialogue) {
+			game.pointerLockControls.current?.lock()
 			game.dialogue.active = undefined
 			return
 		}

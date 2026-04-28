@@ -28,7 +28,6 @@ export const game = proxy({
 	toggleDebug() {
 		game.isDebug = !game.isDebug
 	},
-
 	debug: undefined as unknown,
 
 	isPaused: false,
@@ -50,6 +49,7 @@ export const game = proxy({
 	controlledCharacter: '',
 
 	entities: entities,
+
 	activeInteractable: '',
 	setInteractable(entityId: string) {
 		game.activeInteractable = entityId
