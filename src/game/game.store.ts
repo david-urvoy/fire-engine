@@ -1,7 +1,7 @@
 import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { PointerLockControls } from 'three-stdlib'
-import { proxy, ref, useSnapshot } from 'valtio'
+import { proxy, ref } from 'valtio'
 import { barkStore } from './conversation/bark.store'
 import { dialogueStore } from './conversation/dialogue.store'
 import { entities } from './entity/entity.store'
@@ -61,10 +61,3 @@ export const game = proxy({
 	dialogue: dialogueStore,
 	barks: barkStore,
 })
-
-export function useControlledCharacter() {
-	const controlledCharacterName = useSnapshot(game).controlledCharacter
-	const controlledCharacter = game.entities.map[controlledCharacterName]
-
-	return controlledCharacter
-}

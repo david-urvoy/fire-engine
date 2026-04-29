@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber'
-import { game, UP, useControlledCharacter } from '../../game'
+import { game, UP } from '../../game'
+import { useControlledCharacter } from '../../game/character/controlled-character'
 
 export function CameraTracking() {
 	const controlledCharacter = useControlledCharacter()
