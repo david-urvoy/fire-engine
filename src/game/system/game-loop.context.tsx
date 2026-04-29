@@ -5,7 +5,7 @@ import { useGame } from '../game.context'
 import { game } from '../game.store'
 import { GameLoopSystem } from './game-loop.system'
 
-export const GameLoopContext = createContext<GameLoopSystem | null>(null)
+const GameLoopContext = createContext<GameLoopSystem | null>(null)
 
 export function GameLoopProvider({ children }: PropsWithChildren) {
 	const { dialogueSystem } = useGame()

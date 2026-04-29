@@ -29,6 +29,10 @@ export class Character implements CharacterApi<string, string> {
 		this.age = age
 	}
 
+	triggerDialogue(dialogueId: string) {
+		this.dialogueSystem.trigger(dialogueId)
+	}
+
 	bark(message: string) {
 		console.log(`${this.firstName} barks: ${message}`)
 	}
