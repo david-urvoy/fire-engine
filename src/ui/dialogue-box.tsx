@@ -51,10 +51,7 @@ export function DialogueEventBlocker() {
 	const { events } = useThree()
 
 	useEffect(() => {
-		return subscribe(game, () => {
-			const blocksScene = game.uiMode === 'dialogue' && !game.dialogue.active?.awaitingChoice
-			events.enabled = !blocksScene
-		})
+		return subscribe(game, () => (events.enabled = game.uiMode !== 'dialogue'))
 	}, [events])
 
 	return null
