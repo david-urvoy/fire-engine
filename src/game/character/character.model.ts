@@ -1,4 +1,4 @@
-import type { DialogueRepository } from '../conversation/types/dialogue.repository'
+import type { DialogueManager } from '../conversation/types/dialogue.manager'
 import type { Entity } from '../entity/entity.model'
 import type { CharacterApi } from './types/character'
 
@@ -21,7 +21,7 @@ export class Character implements CharacterApi<string, string> {
 			lastName: string
 			age: number
 		},
-		public dialogueRepository: DialogueRepository<string>,
+		public dialogueManager: DialogueManager<string>,
 	) {
 		this.id = id
 		this.firstName = firstName
@@ -30,7 +30,7 @@ export class Character implements CharacterApi<string, string> {
 	}
 
 	triggerDialogue(dialogueId: string) {
-		this.dialogueRepository.trigger(dialogueId)
+		this.dialogueManager.trigger(dialogueId)
 	}
 
 	bark(message: string) {

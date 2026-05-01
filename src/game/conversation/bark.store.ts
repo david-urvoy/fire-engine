@@ -1,13 +1,13 @@
-import type { Bark, BarkRepository } from '../..'
+import type { Bark, BarkManager } from '../..'
 import type { Character } from '../character'
 
 class BarkStore {
 	activeBarks = new Map<string, Bark<Character<string>>>()
 
-	constructor(public repository?: BarkRepository) {}
+	constructor(public manager?: BarkManager) {}
 
 	bark(id: string, duration: number) {
-		const bark = this.repository?.get(id)
+		const bark = this.manager?.get(id)
 
 		if (!bark) {
 			console.error(`Bark with id ${id} not found.`)

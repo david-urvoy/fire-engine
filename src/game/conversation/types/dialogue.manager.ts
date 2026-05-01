@@ -5,16 +5,16 @@ import type { DialogueDefinition } from './dialogue'
 
 type Dialogue<DialogueId extends string> = DialogueDefinition<Character<string>['id'], DialogueId>
 
-export interface DialogueRepository<DialogueId extends string = string> {
-	get(id: DialogueId): NpcDialogue | PlayerDialogue | undefined
+export interface DialogueManager<DialogueId extends string = string> {
+	get(id: DialogueId): NpcDialogue | PlayerDialogue
 	has(id: DialogueId): boolean
 	all(): Array<DialogueDefinition<string, DialogueId>>
 	trigger(id: DialogueId): void
 }
 
-export function createDialogueRepository<DialogueId extends string>(
+export function createDialogueManager<DialogueId extends string>(
 	source: Readonly<Record<DialogueId, Dialogue<DialogueId>>>,
-): DialogueRepository<DialogueId> {
+): DialogueManager<DialogueId> {
 	function createNpcDialogue(dialogue: Dialogue<DialogueId>) {
 		const currentNpcDialogue = game.dialogue.all.find(({ id }) => dialogue.id === id)
 		if (currentNpcDialogue) return currentNpcDialogue
@@ -37,8 +37,8 @@ export function createDialogueRepository<DialogueId extends string>(
 				game.dialogue.active?.id === id
 					? game.dialogue.active
 					: game.dialogue.all.find((dialogue) => dialogue?.id === id)
-			if (dialogue) return dialogue
-			throw new Error(`Dialogue with id "${id}" not found in repository`)
+			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
+			return dialogue
 		},
 		has(id) {
 			return id in source
@@ -48,9 +48,7 @@ export function createDialogueRepository<DialogueId extends string>(
 		},
 		trigger(id) {
 			const dialogue = source[id]
-			if (!dialogue) {
-				throw new Error(`Dialogue with id "${id}" not found in repository`)
-			}
+			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
 
 			if (dialogue.isNpcOnly) createNpcDialogue(dialogue)
 			else createPlayerDialogue(dialogue)
