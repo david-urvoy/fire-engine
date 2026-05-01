@@ -1,4 +1,4 @@
-import { useEffect, useRef, type PropsWithChildren, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, type PropsWithChildren, type RefObject } from 'react'
 import { Object3D, Vector3 } from 'three'
 import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
@@ -6,6 +6,7 @@ import { Physic } from '../../physics'
 import { Gravity } from '../../physics/gravity'
 import { game } from '../game.store'
 import { EntityContext } from './entity.context'
+import { Entity as EntityModel } from './entity.model'
 import { Interactable } from './interactable/interactable'
 
 export type EntityProps = {
@@ -43,12 +44,25 @@ export function Entity({
 	}, [name, resolvedRef])
 
 	useEffect(() => {
-		game.entities.get(name).controls.teleport = new Vector3(...position)
+		const entity = game.entities.get(name)
+		if (!entity) return
+
+		entity.controls.teleport = new Vector3(...position)
+	}, [name, position])
+
+	const entity = useMemo(() => {
+		const newEntity = new EntityModel(name, position)
+		game.entities.set(name, newEntity)
+		return newEntity
 	}, [name, position])
 
 	return (
 		<EntityContext.Provider
-			value={{ id: name, ref: resolvedRef, entity: game.entities.create(name, position) }}
+			value={{
+				id: name,
+				ref: resolvedRef,
+				entity,
+			}}
 		>
 			{controllable && <Controllable />}
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}

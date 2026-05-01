@@ -17,6 +17,8 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 		fullscreen: toggleFullscreen,
 		snap: () => {
 			const sphere = game.entities.get('sphere')
+			if (!sphere) return
+
 			sphere.teleportTo(new Vector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
 		},
 		nextDialog: () => game.dialogue.active?.next(),

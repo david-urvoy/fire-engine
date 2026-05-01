@@ -4,7 +4,7 @@ import { PointerLockControls } from 'three-stdlib'
 import { proxy, ref } from 'valtio'
 import { barkStore } from './conversation/bark.store'
 import { dialogueStore } from './conversation/dialogue.store'
-import { entities } from './entity/entity.store'
+import type { Entity } from './entity/entity.model'
 
 export const MOVEMENT_SMOOTHING = 20
 export const POINTER_SPEED = 0.8
@@ -48,7 +48,7 @@ export const game = proxy({
 
 	controlledCharacter: '',
 
-	entities: entities,
+	entities: new Map<string, Entity>(),
 
 	activeInteractable: '',
 	setInteractable(entityId: string) {
