@@ -3,12 +3,11 @@ import { GravitySystem } from '../../physics/gravity.system'
 import { PhysicSystem } from '../../physics/physic.system'
 import { DialogueSystem } from '../conversation/dialogue.system'
 
-export class GameLoopSystem<DialogueId extends string = string> {
+export class GameLoopSystem {
 	gravity: GravitySystem = new GravitySystem()
 	physic: PhysicSystem = new PhysicSystem()
 	visual: VisualSystem = new VisualSystem()
-
-	constructor(public dialogue: DialogueSystem<DialogueId>) {}
+	dialogue: DialogueSystem = new DialogueSystem()
 
 	step(delta: number) {
 		this.gravity.step(delta)
