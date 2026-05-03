@@ -51,7 +51,12 @@ export function DialogueEventBlocker() {
 	const { events } = useThree()
 
 	useEffect(() => {
-		return subscribe(game, () => (events.enabled = game.uiMode !== 'dialogue'))
+		return subscribe(game, () => {
+			events.enabled = game.uiMode !== 'dialogue'
+
+			if (game.uiMode === 'dialogue') game.pointerLockControls.current?.unlock()
+			else game.pointerLockControls.current?.lock()
+		})
 	}, [events])
 
 	return null

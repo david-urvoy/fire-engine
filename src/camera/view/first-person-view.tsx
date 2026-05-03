@@ -17,9 +17,7 @@ function FirstPersonControls() {
 		<PointerLockControls
 			ref={controlsRef}
 			pointerSpeed={POINTER_SPEED}
-			selector={
-				uiMode === 'pause' ? '#resume' : dialogue.active?.awaitingChoice ? '#none' : 'canvas'
-			}
+			selector={uiMode === 'pause' ? '#resume' : dialogue.active?.line ? '#none' : 'canvas'}
 		/>
 	)
 }

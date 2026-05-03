@@ -126,7 +126,6 @@ export class NpcDialogue extends AbstractDialogue {
 export class PlayerDialogue extends AbstractDialogue {
 	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
 		super(dialogue)
-		game.pointerLockControls.current?.unlock()
 		game.dialogue.active = this
 	}
 
@@ -134,7 +133,6 @@ export class PlayerDialogue extends AbstractDialogue {
 		const dialogue = super.next()
 
 		if (!dialogue) {
-			game.pointerLockControls.current?.lock()
 			game.dialogue.active = undefined
 			return
 		}
