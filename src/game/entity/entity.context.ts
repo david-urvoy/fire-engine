@@ -1,15 +1,12 @@
-import { createContext, createRef, useContext, type RefObject } from 'react'
-import { Object3D } from 'three'
+import { createContext, useContext } from 'react'
 import { Entity } from './entity.model'
 
 export const EntityContext = createContext<{
 	id: string
-	ref: RefObject<Object3D | null>
 	entity: Entity
 }>({
 	id: '',
-	ref: createRef(),
-	entity: new Entity(''),
+	entity: new Entity({ id: '' }),
 })
 
 export function useEntity() {

@@ -1,9 +1,18 @@
-import type { Quaternion, Vector3 } from 'three'
+import type { RapierRigidBody } from '@react-three/rapier'
+import type { Object3D, Quaternion, Vector3 } from 'three'
 
 export interface ControlsState {
 	move: Vector3
 	orientation: Quaternion
 	teleport?: Vector3
+}
+
+export interface VisualRuntime {
+	object3D?: Object3D
+}
+
+export interface PhysicRuntime {
+	rigidBody?: RapierRigidBody
 }
 
 export interface PhysicState {
@@ -12,12 +21,15 @@ export interface PhysicState {
 	velocity: Vector3
 	isGrounded: boolean
 	dynamic?: boolean
+	runtime: PhysicRuntime
 }
 
 export interface VisualState {
+	localPosition: Vector3
 	position: Vector3
 	orientation: Quaternion
 	snap?: boolean
+	runtime: VisualRuntime
 }
 
 export interface InteractionState {

@@ -3,14 +3,14 @@ import { useEntity } from '../..'
 import { sceneRegistry } from '../../system/scene-registry'
 
 export function Interactable() {
-	const { id, ref } = useEntity()
+	const { id, entity } = useEntity()
 
 	useEffect(() => {
-		const object = { ref }
+		const object = { entity }
 		sceneRegistry.add(id, object)
 
 		return () => sceneRegistry.remove(id, object)
-	}, [id, ref])
+	}, [id, entity])
 
 	return null
 }

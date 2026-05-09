@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef, type PropsWithChildren, type RefObject } from 'react'
-import { Object3D, Vector3 } from 'three'
+import { useMemo, type PropsWithChildren } from 'react'
 import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
 import { Physic } from '../../physics'
@@ -17,7 +16,6 @@ export type EntityProps = {
 	gravity?: boolean
 	fixed?: true
 	visual?: boolean
-	ref?: RefObject<Object3D>
 	position?: [number, number, number]
 }
 
@@ -30,37 +28,18 @@ export function Entity({
 	fixed,
 	visual = true,
 	position = [0, 0, 0],
-	ref: entityRef,
 	children,
 }: PropsWithChildren<EntityProps>) {
-	const defaultRef = useRef<Object3D>(null)
-	const resolvedRef = entityRef || defaultRef
-
-	useEffect(() => {
-		if (!resolvedRef.current) return
-		resolvedRef.current.traverse((child) => {
-			child.userData.entityId = name
-		})
-	}, [name, resolvedRef])
-
-	useEffect(() => {
-		const entity = game.entities.get(name)
-		if (!entity) return
-
-		entity.controls.teleport = new Vector3(...position)
-	}, [name, position])
-
 	const entity = useMemo(() => {
-		const newEntity = new EntityModel(name, position)
+		const newEntity = new EntityModel({ id: name })
 		game.entities.set(name, newEntity)
 		return newEntity
-	}, [name, position])
+	}, [name])
 
 	return (
 		<EntityContext.Provider
 			value={{
 				id: name,
-				ref: resolvedRef,
 				entity,
 			}}
 		>
@@ -68,7 +47,13 @@ export function Entity({
 			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
 			{gravity && <Gravity />}
 			{interactable && <Interactable />}
-			{visual ? <Visual smoothing={10}>{children}</Visual> : children}
+			{visual ? (
+				<Visual position={position} smoothing={10}>
+					{children}
+				</Visual>
+			) : (
+				children
+			)}
 		</EntityContext.Provider>
 	)
 }

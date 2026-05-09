@@ -19,12 +19,17 @@ class Controls implements ControlsState {
 }
 
 class Visual implements VisualState {
+	public localPosition: Vector3 = new Vector3()
 	public position: Vector3 = new Vector3()
 	public orientation: Quaternion = new Quaternion()
 	public snap = false
+	public runtime = {}
 
 	constructor(position?: [number, number, number]) {
-		if (position) this.position.set(...position)
+		if (position) {
+			this.localPosition.set(...position)
+			this.position.set(...position)
+		}
 	}
 }
 
@@ -36,7 +41,7 @@ export class Entity implements EntityState, EntityApi {
 	interaction?: InteractionState
 	private cameraProxy = CameraProxy
 
-	constructor(id: string, position: [number, number, number] = [0, 0, 0]) {
+	constructor({ id, position = [0, 0, 0] }: { id: string; position?: [number, number, number] }) {
 		this.id = id
 		this.controls = new Controls()
 		this.visual = new Visual(position)
@@ -50,6 +55,7 @@ export class Entity implements EntityState, EntityApi {
 				velocity: new Vector3(),
 				isGrounded: true,
 				dynamic,
+				runtime: {},
 			}
 		}
 		return this
@@ -62,6 +68,9 @@ export class Entity implements EntityState, EntityApi {
 
 	teleportTo(target: Vector3) {
 		this.controls.teleport = target.clone()
+
+		if (!this.physic) this.visual.position.copy(target)
+
 		return this
 	}
 

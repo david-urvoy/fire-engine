@@ -1,8 +1,7 @@
-import type { RefObject } from 'react'
-import type { Object3D } from 'three'
+import type { EntityState } from '../entity/types/entity'
 
 type InteractableEntry = {
-	ref: RefObject<Object3D | null>
+	entity: EntityState
 	metadata?: Record<string, any>
 }
 
@@ -32,7 +31,7 @@ export const sceneRegistry = {
 	getAllObjects() {
 		return Array.from(this._interactables.values())
 			.flatMap((set) => Array.from(set))
-			.map((e) => e.ref.current)
+			.map((e) => e.entity.visual.runtime.object3D)
 			.filter((e) => !!e)
 	},
 }

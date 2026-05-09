@@ -65,13 +65,24 @@ export function Physic({
 	)
 
 	useEffect(() => {
+		const rigidBody = body.current ?? undefined
+
 		entity.initPhysic(props.type !== 'fixed')
+		if (entity.physic) {
+			entity.physic.runtime.rigidBody = rigidBody
+		}
 		physic.register({
 			entity,
 			move,
 		})
 
-		return () => physic.unregister(entity.id)
+		return () => {
+			const physicState = entity.physic
+			if (physicState && physicState.runtime.rigidBody === rigidBody) {
+				physicState.runtime.rigidBody = undefined
+			}
+			physic.unregister(entity.id)
+		}
 	}, [physic, entity, props.type, move])
 
 	return (
