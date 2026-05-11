@@ -1,4 +1,4 @@
-import type { DialogueManager } from '../conversation/types/dialogue.manager'
+import type { DialogueManager } from '../conversation/dialogue.manager'
 import { Character } from './character.model'
 import type { CharacterApi, Character as CharacterData } from './types/character'
 

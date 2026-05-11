@@ -1,5 +1,5 @@
 import type { Character } from '../character/types/character'
-import { game } from '../game.store'
+import { dialogueStore } from './dialogue.store'
 import type {
 	DialogueDefinition,
 	DialogueNode,
@@ -105,9 +105,9 @@ export abstract class AbstractDialogue {
 
 export class NpcDialogue extends AbstractDialogue {
 	private remove() {
-		const dialogueIndex = game.dialogue.all.indexOf(this)
+		const dialogueIndex = dialogueStore.all.indexOf(this)
 
-		if (dialogueIndex !== -1) game.dialogue.all.splice(dialogueIndex, 1)
+		if (dialogueIndex !== -1) dialogueStore.all.splice(dialogueIndex, 1)
 		else console.warn(`Dialogue with id ${this.id} not found in dialogues array.`)
 	}
 
@@ -126,14 +126,14 @@ export class NpcDialogue extends AbstractDialogue {
 export class PlayerDialogue extends AbstractDialogue {
 	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
 		super(dialogue)
-		game.dialogue.active = this
+		dialogueStore.active = this
 	}
 
 	override next() {
 		const dialogue = super.next()
 
 		if (!dialogue) {
-			game.dialogue.active = undefined
+			dialogueStore.active = undefined
 			return
 		}
 

@@ -1,6 +1,6 @@
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
 import type { CharacterManager } from './character'
-import type { DialogueManager } from './conversation/types/dialogue.manager'
+import type { DialogueManager } from './conversation/dialogue.manager'
 
 interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
 	characterManager: CharacterManager<CharacterId, DialogueId>
@@ -19,9 +19,7 @@ export function GameProvider<CharacterId extends string, DialogueId extends stri
 	children,
 }: PropsWithChildren<GameProviderProps<CharacterId, DialogueId>>) {
 	return (
-		<GameContext.Provider
-			value={{ characterManager, dialogueManager, canvasRef }}
-		>
+		<GameContext.Provider value={{ characterManager, dialogueManager, canvasRef }}>
 			{children}
 		</GameContext.Provider>
 	)

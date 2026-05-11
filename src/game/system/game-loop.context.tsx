@@ -7,7 +7,7 @@ import { GameLoopSystem } from './game-loop.system'
 const GameLoopContext = createContext<GameLoopSystem | null>(null)
 
 export function GameLoopProvider({ children }: PropsWithChildren) {
-	const { uiMode } = useSnapshot(game)
+	const { isPaused } = useSnapshot(game)
 	const systemRef = useRef<GameLoopSystem>(null)
 
 	if (!systemRef.current) {
@@ -17,7 +17,7 @@ export function GameLoopProvider({ children }: PropsWithChildren) {
 	const system = systemRef.current
 
 	useFrame((_, delta) => {
-		if (uiMode === 'pause') return
+		if (isPaused) return
 		system.step(delta)
 	})
 

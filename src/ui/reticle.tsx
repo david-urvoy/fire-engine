@@ -2,6 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
 import { game } from '../game'
+import { entityManager } from '../game/entity/entity.manager'
 import { sceneRegistry } from '../game/system/scene-registry'
 
 export function Reticle() {
@@ -31,14 +32,14 @@ export function useReticleInteraction() {
 		if (hit === lastHit.current) return
 
 		if (lastHit.current) {
-			const prevEntity = game.entities.get(lastHit.current.userData.entityId)
+			const prevEntity = entityManager.get(lastHit.current.userData.entityId)
 			if (!prevEntity) return
 
 			if (prevEntity.interaction?.isInteracting) prevEntity.interaction.isInteracting = false
 		}
 
 		if (hit) {
-			const entity = game.entities.get(hit.userData.entityId)
+			const entity = entityManager.get(hit.userData.entityId)
 			if (!entity) return
 
 			if (entity.interaction) entity.interaction.isInteracting = true

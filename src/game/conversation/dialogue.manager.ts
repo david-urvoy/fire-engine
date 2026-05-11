@@ -1,7 +1,7 @@
-import type { Character } from '../../character/types/character'
-import { game } from '../../game.store'
-import { NpcDialogue, PlayerDialogue } from '../dialogue'
-import type { DialogueDefinition } from './dialogue'
+import type { Character } from '../character/types/character'
+import { NpcDialogue, PlayerDialogue } from './dialogue'
+import { dialogueStore } from './dialogue.store'
+import type { DialogueDefinition } from './types/dialogue'
 
 type Dialogue<DialogueId extends string> = DialogueDefinition<Character<string>['id'], DialogueId>
 
@@ -16,27 +16,27 @@ export function createDialogueManager<DialogueId extends string>(
 	source: Readonly<Record<DialogueId, Dialogue<DialogueId>>>,
 ): DialogueManager<DialogueId> {
 	function createNpcDialogue(dialogue: Dialogue<DialogueId>) {
-		const currentNpcDialogue = game.dialogue.all.find(({ id }) => dialogue.id === id)
+		const currentNpcDialogue = dialogueStore.all.find(({ id }) => dialogue.id === id)
 		if (currentNpcDialogue) return currentNpcDialogue
 
 		const instance = new NpcDialogue(dialogue)
-		game.dialogue.all.push(instance)
+		dialogueStore.all.push(instance)
 		return instance
 	}
 
 	function createPlayerDialogue(dialogue: Dialogue<DialogueId>) {
-		if (game.dialogue.active) return game.dialogue.active
+		if (dialogueStore.active) return dialogueStore.active
 
-		game.dialogue.active = new PlayerDialogue(dialogue)
-		return game.dialogue.active
+		dialogueStore.active = new PlayerDialogue(dialogue)
+		return dialogueStore.active
 	}
 
 	return {
 		get(id) {
 			const dialogue =
-				game.dialogue.active?.id === id
-					? game.dialogue.active
-					: game.dialogue.all.find((dialogue) => dialogue?.id === id)
+				dialogueStore.active?.id === id
+					? dialogueStore.active
+					: dialogueStore.all.find((dialogue) => dialogue?.id === id)
 			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
 			return dialogue
 		},

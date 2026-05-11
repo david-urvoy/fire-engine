@@ -1,10 +1,10 @@
-import { useMemo, type PropsWithChildren } from 'react'
+import { useEffect, useMemo, type PropsWithChildren } from 'react'
 import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
 import { Physic } from '../../physics'
 import { Gravity } from '../../physics/gravity'
-import { game } from '../game.store'
 import { EntityContext } from './entity.context'
+import { entityManager } from './entity.manager'
 import { Entity as EntityModel } from './entity.model'
 import { Interactable } from './interactable/interactable'
 
@@ -30,11 +30,15 @@ export function Entity({
 	position = [0, 0, 0],
 	children,
 }: PropsWithChildren<EntityProps>) {
-	const entity = useMemo(() => {
-		const newEntity = new EntityModel({ id: name })
-		game.entities.set(name, newEntity)
-		return newEntity
-	}, [name])
+	const entity = useMemo(() => new EntityModel({ id: name }), [name])
+
+	useEffect(() => {
+		entityManager.set(name, entity)
+
+		return () => {
+			entityManager.delete(name)
+		}
+	}, [name, entity])
 
 	return (
 		<EntityContext.Provider

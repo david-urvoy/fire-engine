@@ -1,4 +1,5 @@
-import type { DialogueManager } from '../conversation/types/dialogue.manager'
+import type { DialogueManager } from '../conversation/dialogue.manager'
+import { entityManager } from '../entity/entity.manager'
 import type { Entity } from '../entity/entity.model'
 import type { CharacterApi } from './types/character'
 
@@ -7,7 +8,6 @@ export class Character implements CharacterApi<string, string> {
 	firstName: string
 	lastName: string
 	age: number
-	entity?: Entity
 
 	constructor(
 		{
@@ -39,5 +39,9 @@ export class Character implements CharacterApi<string, string> {
 
 	barkAt(characterId: string, message: string) {
 		console.log(`${this.firstName} barks at ${characterId}: ${message}`)
+	}
+
+	get entity(): Entity | undefined {
+		return entityManager.get(this.id)
 	}
 }

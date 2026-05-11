@@ -1,18 +1,11 @@
 import { useThree } from '@react-three/fiber'
 import clsx from 'clsx'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { subscribe, useSnapshot } from 'valtio'
-import { game } from '../game'
+import { dialogueStore, game } from '../game'
 
 export const DialogueBox = () => {
-	const {
-		dialogue: { active: dialogue },
-	} = useSnapshot(game)
-
-	// useEffect(() => {
-	// 	if (dialogue?.next()) game.pointerLockControls.current?.unlock()
-	// 	else game.pointerLockControls.current?.lock()
-	// }, [dialogue])
+	const { active: dialogue } = useSnapshot(dialogueStore)
 
 	if (!dialogue?.line) return null
 
@@ -37,7 +30,7 @@ export const DialogueBox = () => {
 					<button
 						className="underline hover:bg-amber-200"
 						key={choice.label}
-						onMouseUp={() => game.dialogue.active?.choose(choice)}
+						onMouseUp={() => dialogueStore.active?.choose(choice)}
 					>
 						{choice.label}
 					</button>
@@ -49,14 +42,29 @@ export const DialogueBox = () => {
 
 export function DialogueEventBlocker() {
 	const { events } = useThree()
+	const previousModeRef = useRef<boolean | null>(null)
 
 	useEffect(() => {
-		return subscribe(game, () => {
-			events.enabled = game.uiMode !== 'dialogue'
+		const syncEvents = () => {
+			const isDialogueMode = !game.isPaused && !!dialogueStore.active
+			events.enabled = !isDialogueMode
 
-			if (game.uiMode === 'dialogue') game.pointerLockControls.current?.unlock()
-			else game.pointerLockControls.current?.lock()
-		})
+			if (previousModeRef.current !== null && previousModeRef.current !== isDialogueMode) {
+				if (isDialogueMode) game.pointerLockControls.current?.unlock()
+				else game.pointerLockControls.current?.lock()
+			}
+
+			previousModeRef.current = isDialogueMode
+		}
+
+		syncEvents()
+		const unsubscribeGame = subscribe(game, syncEvents)
+		const unsubscribeDialogue = subscribe(dialogueStore, syncEvents)
+
+		return () => {
+			unsubscribeGame()
+			unsubscribeDialogue()
+		}
 	}, [events])
 
 	return null

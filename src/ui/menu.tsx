@@ -5,8 +5,7 @@ import { useSnapshot } from 'valtio'
 import { game } from '../game'
 
 export function Menu() {
-	const { uiMode } = useSnapshot(game)
-	const isPaused = uiMode === 'pause'
+	const { isPaused } = useSnapshot(game)
 
 	return (
 		<div
