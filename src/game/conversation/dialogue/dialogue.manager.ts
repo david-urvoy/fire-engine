@@ -1,7 +1,7 @@
-import type { Character } from '../character/types/character'
-import { NpcDialogue, PlayerDialogue } from './dialogue'
+import type { Character } from '../../character/types/character'
+import type { DialogueDefinition } from './dialogue'
+import { NpcDialogue, PlayerDialogue } from './dialogue.model'
 import { dialogueStore } from './dialogue.store'
-import type { DialogueDefinition } from './types/dialogue'
 
 type Dialogue<DialogueId extends string> = DialogueDefinition<Character<string>['id'], DialogueId>
 

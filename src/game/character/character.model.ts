@@ -1,4 +1,4 @@
-import type { DialogueManager } from '../conversation/dialogue.manager'
+import type { DialogueManager } from '../conversation/dialogue/dialogue.manager'
 import { entityManager } from '../entity/entity.manager'
 import type { Entity } from '../entity/entity.model'
 import type { CharacterApi } from './types/character'

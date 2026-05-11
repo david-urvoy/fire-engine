@@ -1,4 +1,4 @@
-import { AbstractDialogue } from './dialogue'
+import type { AbstractDialogue } from './dialogue.model'
 import { dialogueStore } from './dialogue.store'
 
 export class DialogueSystem {

@@ -1,6 +1,6 @@
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
 import type { CharacterManager } from './character'
-import type { DialogueManager } from './conversation/dialogue.manager'
+import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
 
 interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
 	characterManager: CharacterManager<CharacterId, DialogueId>

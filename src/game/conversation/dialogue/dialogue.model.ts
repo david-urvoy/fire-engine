@@ -1,11 +1,11 @@
-import type { Character } from '../character/types/character'
-import { dialogueStore } from './dialogue.store'
+import type { Character } from '../../character/types/character'
 import type {
 	DialogueDefinition,
 	DialogueNode,
 	DialogueOption,
 	DialogueParticipant,
-} from './types/dialogue'
+} from './dialogue'
+import { dialogueStore } from './dialogue.store'
 
 export abstract class AbstractDialogue {
 	id: string

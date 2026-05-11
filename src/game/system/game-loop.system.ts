@@ -1,7 +1,7 @@
 import { VisualSystem } from '../../3d/visual.system'
 import { GravitySystem } from '../../physics/gravity.system'
 import { PhysicSystem } from '../../physics/physic.system'
-import { DialogueSystem } from '../conversation/dialogue.system'
+import { DialogueSystem } from '../conversation/dialogue/dialogue.system'
 
 export class GameLoopSystem {
 	gravity: GravitySystem = new GravitySystem()
