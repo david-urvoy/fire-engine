@@ -6,7 +6,7 @@ export function Bark({ children }: PropsWithChildren) {
 		<Suspense fallback={null}>
 			<Billboard>
 				<Float speed={10} rotationIntensity={1} floatIntensity={0.5}>
-					<Text position-y={0.2} fontSize={0.1} color="white" anchorX="center" anchorY="middle">
+					<Text position-y={0.3} fontSize={0.1} color="white" anchorX="center" anchorY="middle">
 						{children}
 					</Text>
 				</Float>
