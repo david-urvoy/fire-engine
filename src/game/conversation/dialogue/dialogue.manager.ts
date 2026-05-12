@@ -24,10 +24,16 @@ export function createDialogueManager<DialogueId extends string>(
 		return instance
 	}
 
-	function createPlayerDialogue(dialogue: Dialogue<DialogueId>) {
+	function createPlayerDialogue({
+		dialogue,
+		locked = true,
+	}: {
+		dialogue: Dialogue<DialogueId>
+		locked?: boolean
+	}) {
 		if (dialogueStore.active) return dialogueStore.active
 
-		dialogueStore.active = new PlayerDialogue(dialogue)
+		dialogueStore.active = new PlayerDialogue({ dialogue, locked })
 		return dialogueStore.active
 	}
 
@@ -51,7 +57,7 @@ export function createDialogueManager<DialogueId extends string>(
 			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
 
 			if (dialogue.isNpcOnly) createNpcDialogue(dialogue)
-			else createPlayerDialogue(dialogue)
+			else createPlayerDialogue({ dialogue, locked: dialogue.locked })
 		},
 	}
 }

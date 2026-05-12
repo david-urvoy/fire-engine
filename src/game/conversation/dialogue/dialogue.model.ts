@@ -124,9 +124,18 @@ export class NpcDialogue extends AbstractDialogue {
 }
 
 export class PlayerDialogue extends AbstractDialogue {
-	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
+	locked = true
+
+	constructor({
+		dialogue,
+		locked = true,
+	}: {
+		dialogue: DialogueDefinition<Character<string>['id']>
+		locked?: boolean
+	}) {
 		super(dialogue)
 		dialogueStore.active = this
+		this.locked = locked
 	}
 
 	override next() {

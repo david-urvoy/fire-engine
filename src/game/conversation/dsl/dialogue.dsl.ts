@@ -11,6 +11,7 @@ class DialogueBuilder<
 	private requiredParticipants: ParticipantId[] = []
 	private optionalParticipants: ParticipantId[] = []
 	private isNpcOnly = false
+	private isLocked = false
 
 	constructor(private readonly dialogueId: DialogueId) {}
 
@@ -28,6 +29,12 @@ class DialogueBuilder<
 
 	npcOnly() {
 		this.isNpcOnly = true
+		return this
+	}
+
+	locked() {
+		this.isLocked = true
+
 		return this
 	}
 
@@ -61,10 +68,51 @@ class DialogueBuilder<
 		return this
 	}
 
+	private hasReachableChoice() {
+		const visited = new Set<string>()
+		const toVisit = [this.entryNodeId]
+
+		while (toVisit.length) {
+			const nodeId = toVisit.pop()
+			if (!nodeId || visited.has(nodeId)) continue
+			visited.add(nodeId)
+
+			const node = this.nodes[nodeId]
+			if (!node) continue
+
+			if (node.choice?.length) return true
+
+			if (node.nextNodeId) toVisit.push(node.nextNodeId)
+			for (const choice of node.choice ?? []) {
+				toVisit.push(choice.nextNodeId)
+			}
+		}
+
+		return false
+	}
+
 	done(): DialogueDefinition<Character<ParticipantId>['id'], DialogueId> {
 		if (!this.entryNodeId) {
 			throw new Error('A dialogue must define at least one node before done().')
 		}
+
+		const hasChoice = this.hasReachableChoice()
+
+		if (this.isNpcOnly && hasChoice) {
+			throw new Error('An npcOnly dialogue cannot contain reachable choices.')
+		}
+
+		if (this.isNpcOnly)
+			return {
+				id: this.dialogueId,
+				participants: [
+					...this.requiredParticipants.map((id) => ({ id, required: true })),
+					...this.optionalParticipants.map((id) => ({ id, required: false })),
+				],
+				entryNodeId: this.entryNodeId,
+				nodes: this.nodes,
+				isNpcOnly: true,
+			}
 
 		return {
 			id: this.dialogueId,
@@ -74,7 +122,8 @@ class DialogueBuilder<
 			],
 			entryNodeId: this.entryNodeId,
 			nodes: this.nodes,
-			isNpcOnly: this.isNpcOnly,
+			isNpcOnly: false,
+			locked: this.isLocked || hasChoice,
 		}
 	}
 }

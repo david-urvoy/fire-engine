@@ -10,13 +10,15 @@ export const DialogueBox = () => {
 	if (!dialogue?.line) return null
 
 	const { text, speakerId } = dialogue.line
+	const isLockedDialogue = !!dialogue.locked
 	const choices = dialogue.choices
 
 	return (
 		<div
 			id="dialogue-box"
 			className={clsx(
-				'pointer-events-auto cursor-default select-none',
+				isLockedDialogue ? 'pointer-events-auto' : 'pointer-events-none',
+				'cursor-default select-none',
 				'flex flex-col items-center gap-4',
 				'rounded-lg px-6 py-4 text-center text-3xl',
 				'font-bebas text-white backdrop-blur-sm',
@@ -25,17 +27,19 @@ export const DialogueBox = () => {
 			<p>
 				{speakerId.charAt(0).toUpperCase() + speakerId.slice(1)}: {text}
 			</p>
-			<div className="flex gap-4">
-				{choices?.map((choice) => (
-					<button
-						className="underline hover:bg-amber-200"
-						key={choice.label}
-						onMouseUp={() => dialogueStore.active?.choose(choice)}
-					>
-						{choice.label}
-					</button>
-				))}
-			</div>
+			{isLockedDialogue && !!choices?.length && (
+				<div className="flex gap-4">
+					{choices.map((choice) => (
+						<button
+							className="underline hover:bg-amber-200"
+							key={choice.label}
+							onMouseUp={() => dialogueStore.active?.choose(choice)}
+						>
+							{choice.label}
+						</button>
+					))}
+				</div>
+			)}
 		</div>
 	)
 }
@@ -46,7 +50,7 @@ export function DialogueEventBlocker() {
 
 	useEffect(() => {
 		const syncEvents = () => {
-			const isDialogueMode = !game.isPaused && !!dialogueStore.active
+			const isDialogueMode = !game.isPaused && !!dialogueStore.active?.locked
 			events.enabled = !isDialogueMode
 
 			if (previousModeRef.current !== null && previousModeRef.current !== isDialogueMode) {

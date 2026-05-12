@@ -1,23 +1,24 @@
 import { Vector2 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
 import { computed } from 'valtio-reactive'
-import { Keymap } from './keymap'
+import { type Action, Keymap } from './keymap'
 
 const _dir = new Vector2()
 
 export const keyboardKeys = proxy(
-	Object.fromEntries(Object.keys(Keymap).map((k) => [k, false])) as Record<
-		keyof typeof Keymap,
-		boolean
-	>,
+	Object.fromEntries(
+		(Object.values(Keymap) as Record<string, readonly string[]>[])
+			.flatMap((category) => Object.keys(category))
+			.map((k) => [k, false]),
+	) as Record<Action, boolean>,
 )
 
 const keyboardCommands = computed({
 	direction: () => {
-		const { up, down, left, right, shift } = keyboardKeys
+		const { up, down, left, right, sprint } = keyboardKeys
 		const z = -up + +down
 		const x = -left + +right
-		const speed = (!shift ? 2 : 1) * 0.2
+		const speed = (!sprint ? 2 : 1) * 0.2
 		return _dir.set(x, z).multiplyScalar(speed)
 	},
 })

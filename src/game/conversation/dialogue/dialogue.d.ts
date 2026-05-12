@@ -21,10 +21,18 @@ export interface DialogueParticipant<Id extends string> {
 	required?: boolean
 }
 
-export interface DialogueDefinition<P extends string, Id extends string = string> {
+export type DialogueDefinition<P extends string, Id extends string = string> = {
 	id: Id
 	participants: readonly DialogueParticipant<P>[]
-	isNpcOnly: boolean
 	entryNodeId: string
 	nodes: Record<string, DialogueNode<P>>
-}
+} & (
+	| {
+			isNpcOnly: true
+			locked?: never
+	  }
+	| {
+			isNpcOnly: false
+			locked?: boolean
+	  }
+)

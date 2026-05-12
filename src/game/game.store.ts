@@ -38,8 +38,12 @@ export const game = proxy({
 
 	get uiMode(): 'gameplay' | 'pause' | 'dialogue' {
 		if (this.isPaused) return 'pause'
-		if (dialogueStore.active) return 'dialogue'
+		if (dialogueStore.active?.locked) return 'dialogue'
 		return 'gameplay'
+	},
+
+	get isDialogueLocked(): boolean {
+		return !!dialogueStore.active?.locked
 	},
 
 	pointerLockControls: ref(createRef<PointerLockControls | null>()),

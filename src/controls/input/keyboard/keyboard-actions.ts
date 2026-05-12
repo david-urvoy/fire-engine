@@ -23,6 +23,9 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 
 			sphere.teleportTo(new Vector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
 		},
-		nextDialog: () => dialogueStore.active?.next(),
+		nextDialogue: () => {
+			if (!dialogueStore.active?.locked) return
+			dialogueStore.active.next()
+		},
 	}
 }

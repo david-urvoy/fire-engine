@@ -1,27 +1,31 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
+import { game } from '../../../game/game.store'
 import { useKeyboardActions } from './keyboard-actions'
 import { keyboardKeys } from './keyboard.store'
-import type { Keymap } from './keymap'
+import { KEYBOARD_CODE_TO_ACTION, type Keymap } from './keymap'
 
 export function KeyboardControls({
-	map: keymap,
+	map: _keymap,
 	children,
 }: PropsWithChildren & { map: typeof Keymap }) {
 	const keyboardActions = useKeyboardActions()
 
 	const toggleKey = useCallback(
 		(code: string, value: boolean) => {
-			const obj = Object.entries(keymap).find(([, keys]: [string, readonly string[]]) =>
-				keys.includes(code),
-			)
+			const found = KEYBOARD_CODE_TO_ACTION[code]
+			if (!found) return
 
-			if (!obj) return
+			const { category, action: command } = found
 
-			const command = obj[0] as keyof typeof keymap
+			if (game.isDialogueLocked) {
+				if (value && category === 'dialogue') keyboardActions[command]?.()
+				return
+			}
+
 			keyboardKeys[command] = value
 			if (value) keyboardActions[command]?.()
 		},
-		[keymap, keyboardActions],
+		[keyboardActions],
 	)
 
 	const downHandler = useCallback(
