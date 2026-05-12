@@ -1,9 +1,9 @@
 import { proxy } from 'valtio'
-import type { Character } from '../../character'
+import type { CharacterType } from '../../character'
 import type { Bark } from './bark'
 import type { BarkManager } from './bark.manager'
 
-type ActiveBark = Bark<Character<string>> & {
+type ActiveBark = Bark<CharacterType<string>> & {
 	startedAt: number
 	duration: number
 }
