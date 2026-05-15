@@ -31,7 +31,7 @@ export function createDialogueManager<DialogueId extends string>(
 		dialogue: Dialogue<DialogueId>
 		locked?: boolean
 	}) {
-		if (dialogueStore.active) return dialogueStore.active
+		if (dialogueStore.active?.locked) return dialogueStore.active
 
 		dialogueStore.active = new PlayerDialogue({ dialogue, locked })
 		return dialogueStore.active
