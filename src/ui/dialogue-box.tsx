@@ -1,7 +1,7 @@
 import { useThree } from '@react-three/fiber'
 import clsx from 'clsx'
 import { useEffect, useRef } from 'react'
-import { subscribe, useSnapshot } from 'valtio'
+import { useSnapshot } from 'valtio'
 import { dialogueStore, game } from '../game'
 
 export const DialogueBox = () => {
@@ -47,10 +47,13 @@ export const DialogueBox = () => {
 export function DialogueEventBlocker() {
 	const { events } = useThree()
 	const previousModeRef = useRef<boolean | null>(null)
+	const { isPaused } = useSnapshot(game)
+	const { active: activeDialogue } = useSnapshot(dialogueStore)
 
 	useEffect(() => {
 		const syncEvents = () => {
-			const isDialogueMode = !game.isPaused && !!dialogueStore.active?.locked
+			const isDialogueMode = !isPaused && !!activeDialogue?.locked
+			console.log({ isDialogueMode })
 			events.enabled = !isDialogueMode
 
 			if (previousModeRef.current !== null && previousModeRef.current !== isDialogueMode) {
@@ -62,14 +65,7 @@ export function DialogueEventBlocker() {
 		}
 
 		syncEvents()
-		const unsubscribeGame = subscribe(game, syncEvents)
-		const unsubscribeDialogue = subscribe(dialogueStore, syncEvents)
-
-		return () => {
-			unsubscribeGame()
-			unsubscribeDialogue()
-		}
-	}, [events])
+	}, [events, isPaused, activeDialogue])
 
 	return null
 }

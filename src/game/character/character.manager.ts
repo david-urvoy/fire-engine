@@ -29,7 +29,7 @@ export function createCharacterManager<
 		},
 		create(id) {
 			if (instances.has(id)) {
-				console.error(`Character "${id}" already exists. Returning existing instance.`)
+				console.warn(`Character "${id}" already exists. Returning existing instance.`)
 				return instances.get(id)!
 			}
 

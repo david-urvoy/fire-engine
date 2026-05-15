@@ -5,6 +5,7 @@ export * from './entity/entity.context'
 export * from './entity/entity.manager'
 
 export * from './conversation'
+export * from './quest'
 
 export * from './game.context'
 export * from './game.store'

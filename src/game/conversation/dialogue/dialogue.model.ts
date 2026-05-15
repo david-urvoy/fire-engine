@@ -67,7 +67,7 @@ export abstract class AbstractDialogue {
 		if (this.nextLine()) return this
 		if (this.nextNode()) return this
 
-		console.log(`Dialogue "${this.id}" has ended.`)
+		console.debug(`Dialogue "${this.id}" has ended.`)
 		return undefined
 	}
 
