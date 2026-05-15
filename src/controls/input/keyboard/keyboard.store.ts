@@ -33,3 +33,9 @@ export function useKeyboardDirection() {
 	const commands = useSnapshot(keyboardCommands)
 	return commands.direction
 }
+
+export function resetKeyboardKeys() {
+	for (const action of Object.keys(keyboardKeys) as Action[]) {
+		keyboardKeys[action] = false
+	}
+}

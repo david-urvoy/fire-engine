@@ -53,7 +53,6 @@ export function DialogueEventBlocker() {
 	useEffect(() => {
 		const syncEvents = () => {
 			const isDialogueMode = !isPaused && !!activeDialogue?.locked
-			console.log({ isDialogueMode })
 			events.enabled = !isDialogueMode
 
 			if (previousModeRef.current !== null && previousModeRef.current !== isDialogueMode) {

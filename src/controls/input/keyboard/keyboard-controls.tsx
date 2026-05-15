@@ -1,13 +1,16 @@
 import { type PropsWithChildren, useCallback, useEffect } from 'react'
-import { game } from '../../../game/game.store'
+import { useSnapshot } from 'valtio'
+import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
 import { useKeyboardActions } from './keyboard-actions'
-import { keyboardKeys } from './keyboard.store'
+import { keyboardKeys, resetKeyboardKeys } from './keyboard.store'
 import { KEYBOARD_CODE_TO_ACTION, type Keymap } from './keymap'
 
 export function KeyboardControls({
 	map: _keymap,
 	children,
 }: PropsWithChildren & { map: typeof Keymap }) {
+	const { active: activeDialogue } = useSnapshot(dialogueStore)
+	const isDialogueLocked = !!activeDialogue?.locked
 	const keyboardActions = useKeyboardActions()
 
 	const toggleKey = useCallback(
@@ -17,7 +20,7 @@ export function KeyboardControls({
 
 			const { category, action: command } = found
 
-			if (game.isDialogueLocked) {
+			if (dialogueStore.active?.locked) {
 				if (value && category === 'dialogue') keyboardActions[command]?.()
 				return
 			}
@@ -45,6 +48,11 @@ export function KeyboardControls({
 
 	useEffect(() => {
 		const keysSubscriptionController = new AbortController()
+
+		const blurHandler = () => {
+			resetKeyboardKeys()
+		}
+
 		window.addEventListener('keydown', downHandler as EventListenerOrEventListenerObject, {
 			passive: true,
 			signal: keysSubscriptionController.signal,
@@ -53,9 +61,18 @@ export function KeyboardControls({
 			passive: true,
 			signal: keysSubscriptionController.signal,
 		})
+		window.addEventListener('blur', blurHandler as EventListenerOrEventListenerObject, {
+			passive: true,
+			signal: keysSubscriptionController.signal,
+		})
 
 		return () => keysSubscriptionController.abort()
 	}, [downHandler, upHandler])
+
+	useEffect(() => {
+		if (!isDialogueLocked) return
+		resetKeyboardKeys()
+	}, [isDialogueLocked])
 
 	return children
 }
