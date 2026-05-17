@@ -92,6 +92,12 @@ export abstract class AbstractDialogue {
 		return this
 	}
 
+	protected onEnd?: (dialogue: AbstractDialogue) => void
+
+	end() {
+		this.onEnd?.(this)
+	}
+
 	get line() {
 		const node = this.nodes[this.currentNodeId]
 		return node?.lines[this.currentLineIndex]
@@ -129,19 +135,23 @@ export class PlayerDialogue extends AbstractDialogue {
 	constructor({
 		dialogue,
 		locked = true,
+		onEnd,
 	}: {
 		dialogue: DialogueDefinition<Character<string>['id']>
 		locked?: boolean
+		onEnd?: (dialogue: AbstractDialogue) => void
 	}) {
 		super(dialogue)
 		dialogueStore.active = this
 		this.locked = locked
+		this.onEnd = onEnd
 	}
 
 	override next() {
 		const dialogue = super.next()
 
 		if (!dialogue) {
+			this.onEnd?.(this)
 			dialogueStore.active = undefined
 			return
 		}
