@@ -62,10 +62,16 @@ export function createDialogueManager<DialogueId extends string>(
 			const dialogue = source[id]
 			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
 
-			eventBus.emit('dialogue_started', { dialogueId: id })
+			if (dialogue.isNpcOnly) {
+				createNpcDialogue(dialogue)
+				eventBus.emit('dialogue_started', { dialogueId: id })
+				return
+			}
 
-			if (dialogue.isNpcOnly) createNpcDialogue(dialogue)
-			else createPlayerDialogue({ dialogue, locked: dialogue.locked })
+			const instance = createPlayerDialogue({ dialogue, locked: dialogue.locked })
+			if (instance?.id === id) {
+				eventBus.emit('dialogue_started', { dialogueId: id })
+			}
 		},
 	}
 }
