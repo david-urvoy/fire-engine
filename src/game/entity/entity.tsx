@@ -17,6 +17,7 @@ export type EntityProps = {
 	fixed?: true
 	visual?: boolean
 	position?: [number, number, number]
+	onClick?: () => void
 }
 
 export function Entity({
@@ -28,6 +29,7 @@ export function Entity({
 	fixed,
 	visual = true,
 	position = [0, 0, 0],
+	onClick,
 	children,
 }: PropsWithChildren<EntityProps>) {
 	const entity = useMemo(() => new EntityModel({ id: name }), [name])
@@ -47,17 +49,19 @@ export function Entity({
 				entity,
 			}}
 		>
-			{controllable && <Controllable />}
-			{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
-			{gravity && <Gravity />}
-			{interactable && <Interactable />}
-			{visual ? (
-				<Visual position={position} smoothing={10}>
-					{children}
-				</Visual>
-			) : (
-				children
-			)}
+			<group onClick={onClick}>
+				{controllable && <Controllable />}
+				{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
+				{gravity && <Gravity />}
+				{interactable && <Interactable />}
+				{visual ? (
+					<Visual position={position} smoothing={10}>
+						{children}
+					</Visual>
+				) : (
+					children
+				)}
+			</group>
 		</EntityContext.Provider>
 	)
 }
