@@ -1,1 +1,1 @@
-export {}
+export * from './events/event-bus'

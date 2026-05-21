@@ -1,24 +1,21 @@
+import { eventBus } from '../../../lib'
 import type { Character } from '../../character/types/character'
 import type { DialogueDefinition } from './dialogue'
 import { NpcDialogue, PlayerDialogue } from './dialogue.model'
 import { dialogueStore } from './dialogue.store'
 
 type Dialogue<DialogueId extends string> = DialogueDefinition<Character<string>['id'], DialogueId>
-type DialogueEndListener = () => void
 
 export interface DialogueManager<DialogueId extends string = string> {
 	get(id: DialogueId): NpcDialogue | PlayerDialogue
 	has(id: DialogueId): boolean
 	all(): Array<DialogueDefinition<string, DialogueId>>
 	trigger(id: DialogueId): void
-	subscribeOnDialogueEnd(dialogueId: DialogueId, listener: DialogueEndListener): () => void
 }
 
 export function createDialogueManager<DialogueId extends string>(
 	source: Readonly<Record<DialogueId, Dialogue<DialogueId>>>,
 ): DialogueManager<DialogueId> {
-	const onDialogueEndSubscribers = new Map<DialogueId, Set<DialogueEndListener>>()
-
 	function createNpcDialogue(dialogue: Dialogue<DialogueId>) {
 		const currentNpcDialogue = dialogueStore.all.find(({ id }) => dialogue.id === id)
 		if (currentNpcDialogue) return currentNpcDialogue
@@ -41,10 +38,7 @@ export function createDialogueManager<DialogueId extends string>(
 		dialogueStore.active = new PlayerDialogue({
 			dialogue,
 			locked,
-			onEnd: (endedDialogue) => {
-				const dialogueId = endedDialogue.id as DialogueId
-				onDialogueEndSubscribers.get(dialogueId)?.forEach((subscriber) => subscriber())
-			},
+			onEnd: () => eventBus.emit('dialogue_ended', { dialogueId: dialogue.id }),
 		})
 		return dialogueStore.active
 	}
@@ -68,26 +62,10 @@ export function createDialogueManager<DialogueId extends string>(
 			const dialogue = source[id]
 			if (!dialogue) throw new Error(`Dialogue with id "${id}" not found in repository`)
 
+			eventBus.emit('dialogue_started', { dialogueId: id })
+
 			if (dialogue.isNpcOnly) createNpcDialogue(dialogue)
 			else createPlayerDialogue({ dialogue, locked: dialogue.locked })
-		},
-		subscribeOnDialogueEnd(dialogueId, listener) {
-			let subscribers = onDialogueEndSubscribers.get(dialogueId)
-
-			if (!subscribers) {
-				subscribers = new Set<DialogueEndListener>()
-				onDialogueEndSubscribers.set(dialogueId, subscribers)
-			}
-
-			subscribers.add(listener)
-
-			return () => {
-				const currentSubscribers = onDialogueEndSubscribers.get(dialogueId)
-				if (!currentSubscribers) return
-
-				currentSubscribers.delete(listener)
-				if (currentSubscribers.size === 0) onDialogueEndSubscribers.delete(dialogueId)
-			}
 		},
 	}
 }
