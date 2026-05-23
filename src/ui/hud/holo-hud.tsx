@@ -1,6 +1,7 @@
 import { Float, Html } from '@react-three/drei'
 import type { HtmlProps } from '@react-three/drei/web/Html'
 import { proxy, useSnapshot } from 'valtio'
+
 import { HudOption } from './hud-option'
 
 type ActionOptions = Record<string, { action: () => void }>

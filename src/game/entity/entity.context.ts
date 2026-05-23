@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react'
+
 import { Entity } from './entity.model'
 
 export const EntityContext = createContext<{

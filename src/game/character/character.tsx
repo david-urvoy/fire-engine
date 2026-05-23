@@ -1,4 +1,5 @@
 import { useEffect, type PropsWithChildren } from 'react'
+
 import { eventBus } from '../../lib'
 import { Entity, type EntityProps } from '../entity/entity'
 import { useGame } from '../game.context'

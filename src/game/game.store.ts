@@ -2,6 +2,7 @@ import { createRef } from 'react'
 import { Vector3 } from 'three'
 import { PointerLockControls } from 'three-stdlib'
 import { proxy, ref } from 'valtio'
+
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
 
 export const MOVEMENT_SMOOTHING = 20

@@ -1,4 +1,5 @@
 import { Color } from 'three'
+
 import { useLight } from './use-light'
 
 export function AmbientLight({

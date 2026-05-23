@@ -1,4 +1,5 @@
 import { Quaternion, Vector3 } from 'three'
+
 import { CameraProxy } from '../../camera/camera-proxy'
 import { UP } from '../game.store'
 import type {

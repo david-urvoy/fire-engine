@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { AnimationAction } from 'three'
 import { useSnapshot } from 'valtio'
+
 import { keyboardKeys } from '../controls/input/keyboard/keyboard.store'
 
 type Actions = 'idle' | 'walk' | 'run'

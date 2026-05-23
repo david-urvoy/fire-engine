@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import type { Vector3 } from 'three'
+
 import { type Animations, animate } from '../animation/animate'
 
 export const useWanderingBehavior = (position: Vector3, animations?: Animations) => {

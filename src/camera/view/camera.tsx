@@ -1,5 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { proxy, useSnapshot } from 'valtio'
+
 import { useReticleInteraction } from '../../ui'
 import { FirstPersonView } from './first-person-view'
 

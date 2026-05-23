@@ -1,5 +1,6 @@
 import { Vector2 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
+
 import { ActionPad } from './action-pad'
 import { Joystick } from './joystick'
 

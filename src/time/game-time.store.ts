@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { proxy } from 'valtio'
+
 import { game } from '../game'
 import { Tweaks } from '../ui'
 import { type PeriodName, Period, PERIODS } from './periods/period'

@@ -17,7 +17,7 @@ function useDisplayName(disabled = false) {
 export function Interactable({
 	disabled = false,
 	onClick,
-	children
+	children,
 }: PropsWithChildren<{ disabled?: boolean; onClick?: () => void }>) {
 	useDisplayName(disabled)
 

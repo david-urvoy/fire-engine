@@ -1,4 +1,5 @@
 import { proxy } from 'valtio'
+
 import type { CharacterType } from '../../character'
 import type { Bark } from './bark'
 import type { BarkManager } from './bark.manager'

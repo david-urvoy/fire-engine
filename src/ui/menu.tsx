@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useSnapshot } from 'valtio'
+
 import { game } from '../game'
 
 export function Menu() {

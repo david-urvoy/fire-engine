@@ -1,4 +1,5 @@
 import { Vector3 } from 'three'
+
 import type { EntityState } from '../game/entity/types/entity'
 
 type CharacterEntry = {

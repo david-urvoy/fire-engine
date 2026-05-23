@@ -2,6 +2,7 @@ import { useThree } from '@react-three/fiber'
 import clsx from 'clsx'
 import { useEffect, useRef } from 'react'
 import { useSnapshot } from 'valtio'
+
 import { dialogueStore, game } from '../game'
 
 export const DialogueBox = () => {

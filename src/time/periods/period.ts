@@ -1,4 +1,5 @@
 import { Color } from 'three'
+
 import type { Light } from '../../3d/environment/light/light'
 import type { Time } from '../time'
 

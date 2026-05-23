@@ -1,4 +1,5 @@
 import { useSnapshot } from 'valtio'
+
 import { entityManager } from '../entity/entity.manager'
 import { game } from '../game.store'
 

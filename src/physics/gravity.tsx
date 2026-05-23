@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+
 import { useEntity, useGameLoopSystem } from '../game'
 
 export function Gravity() {

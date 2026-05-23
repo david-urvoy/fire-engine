@@ -1,6 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
+
 import { game } from '../game'
 import { entityManager } from '../game/entity/entity.manager'
 import { sceneRegistry } from '../game/system/scene-registry'

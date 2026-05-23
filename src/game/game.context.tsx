@@ -1,4 +1,5 @@
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
+
 import type { CharacterManager } from './character'
 import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
 

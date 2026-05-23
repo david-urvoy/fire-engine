@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { createContext, useContext, useRef, type PropsWithChildren } from 'react'
 import { useSnapshot } from 'valtio'
+
 import { game } from '../game.store'
 import { GameLoopSystem } from './game-loop.system'
 

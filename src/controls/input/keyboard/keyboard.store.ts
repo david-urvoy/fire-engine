@@ -1,6 +1,7 @@
 import { Vector2 } from 'three'
 import { proxy, useSnapshot } from 'valtio'
 import { computed } from 'valtio-reactive'
+
 import { type Action, Keymap } from './keymap'
 
 const _dir = new Vector2()

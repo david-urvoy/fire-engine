@@ -1,6 +1,7 @@
 import { PointerLockControls } from '@react-three/drei'
 import { useEffect } from 'react'
 import { useSnapshot } from 'valtio'
+
 import { dialogueStore, game, POINTER_SPEED } from '../../game'
 import { DialogueEventBlocker } from '../../ui'
 import { TouchControls } from '../lock/touch-lock'

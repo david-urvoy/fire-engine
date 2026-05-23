@@ -1,4 +1,5 @@
 import { Vector3 } from 'three'
+
 import { CameraType } from '../../../camera'
 import { game } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'

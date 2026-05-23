@@ -1,4 +1,5 @@
 import { useFrame } from '@react-three/fiber'
+
 import { game, UP } from '../../game'
 import { useControlledCharacter } from '../../game/character/controlled-character'
 

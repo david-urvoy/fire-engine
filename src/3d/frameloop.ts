@@ -1,5 +1,6 @@
 import { useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
+
 import { game } from '../game'
 
 export function useFrameloop() {

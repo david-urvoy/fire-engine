@@ -6,6 +6,7 @@ import {
 } from '@react-three/rapier'
 import { type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Vector3 } from 'three'
+
 import {
 	type CharacterDimensions,
 	characterDimensions,

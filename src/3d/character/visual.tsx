@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useRef, type PropsWithChildren } from 'react'
 import { Object3D, Quaternion, Vector3 } from 'three'
+
 import { MOVEMENT_SMOOTHING, useEntity, useGameLoopSystem } from '../../game'
 
 const tmpLocalPosition = new Vector3()

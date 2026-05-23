@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs'
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+
 import { compileDialoguesFromExports } from './dialogues.compiler'
 
 function findDialogueFiles(dir: string): string[] {

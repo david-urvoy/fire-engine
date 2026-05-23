@@ -1,4 +1,5 @@
 import { Euler, Quaternion, Vector3 } from 'three'
+
 import { game } from '../game'
 
 export const CameraProxy = {

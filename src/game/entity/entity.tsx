@@ -31,7 +31,7 @@ export function Entity({
 	visual = true,
 	position = [0, 0, 0],
 	onClick,
-	children
+	children,
 }: PropsWithChildren<EntityProps>) {
 	const entity = useMemo(() => new EntityModel({ id: name }), [name])
 
@@ -47,7 +47,7 @@ export function Entity({
 		<EntityContext.Provider
 			value={{
 				id: name,
-				entity
+				entity,
 			}}
 		>
 			<Interactable disabled={!interactable} onClick={onClick}>
