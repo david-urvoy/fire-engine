@@ -1,16 +1,25 @@
-import { useEffect } from 'react'
+import { useEffect, type PropsWithChildren } from 'react'
+
 import { useEntity } from '../..'
 import { sceneRegistry } from '../../system/scene-registry'
 
-export function Interactable() {
+function useDisplayName(disabled = false) {
 	const { id, entity } = useEntity()
-
 	useEffect(() => {
-		const object = { entity }
-		sceneRegistry.add(id, object)
+		if (!disabled) {
+			const object = { entity }
+			sceneRegistry.add(id, object)
+			return () => sceneRegistry.remove(id, object)
+		}
+	}, [id, entity, disabled])
+}
 
-		return () => sceneRegistry.remove(id, object)
-	}, [id, entity])
+export function Interactable({
+	disabled = false,
+	onClick,
+	children
+}: PropsWithChildren<{ disabled?: boolean; onClick?: () => void }>) {
+	useDisplayName(disabled)
 
-	return null
+	return <group onClick={onClick}>{children}</group>
 }

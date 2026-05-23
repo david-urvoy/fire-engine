@@ -1,4 +1,5 @@
 import { useEffect, useMemo, type PropsWithChildren } from 'react'
+
 import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
 import { Physic } from '../../physics'
@@ -30,7 +31,7 @@ export function Entity({
 	visual = true,
 	position = [0, 0, 0],
 	onClick,
-	children,
+	children
 }: PropsWithChildren<EntityProps>) {
 	const entity = useMemo(() => new EntityModel({ id: name }), [name])
 
@@ -46,14 +47,13 @@ export function Entity({
 		<EntityContext.Provider
 			value={{
 				id: name,
-				entity,
+				entity
 			}}
 		>
-			<group onClick={onClick}>
+			<Interactable disabled={!interactable} onClick={onClick}>
 				{controllable && <Controllable />}
 				{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
 				{gravity && <Gravity />}
-				{interactable && <Interactable />}
 				{visual ? (
 					<Visual position={position} smoothing={10}>
 						{children}
@@ -61,7 +61,7 @@ export function Entity({
 				) : (
 					children
 				)}
-			</group>
+			</Interactable>
 		</EntityContext.Provider>
 	)
 }
