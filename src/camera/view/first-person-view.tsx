@@ -19,7 +19,7 @@ function FirstPersonControls() {
 		<PointerLockControls
 			ref={controlsRef}
 			pointerSpeed={POINTER_SPEED}
-			selector={isPaused ? '#resume' : dialogue?.line ? '#none' : 'canvas'}
+			selector={isPaused ? '#resume' : dialogue?.awaitingChoice ? '#none' : 'canvas'}
 		/>
 	)
 }
