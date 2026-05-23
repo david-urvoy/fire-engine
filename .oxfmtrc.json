@@ -1,10 +1,12 @@
 {
-	"semi": false,
-	"useTabs": true,
-	"singleQuote": true,
+  "semi": false,
+  "useTabs": true,
+  "singleQuote": true,
+  "sortImports": true,
+  "trailingComma": "none",
 
-	"experimentalTailwindcss": {
-		"attributes": ["class", "className"],
-		"functions": ["clsx", "cn"]
-	}
+  "experimentalTailwindcss": {
+    "attributes": ["class", "className"],
+    "functions": ["clsx", "cn"]
+  }
 }
