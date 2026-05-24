@@ -1,12 +1,12 @@
 import { PositionalAudio as DreiPositionalAudio } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { PositionalAudio as PositionalAudioType, Vector3 } from 'three'
+import { PositionalAudio as PositionalAudioType } from 'three'
+import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js'
+import { useSnapshot } from 'valtio'
 
 import { game } from '../game'
-import { useControlledCharacter } from '../game/character/controlled-character'
 
-const tmpVec = new Vector3()
+type PositionalAudioDistanceModel = 'linear' | 'inverse' | 'exponential'
 
 export function PositionalAudio({
 	distance = 2,
@@ -17,27 +17,29 @@ export function PositionalAudio({
 }: Parameters<typeof DreiPositionalAudio>[0] & {
 	rollOffFactor?: number
 	maxDistance?: number
-	distanceModel?: 'linear' | 'inverse' | 'exponential'
+	distanceModel?: PositionalAudioDistanceModel
 }) {
-	const controlledCharacter = useControlledCharacter()
 	const audioRef = useRef<PositionalAudioType>(null)
-
-	useFrame(() => {
-		if (!controlledCharacter) return
-
-		const distance = audioRef.current
-			?.getWorldPosition(tmpVec)
-			.distanceTo(controlledCharacter.position)
-
-		if (distance && distance > 8) audioRef.current?.setVolume(0)
-		game.debug.distance = distance
-	})
+	const { isDebug } = useSnapshot(game)
 
 	useEffect(() => {
 		audioRef.current?.setRolloffFactor(rollOffFactor)
 		audioRef.current?.setDistanceModel(distanceModel)
 		audioRef.current?.setMaxDistance(maxDistance)
 	}, [rollOffFactor, maxDistance, distanceModel])
+
+	useEffect(() => {
+		const audio = audioRef.current
+		if (!isDebug || !audio) return
+
+		const helper = new PositionalAudioHelper(audio, 1)
+		audio.add(helper)
+
+		return () => {
+			audio.remove(helper)
+			helper.dispose()
+		}
+	}, [isDebug])
 
 	return <DreiPositionalAudio distance={distance} ref={audioRef} {...props} />
 }
