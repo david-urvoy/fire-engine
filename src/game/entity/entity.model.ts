@@ -20,7 +20,6 @@ class Controls implements ControlsState {
 }
 
 class Visual implements VisualState {
-	public localPosition: Vector3 = new Vector3()
 	public position: Vector3 = new Vector3()
 	public orientation: Quaternion = new Quaternion()
 	public snap = false
@@ -28,7 +27,6 @@ class Visual implements VisualState {
 
 	constructor(position?: [number, number, number]) {
 		if (position) {
-			this.localPosition.set(...position)
 			this.position.set(...position)
 		}
 	}

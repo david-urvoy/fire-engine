@@ -25,7 +25,6 @@ export interface PhysicState {
 }
 
 export interface VisualState {
-	localPosition: Vector3
 	position: Vector3
 	orientation: Quaternion
 	snap?: boolean

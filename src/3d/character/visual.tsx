@@ -42,7 +42,6 @@ export function Visual({
 
 	useLayoutEffect(() => {
 		const localPosition = new Vector3(...position)
-		entity.visual.localPosition.copy(localPosition)
 
 		const worldPosition = localPosition.clone()
 		objectRef.current?.parent?.localToWorld(worldPosition)
@@ -65,7 +64,6 @@ export function Visual({
 			parent?.worldToLocal(tmpLocalPosition)
 
 			object3D.position.copy(tmpLocalPosition)
-			entity.visual.localPosition.copy(tmpLocalPosition)
 
 			if (parent) {
 				parent.getWorldQuaternion(tmpParentOrientation)
@@ -78,7 +76,6 @@ export function Visual({
 			return
 		}
 
-		entity.visual.localPosition.copy(object3D.position)
 		object3D.getWorldPosition(tmpWorldPosition)
 		entity.visual.position.copy(tmpWorldPosition)
 

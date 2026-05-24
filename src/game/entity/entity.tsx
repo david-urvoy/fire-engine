@@ -43,6 +43,8 @@ export function Entity({
 		}
 	}, [name, entity])
 
+	if (name === 'mother') console.log('Entity rendered', name)
+
 	return (
 		<EntityContext.Provider
 			value={{
