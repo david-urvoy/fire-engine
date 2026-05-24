@@ -27,7 +27,7 @@ export const game = proxy({
 	toggleDebug() {
 		game.isDebug = !game.isDebug
 	},
-	debug: undefined as unknown,
+	debug: {} as any,
 
 	isPaused: false,
 	pause() {
