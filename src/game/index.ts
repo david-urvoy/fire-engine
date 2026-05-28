@@ -7,6 +7,8 @@ export * from './entity/entity.manager'
 export * from './conversation'
 export * from './quest'
 
+export * from './item'
+
 export * from './game.context'
 export * from './game.store'
 export * from './system/game-loop.context'
