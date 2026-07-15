@@ -1,5 +1,6 @@
 export type { DialogueDefinition as Dialogue } from './dialogue/dialogue'
 export { createDialogueManager } from './dialogue/dialogue.manager'
+export type { DialogueManager } from './dialogue/dialogue.manager'
 export * from './dialogue/dialogue.resolver'
 export * from './dialogue/dialogue.store'
 

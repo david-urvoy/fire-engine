@@ -6,6 +6,9 @@ export const Keymap = {
 		right: ['ArrowRight', 'KeyD'],
 		sprint: ['ShiftLeft'],
 	},
+	action: {
+		clearInventory: ['KeyX'],
+	},
 	dialogue: {
 		nextDialogue: ['Space'],
 	},
@@ -27,7 +30,6 @@ export const Keymap = {
 export type Category = keyof typeof Keymap
 export type Action = { [C in Category]: keyof (typeof Keymap)[C] }[Category]
 
-// Pre-compute a map from keyboard code to action+category for O(1) lookup
 export const KEYBOARD_CODE_TO_ACTION = (() => {
 	const result: Record<string, { action: string; category: string }> = {}
 

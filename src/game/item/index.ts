@@ -1,2 +1,5 @@
 export * from './collectible'
 export * from './inventory'
+export * from './items.context'
+export * from './items.manager'
+export * from './items.repository'

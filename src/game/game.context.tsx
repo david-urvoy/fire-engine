@@ -2,11 +2,13 @@ import { createContext, useContext, type PropsWithChildren, type RefObject } fro
 
 import type { CharacterManager } from './character'
 import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
+import { type ItemsManager } from './item'
 
 interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
 	characterManager: CharacterManager<CharacterId, DialogueId>
 	dialogueManager: DialogueManager<DialogueId>
 	canvasRef: RefObject<HTMLCanvasElement | null>
+	itemsManager: ItemsManager
 }
 
 type GameContextValue = GameProviderProps<string, string>
@@ -14,13 +16,14 @@ type GameContextValue = GameProviderProps<string, string>
 const GameContext = createContext<GameContextValue | null>(null)
 
 export function GameProvider<CharacterId extends string, DialogueId extends string>({
+	canvasRef,
 	characterManager,
 	dialogueManager,
-	canvasRef,
+	itemsManager,
 	children,
 }: PropsWithChildren<GameProviderProps<CharacterId, DialogueId>>) {
 	return (
-		<GameContext.Provider value={{ characterManager, dialogueManager, canvasRef }}>
+		<GameContext.Provider value={{ canvasRef, characterManager, dialogueManager, itemsManager }}>
 			{children}
 		</GameContext.Provider>
 	)

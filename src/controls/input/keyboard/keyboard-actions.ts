@@ -4,6 +4,7 @@ import { CameraType } from '../../../camera'
 import { game } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
 import { entityManager } from '../../../game/entity/entity.manager'
+import { eventBus } from '../../../lib'
 import { useToggleFullscreen } from '../../bindings/fullscreen'
 import type { Action } from './keymap'
 
@@ -28,5 +29,6 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			if (!dialogueStore.active?.locked) return
 			dialogueStore.active.next()
 		},
+		clearInventory: () => eventBus.emit('clear_inventory'),
 	}
 }
