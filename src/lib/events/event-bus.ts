@@ -1,8 +1,5 @@
-type EventMap = Record<string, unknown>
-
-type EventPayload<P> = [P] extends [void | undefined] ? [] : [payload: P]
-
-type EventListener<P> = (...payload: EventPayload<P>) => void
+import { game } from '../../game'
+import { EventBus } from './event-bus.model'
 
 export type DefaultEventMap = {
 	character_interacted: { characterId: string }
@@ -13,28 +10,15 @@ export type DefaultEventMap = {
 	quest_completed: { questId: string }
 }
 
-type EventListeners<T extends EventMap = DefaultEventMap> = {
-	[K in keyof T]: Set<EventListener<T[K]>>
+function isPointerLocked() {
+	return game.pointerLockControls.current?.isLocked ?? false
 }
 
-export class EventBus<T extends EventMap = DefaultEventMap> {
-	private listeners: Partial<EventListeners<T>> = {}
-
-	on<K extends keyof T>(eventName: K, listener: EventListener<T[K]>) {
-		if (!this.listeners[eventName]) {
-			this.listeners[eventName] = new Set()
-		}
-		this.listeners[eventName].add(listener)
-		return () => this.off(eventName, listener)
-	}
-
-	off<K extends keyof T>(eventName: K, listener: EventListener<T[K]>) {
-		this.listeners[eventName]?.delete(listener)
-	}
-
-	emit<K extends keyof T>(eventName: K, ...payload: EventPayload<T[K]>) {
-		this.listeners[eventName]?.forEach((listener) => listener(...payload))
-	}
-}
-
-export const eventBus = new EventBus()
+export const eventBus = new EventBus<DefaultEventMap>({
+	character_interacted: {
+		canEmit: isPointerLocked,
+	},
+	item_collected: {
+		canEmit: isPointerLocked,
+	},
+})
