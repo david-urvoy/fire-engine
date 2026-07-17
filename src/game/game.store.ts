@@ -48,6 +48,7 @@ export const game = proxy({
 	},
 
 	pointerLockControls: ref(createRef<PointerLockControls | null>()),
+	isPointerLocked: false,
 
 	controlledCharacter: '',
 

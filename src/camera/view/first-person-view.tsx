@@ -18,6 +18,8 @@ function FirstPersonControls() {
 	return (
 		<PointerLockControls
 			ref={controlsRef}
+			onLock={() => (game.isPointerLocked = true)}
+			onUnlock={() => (game.isPointerLocked = false)}
 			pointerSpeed={POINTER_SPEED}
 			selector={isPaused ? '#resume' : dialogue?.awaitingChoice ? '#none' : 'canvas'}
 		/>
