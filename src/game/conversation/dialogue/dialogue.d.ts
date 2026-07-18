@@ -32,7 +32,7 @@ export type DialogueDefinition<P extends string, Id extends string = string> = {
 			locked?: never
 	  }
 	| {
-			isNpcOnly: false
+			isNpcOnly: boolean
 			locked?: boolean
 	  }
 )

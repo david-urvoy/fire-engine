@@ -17,11 +17,15 @@ function findDialogueFiles(dir: string): string[] {
 	})
 }
 
-export async function generateDialogues(options: {
-	sourceDir: string
-	generatedDir: string
+export async function generateDialogues(options?: {
+	sourceDir?: string
+	generatedDir?: string
 }): Promise<void> {
-	const { sourceDir, generatedDir } = options
+	const projectRoot = process.cwd()
+
+	const sourceDir = options?.sourceDir ?? path.resolve(projectRoot, 'content/dialogues')
+
+	const generatedDir = options?.generatedDir ?? path.resolve(projectRoot, '.generated')
 
 	const generatedDialoguesPath = path.join(generatedDir, 'dialogues.json')
 	const manifestPath = path.join(generatedDir, 'dialogues.manifest.json')
