@@ -7,12 +7,9 @@ import { CharacterProvider } from './character.context'
 
 export function Character({
 	id,
+	name,
 	...props
-}: PropsWithChildren<
-	{
-		id: string
-	} & Omit<EntityProps, 'name'>
->) {
+}: PropsWithChildren<EntityProps & { name: string }>) {
 	const { characterManager } = useGame()
 
 	useEffect(() => {
@@ -20,11 +17,11 @@ export function Character({
 	}, [id, characterManager])
 
 	return (
-		<CharacterProvider id={id}>
+		<CharacterProvider id={id} name={name}>
 			<Entity
-				{...props}
-				name={id}
+				id={id}
 				onClick={() => eventBus.emit('character_interacted', { characterId: id })}
+				{...props}
 			/>
 		</CharacterProvider>
 	)

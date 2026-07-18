@@ -4,13 +4,13 @@ import { Visual } from '../../3d'
 import { Controllable } from '../../controls'
 import { Physic } from '../../physics'
 import { Gravity } from '../../physics/gravity'
-import { EntityContext } from './entity.context'
+import { EntityProvider } from './entity.context'
 import { entityManager } from './entity.manager'
 import { Entity as EntityModel } from './entity.model'
 import { Interactable } from './interactable/interactable'
 
 export type EntityProps = {
-	name: string
+	id: string
 	interactable?: true
 	controllable?: true
 	physic?: true
@@ -22,7 +22,7 @@ export type EntityProps = {
 }
 
 export function Entity({
-	name,
+	id,
 	interactable,
 	controllable,
 	physic,
@@ -33,25 +33,18 @@ export function Entity({
 	onClick,
 	children,
 }: PropsWithChildren<EntityProps>) {
-	const entity = useMemo(() => new EntityModel({ id: name }), [name])
+	const entity = useMemo(() => new EntityModel({ id }), [id])
 
 	useEffect(() => {
-		entityManager.set(name, entity)
+		entityManager.set(id, entity)
 
 		return () => {
-			entityManager.delete(name)
+			entityManager.delete(id)
 		}
-	}, [name, entity])
-
-	if (name === 'mother') console.log('Entity rendered', name)
+	}, [id, entity])
 
 	return (
-		<EntityContext.Provider
-			value={{
-				id: name,
-				entity,
-			}}
-		>
+		<EntityProvider id={id} entity={entity}>
 			<Interactable disabled={!interactable} onClick={onClick}>
 				{controllable && <Controllable />}
 				{physic && <Physic {...(fixed && { type: 'fixed' })} position={position} />}
@@ -64,6 +57,6 @@ export function Entity({
 					children
 				)}
 			</Interactable>
-		</EntityContext.Provider>
+		</EntityProvider>
 	)
 }
