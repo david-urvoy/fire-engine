@@ -21,7 +21,7 @@ export function WindowVisibility() {
 	}, [isFocused])
 
 	useEffect(() => {
-		if (!isDev || keepOpen) return
+		if (game.isPaused || game.isDialogueLocked || keepOpen) return
 
 		pane.expanded = !isPointerLocked
 	}, [isPointerLocked, keepOpen])
