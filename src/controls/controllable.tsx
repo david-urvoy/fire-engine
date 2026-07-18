@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { Vector3 } from 'three/src/math/Vector3.js'
 import { useSnapshot } from 'valtio'
 
-import { useControlledCharacter } from '../game/character/controlled-character'
+import { usePlayer } from '../game/character/player.hook'
 import { game } from '../game/game.store'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
 import { KeyboardControls } from './input/keyboard/keyboard-controls'
@@ -19,7 +19,7 @@ function usePlayerDirection() {
 
 function useCharacterMove() {
 	const { uiMode } = useSnapshot(game)
-	const controlledCharacter = useControlledCharacter()
+	const controlledCharacter = usePlayer()
 	const direction = usePlayerDirection()
 	const vec = useRef(new Vector3())
 

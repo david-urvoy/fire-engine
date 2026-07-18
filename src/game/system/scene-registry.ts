@@ -23,9 +23,7 @@ export const sceneRegistry = {
 
 		set.delete(entry)
 
-		if (set.size === 0) {
-			this._interactables.delete(entityId)
-		}
+		if (set.size === 0) this._interactables.delete(entityId)
 	},
 
 	getAllObjects() {

@@ -1,7 +1,7 @@
-import { Quaternion, Vector3 } from 'three'
+import { Quaternion, Vector3, type Object3D } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
-import { UP } from '../game.store'
+import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
 import type {
 	ControlsState,
 	EntityApi,
@@ -109,5 +109,13 @@ export class Entity implements EntityState, EntityApi {
 
 	get velocity(): Vector3 {
 		return this.physic?.velocity ?? new Vector3()
+	}
+
+	distanceTo(target: Object3D) {
+		return this.position.distanceTo(target.position)
+	}
+
+	isInRange(target: Object3D, maxDistance = INTERACTION_MAX_DISTANCE) {
+		return this.distanceTo(target) <= maxDistance
 	}
 }

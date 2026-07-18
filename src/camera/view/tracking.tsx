@@ -1,10 +1,10 @@
 import { useFrame } from '@react-three/fiber'
 
 import { game, UP } from '../../game'
-import { useControlledCharacter } from '../../game/character/controlled-character'
+import { usePlayer } from '../../game/character/player.hook'
 
 export function CameraTracking() {
-	const controlledCharacter = useControlledCharacter()
+	const controlledCharacter = usePlayer()
 
 	useFrame(({ camera }) => {
 		if (!controlledCharacter) return
@@ -17,7 +17,7 @@ export function CameraTracking() {
 }
 
 export function CameraOrientation() {
-	const controlledCharacter = useControlledCharacter()
+	const controlledCharacter = usePlayer()
 
 	useFrame(() => {
 		if (!controlledCharacter) return

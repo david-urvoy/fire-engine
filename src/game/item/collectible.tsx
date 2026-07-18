@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react'
 
 import { eventBus } from '../../lib'
+import { Entity } from '../entity/entity'
 
 export function Collectible({
 	id,
@@ -10,13 +11,8 @@ export function Collectible({
 	if (!isActive) return null
 
 	return (
-		<group
-			onClick={(e) => {
-				eventBus.emit('item_collected', { itemId: id })
-				e.stopPropagation()
-			}}
-		>
+		<Entity id={id} onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
 			{children}
-		</group>
+		</Entity>
 	)
 }

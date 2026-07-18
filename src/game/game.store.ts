@@ -11,6 +11,8 @@ export const POINTER_SPEED = 0.8
 export const GRAVITY_CONST = 9.81
 export const MAX_FALLING_SPEED = Infinity
 
+export const INTERACTION_MAX_DISTANCE = 2
+
 export const FORWARD = new Vector3(0, 0, -1)
 export const UP = new Vector3(0, 1, 0)
 
