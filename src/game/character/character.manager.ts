@@ -28,10 +28,7 @@ export function createCharacterManager<
 			throw new Error(`Character "${id}" not found in repository`)
 		},
 		create(id) {
-			if (instances.has(id)) {
-				console.warn(`Character "${id}" already exists. Returning existing instance.`)
-				return instances.get(id)!
-			}
+			if (instances.has(id)) return instances.get(id)!
 
 			const data = source[id]
 			if (!data) throw new Error(`Character "${id}" not found in repository`)

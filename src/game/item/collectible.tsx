@@ -2,13 +2,15 @@ import type { PropsWithChildren } from 'react'
 
 import { eventBus } from '../../lib'
 import { Entity } from '../entity/entity'
+import { useIsCollected } from './items.manager'
 
 export function Collectible({
 	id,
-	isActive,
 	children,
 }: PropsWithChildren<{ id: string; isActive?: boolean }>) {
-	if (!isActive) return null
+	const isCollected = useIsCollected(id)
+
+	if (isCollected) return null
 
 	return (
 		<Entity id={id} onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>

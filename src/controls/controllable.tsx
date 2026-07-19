@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { Vector3 } from 'three/src/math/Vector3.js'
 import { useSnapshot } from 'valtio'
 
+import { CameraTracking } from '../camera'
 import { usePlayer } from '../game/character/player.hook'
 import { game } from '../game/game.store'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
@@ -39,5 +40,10 @@ export function Controllable() {
 	const { isMobile } = useSnapshot(game)
 	useCharacterMove()
 
-	return isMobile ? <Gamepad /> : <KeyboardControls map={Keymap} />
+	return (
+		<>
+			<CameraTracking />
+			{isMobile ? <Gamepad /> : <KeyboardControls map={Keymap} />}
+		</>
+	)
 }

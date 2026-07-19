@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
 
-import { game } from '../game'
+import { game, INTERACTION_MAX_DISTANCE } from '../game'
 import { entityManager } from '../game/entity/entity.manager'
 import { sceneRegistry } from '../game/system/scene-registry'
 
@@ -20,7 +20,7 @@ export function useReticleInteraction() {
 	const raycaster = useMemo(() => {
 		const rc = new Raycaster()
 		rc.firstHitOnly = true
-		rc.far = 1
+		rc.far = INTERACTION_MAX_DISTANCE
 		return rc
 	}, [])
 
@@ -48,8 +48,6 @@ export function useReticleInteraction() {
 		}
 
 		lastHit.current = hit
-
-		console.log('currentEntity', currentEntity)
 
 		if (currentEntity) game.setInteractable(currentEntity.id)
 		else game.clearInteractable()

@@ -33,14 +33,11 @@ export function Entity({
 	onClick,
 	children,
 }: PropsWithChildren<EntityProps>) {
-	const entity = useMemo(() => new EntityModel({ id }), [id])
+	const [x, y, z] = position
+	const entity = useMemo(() => new EntityModel({ id, position: [x, y, z] }), [id, x, y, z])
 
 	useEffect(() => {
 		entityManager.set(id, entity)
-
-		return () => {
-			entityManager.delete(id)
-		}
 	}, [id, entity])
 
 	return (

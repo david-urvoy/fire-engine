@@ -1,8 +1,7 @@
 import { useEffect, type PropsWithChildren } from 'react'
-import type { Object3D } from 'three'
+import { type Object3D } from 'three'
 
-import { useEntity } from '../..'
-import { usePlayer } from '../../character/player.hook'
+import { entityManager, game, useEntity } from '../..'
 import { sceneRegistry } from '../../system/scene-registry'
 
 function useDisplayName(disabled = false) {
@@ -20,14 +19,16 @@ export function Interactable({
 	disabled = false,
 	onClick,
 	children,
-}: PropsWithChildren<{ disabled?: boolean; onClick?: (object: Object3D) => void }>) {
+}: PropsWithChildren<{
+	disabled?: boolean
+	onClick?: (object: Object3D) => void
+}>) {
 	useDisplayName(disabled)
-	const player = usePlayer()
 
 	return (
 		<group
 			onClick={(e) => {
-				if (!player?.isInRange(e.object)) return
+				if (!entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return
 
 				onClick?.(e.object)
 				e.stopPropagation()

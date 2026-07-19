@@ -6,7 +6,6 @@ import { dialogueStore, game, POINTER_SPEED } from '../../game'
 import { DialogueEventBlocker } from '../../ui'
 import { TouchControls } from '../lock/touch-lock'
 import { usePointerLock } from '../lock/usePointerLock'
-import { CameraOrientation, CameraTracking } from './tracking'
 
 function FirstPersonControls() {
 	const { isMobile, isPaused } = useSnapshot(game)
@@ -34,8 +33,6 @@ export function FirstPersonView() {
 
 	return (
 		<>
-			<CameraTracking />
-			<CameraOrientation />
 			<FirstPersonControls />
 			<DialogueEventBlocker />
 		</>
