@@ -2,7 +2,9 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useRef, type PropsWithChildren } from 'react'
 import { Object3D, Quaternion, Vector3 } from 'three'
 
-import { MOVEMENT_SMOOTHING, useEntity, useGameLoopSystem } from '../../game'
+import { entityManager, game, MOVEMENT_SMOOTHING, useEntity, useGameLoopSystem } from '../../game'
+import type { MeshProps } from '../../lib'
+import { LAYERS } from '../../lib/enums/layers'
 
 const tmpLocalPosition = new Vector3()
 const tmpWorldPosition = new Vector3()
@@ -11,14 +13,18 @@ const tmpParentOrientation = new Quaternion()
 const tmpLocalOrientation = new Quaternion()
 
 export function Visual({
-	smoothing: _smoothing = MOVEMENT_SMOOTHING,
 	position = [0, 0, 0],
+	smoothing: _smoothing = MOVEMENT_SMOOTHING,
+	interactable = false,
 	children,
+	onClick,
 	...props
-}: PropsWithChildren<{
-	smoothing?: number
-	position?: [number, number, number]
-}>) {
+}: PropsWithChildren<
+	MeshProps & {
+		smoothing?: number
+		interactable?: boolean
+	}
+>) {
 	const { id, entity } = useEntity()
 	const { visual } = useGameLoopSystem()
 	const objectRef = useRef<Object3D>(null)
@@ -33,29 +39,28 @@ export function Visual({
 	}, [visual, entity])
 
 	useLayoutEffect(() => {
-		if (!objectRef.current) return
+		const object3D = objectRef.current
+		if (!object3D) return
 
-		objectRef.current.traverse((child) => {
+		entity.visual.runtime.object3D = object3D
+
+		object3D.traverse((child) => {
 			child.userData.entityId = id
 		})
-	}, [id])
+	}, [id, entity])
 
-	useLayoutEffect(() => {
-		const localPosition = new Vector3(...position)
-
-		const worldPosition = localPosition.clone()
-		objectRef.current?.parent?.localToWorld(worldPosition)
-
-		entity.teleportTo(worldPosition)
-	}, [entity, position])
+	// useEffect(() => {
+	// 	const localPosition = new Vector3(...position)
+	//
+	// 	const worldPosition = localPosition.clone()
+	// 	objectRef.current?.parent?.localToWorld(worldPosition)
+	//
+	// 	entity.teleportTo(worldPosition)
+	// }, [entity, position])
 
 	useFrame(() => {
 		const object3D = objectRef.current
-
 		if (!object3D) return
-		if (entity.visual.runtime.object3D !== object3D) {
-			entity.visual.runtime.object3D = object3D
-		}
 
 		const parent = object3D.parent
 
@@ -84,8 +89,19 @@ export function Visual({
 	})
 
 	return (
-		<group ref={objectRef} {...props}>
+		<mesh
+			ref={objectRef}
+			position={position}
+			{...props}
+			onClick={(e) => {
+				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return
+
+				onClick?.(e)
+				e.stopPropagation()
+			}}
+			onUpdate={(mesh) => interactable && mesh.layers.enable(LAYERS.INTERACTABLE)}
+		>
 			{children}
-		</group>
+		</mesh>
 	)
 }

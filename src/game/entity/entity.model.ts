@@ -37,13 +37,17 @@ export class Entity implements EntityState, EntityApi {
 	readonly controls: Controls
 	readonly visual: VisualState
 	physic?: PhysicState
-	interaction?: InteractionState
+	interaction: InteractionState
 	private cameraProxy = CameraProxy
 
 	constructor({ id, position = [0, 0, 0] }: { id: string; position?: [number, number, number] }) {
 		this.id = id
 		this.controls = new Controls()
 		this.visual = new Visual(position)
+		this.interaction = {
+			isInteracting: false,
+			runtime: {},
+		}
 	}
 
 	initPhysic(dynamic = true) {

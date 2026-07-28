@@ -3,8 +3,7 @@ import { useMemo, useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
 
 import { game, INTERACTION_MAX_DISTANCE } from '../game'
-import { entityManager } from '../game/entity/entity.manager'
-import { sceneRegistry } from '../game/system/scene-registry'
+import { LAYERS } from '../lib/enums/layers'
 
 export function Reticle() {
 	return (
@@ -19,6 +18,7 @@ export function useReticleInteraction() {
 
 	const raycaster = useMemo(() => {
 		const rc = new Raycaster()
+		rc.layers.set(LAYERS.INTERACTABLE)
 		rc.firstHitOnly = true
 		rc.far = INTERACTION_MAX_DISTANCE
 		return rc
@@ -26,30 +26,23 @@ export function useReticleInteraction() {
 
 	const lastHit = useRef<Object3D | null>(null)
 
-	useFrame(() => {
+	useFrame(({ scene }) => {
 		raycaster.setFromCamera(CENTER, camera)
 
-		const hit = raycaster.intersectObjects(sceneRegistry.getAllObjects(), true)[0]?.object ?? null
+		const hit = raycaster.intersectObject(scene, true)[0]?.object ?? null
 
 		if (hit === lastHit.current) return
 
-		const previousEntity = lastHit.current
-			? entityManager.get(lastHit.current.userData.entityId)
-			: undefined
-
-		if (previousEntity?.interaction) {
-			previousEntity.interaction.isInteracting = false
+		if (!hit && lastHit.current) {
+			lastHit.current.userData.isInteracting = false
+			game.clearInteractable()
 		}
 
-		const currentEntity = hit ? entityManager.get(hit.userData.entityId) : undefined
-
-		if (currentEntity?.interaction) {
-			currentEntity.interaction.isInteracting = true
+		if (hit) {
+			hit.userData.isInteracting = true
+			game.setInteractable(hit.userData.entityId)
 		}
 
 		lastHit.current = hit
-
-		if (currentEntity) game.setInteractable(currentEntity.id)
-		else game.clearInteractable()
 	})
 }

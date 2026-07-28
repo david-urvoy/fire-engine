@@ -12,7 +12,7 @@ export function createItemsRepository(db: Dexie) {
 		add: async (item: ItemRecord) => table.put(item),
 		get: async (id: string): Promise<ItemRecord | undefined> => table.get(id),
 		all: async (): Promise<ItemRecord[]> => table.toArray(),
-		isCollected: async (id: string) => !!(await table.get(id))?.collectedAt,
+		isCollected: async (id: string) => !!(await table.get(id)),
 		clear: async () => table.clear(),
 		on: (
 			event: 'create' | 'update' | 'upsert' | 'delete' | 'read',

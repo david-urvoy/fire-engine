@@ -1,3 +1,4 @@
+import type { ThreeEvent } from '@react-three/fiber'
 import type { RapierRigidBody } from '@react-three/rapier'
 import type { Object3D, Quaternion, Vector3 } from 'three'
 
@@ -33,6 +34,12 @@ export interface VisualState {
 
 export interface InteractionState {
 	isInteracting: boolean
+	runtime: InteractionRuntime
+}
+
+export interface InteractionRuntime {
+	onClick?: (object: ThreeEvent<MouseEvent>) => void
+	onUpdate?: (object: Object3D) => void
 }
 
 export interface EntityState {

@@ -11,7 +11,7 @@ export function createItemsManager(db: Dexie) {
 		collect: (item: ItemRecord) => repo.add(item),
 		get: (id: string) => repo.get(id),
 		all: () => repo.all(),
-		isCollected: (id: string) => () => repo.isCollected(id),
+		isCollected: (id: string) => repo.isCollected(id),
 		clear: () => repo.clear(),
 		on: (
 			event: 'create' | 'update' | 'upsert' | 'delete' | 'read',
@@ -22,7 +22,8 @@ export function createItemsManager(db: Dexie) {
 
 export function useIsCollected(itemId: string) {
 	const { itemsManager } = useGame()
-	return useLiveQuery(() => itemsManager.isCollected(itemId)(), [itemsManager, itemId])
+
+	return useLiveQuery(async () => itemsManager.isCollected(itemId), [itemsManager, itemId])
 }
 
 export type ItemsManager = ReturnType<typeof createItemsManager>
