@@ -1,16 +1,22 @@
-import { useEffect, type PropsWithChildren } from 'react'
+import { ActiveCollisionTypes } from '@dimforge/rapier3d-compat'
+import { CapsuleCollider } from '@react-three/rapier'
+import { useEffect } from 'react'
 
+import { Visual } from '../../3d'
 import { eventBus } from '../../lib'
+import { Gravity, KinematicMotor } from '../../physics'
 import { Entity, type EntityProps } from '../entity/entity'
 import { useGame } from '../game.context'
+import { characterDimensions } from '../game.store'
 import { CharacterProvider } from './character.context'
 
 export function Character({
 	id,
 	name,
+	position = [0, 0, 0],
 	children,
 	...props
-}: PropsWithChildren<EntityProps & { name: string }>) {
+}: EntityProps & { name: string }) {
 	const { characterManager } = useGame()
 
 	useEffect(() => {
@@ -19,13 +25,23 @@ export function Character({
 
 	return (
 		<CharacterProvider id={id} name={name}>
-			<Entity
-				id={id}
-				interactable
-				onClick={() => eventBus.emit('character_interacted', { characterId: id })}
-				{...props}
-			>
-				{children}
+			<Entity id={id} {...props}>
+				<KinematicMotor position={position}>
+					<CapsuleCollider
+						args={[characterDimensions.halfHeight, characterDimensions.radius]}
+						activeCollisionTypes={ActiveCollisionTypes.KINEMATIC_FIXED}
+					/>
+				</KinematicMotor>
+				<Visual
+					position={position}
+					smoothing={10}
+					onClick={() => eventBus.emit('character_interacted', { characterId: id })}
+					interactable
+					{...props}
+				>
+					{children}
+				</Visual>
+				<Gravity />
 			</Entity>
 		</CharacterProvider>
 	)

@@ -6,7 +6,7 @@ export class GravitySystem {
 
 	step(delta: number) {
 		this.entities.forEach((entity) => {
-			if (!entity.physic || !entity.physic.dynamic) return
+			if (!entity.physic) return
 
 			const { velocity, isGrounded } = entity.physic
 

@@ -40,28 +40,28 @@ export class Entity implements EntityState, EntityApi {
 	interaction: InteractionState
 	private cameraProxy = CameraProxy
 
-	constructor({ id, position = [0, 0, 0] }: { id: string; position?: [number, number, number] }) {
+	constructor({
+		id,
+		initialPosition = [0, 0, 0],
+	}: {
+		id: string
+		initialPosition?: [number, number, number]
+	}) {
 		this.id = id
 		this.controls = new Controls()
-		this.visual = new Visual(position)
+		this.physic = {
+			position: new Vector3(...initialPosition),
+			orientation: new Quaternion(),
+			velocity: new Vector3(),
+			isGrounded: true,
+			runtime: {},
+			active: false,
+		}
+		this.visual = new Visual(initialPosition)
 		this.interaction = {
 			isInteracting: false,
 			runtime: {},
 		}
-	}
-
-	initPhysic(dynamic = true) {
-		if (!this.physic) {
-			this.physic = {
-				position: this.visual.position.clone(),
-				orientation: this.visual.orientation.clone(),
-				velocity: new Vector3(),
-				isGrounded: true,
-				dynamic,
-				runtime: {},
-			}
-		}
-		return this
 	}
 
 	moveBy(delta: [number, number, number]) {

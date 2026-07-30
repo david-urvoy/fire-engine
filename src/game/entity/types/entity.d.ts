@@ -21,8 +21,8 @@ export interface PhysicState {
 	orientation: Quaternion
 	velocity: Vector3
 	isGrounded: boolean
-	dynamic?: boolean
 	runtime: PhysicRuntime
+	active: boolean
 }
 
 export interface VisualState {
@@ -51,7 +51,6 @@ export interface EntityState {
 }
 
 export interface EntityApi {
-	initPhysic: (dynamic?: boolean) => EntityState
 	moveBy: (delta: [number, number, number]) => EntityState
 	teleportTo: (target: Vector3) => EntityState
 	lookAt(target: Vector3): EntityState
