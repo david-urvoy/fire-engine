@@ -25,6 +25,7 @@ type BindingParam<T extends Bindable> = {
 	param: T
 	key?: keyof T
 	options?: BindingParams
+	onChange?: (value: T[keyof T]) => void
 }
 
 function ensureRegistry(parent: FolderApi | Pane) {
@@ -62,6 +63,7 @@ export function useAddBinding<T extends Bindable>({
 	param,
 	key,
 	options,
+	onChange,
 }: {
 	folder: FolderApi
 } & BindingParam<T>) {
@@ -73,17 +75,18 @@ export function useAddBinding<T extends Bindable>({
 	useEffect(() => {
 		bindingRef.current = folderRef.current
 			.addBinding(...paramsRef.current)
-			.on('change', ({ value }) =>
+			.on('change', ({ value }) => {
 				setValue((prev) => ({
 					...prev,
 					[paramsRef.current[1]]: value.clone ? value.clone() : value,
-				})),
-			)
+				}))
+				onChange?.(value)
+			})
 		const cleanupFolder = folderRef.current
 		return () => {
 			if (bindingRef.current) cleanupFolder.remove(bindingRef.current)
 		}
-	}, [])
+	}, [onChange])
 
 	return value
 }
@@ -96,11 +99,12 @@ export function useAddBindings<T extends Bindable>({
 	bindings: BindingParam<T>[]
 }) {
 	const defsRef = useRef<BindingParam<T>[]>(
-		bindings.map(({ param, key, options }) => ({
+		bindings.map(({ param, key, options, onChange }) => ({
 			id: Symbol(),
 			param,
 			key: key ?? (Object.keys(param)[0] as keyof T),
 			options,
+			onChange,
 		})),
 	)
 
@@ -128,6 +132,7 @@ export function useAddBindings<T extends Bindable>({
 								: v,
 						),
 					)
+					def.onChange?.(value)
 				})
 
 			created.push(binding)
