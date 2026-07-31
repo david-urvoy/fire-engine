@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, type PropsWithChildren } from 'react'
-import { type Group } from 'three'
+import { type PropsWithChildren } from 'react'
 
-import { entityManager, game, MOVEMENT_SMOOTHING, useEntity, useGameLoopSystem } from '../../game'
+import { entityManager, game, MOVEMENT_SMOOTHING, useEntity } from '../../game'
 import type { GroupProps } from '../../lib'
 import { LAYERS } from '../../lib/enums/layers'
+import { useRegisterVisual } from './use-visual'
 
 export function Visual({
 	position = [0, 0, 0],
@@ -19,29 +19,8 @@ export function Visual({
 		interactable?: boolean
 	}
 >) {
-	const { id, entity } = useEntity()
-	const { visual } = useGameLoopSystem()
-	const objectRef = useRef<Group>(null)
-
-	useEffect(() => {
-		visual.register(entity)
-
-		return () => {
-			entity.visual.runtime.object3D = undefined
-			visual.unregister(entity)
-		}
-	}, [visual, entity])
-
-	useLayoutEffect(() => {
-		const object3D = objectRef.current
-		if (!object3D) return
-
-		entity.visual.runtime.object3D = object3D
-
-		object3D.traverse((child) => {
-			child.userData.entityId = id
-		})
-	}, [id, entity])
+	const { id } = useEntity()
+	const objectRef = useRegisterVisual()
 
 	return (
 		<group

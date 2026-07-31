@@ -2,13 +2,13 @@ import { Vector3 } from 'three'
 
 import type { EntityState } from '../game/entity/types/entity'
 
-type CharacterEntry = {
+type PhysicEntry = {
 	entity: EntityState
 	move: (delta: Vector3) => void
 }
 
 export class PhysicSystem {
-	private entities = new Map<string, CharacterEntry & { tmpVelocity: Vector3 }>()
+	private entities = new Map<string, PhysicEntry & { tmpVelocity: Vector3 }>()
 
 	step(delta: number) {
 		this.entities.forEach(({ entity, tmpVelocity, move }) => {
@@ -23,7 +23,7 @@ export class PhysicSystem {
 		})
 	}
 
-	register(character: CharacterEntry) {
+	register(character: PhysicEntry) {
 		this.entities.set(character.entity.id, { ...character, tmpVelocity: new Vector3() })
 	}
 

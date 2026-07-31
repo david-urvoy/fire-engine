@@ -45,7 +45,7 @@ export function useCharacterMovement(
 	)
 
 	useEffect(() => {
-		physic.register({ entity, move })
+		if (entity.physic.active) physic.register({ entity, move })
 		return () => physic.unregister(entity.id)
 	}, [physic, entity, move])
 }

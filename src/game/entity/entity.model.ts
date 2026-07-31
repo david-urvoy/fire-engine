@@ -36,7 +36,7 @@ export class Entity implements EntityState, EntityApi {
 	readonly id: string
 	readonly controls: Controls
 	readonly visual: VisualState
-	physic?: PhysicState
+	physic: PhysicState
 	interaction: InteractionState
 	private cameraProxy = CameraProxy
 
@@ -55,7 +55,7 @@ export class Entity implements EntityState, EntityApi {
 			velocity: new Vector3(),
 			isGrounded: true,
 			runtime: {},
-			active: false,
+			active: true,
 		}
 		this.visual = new Visual(initialPosition)
 		this.interaction = {
@@ -104,7 +104,7 @@ export class Entity implements EntityState, EntityApi {
 	}
 
 	get position() {
-		return this.physic?.position ?? this.visual.position
+		return this.physic.active ? this.physic.position : this.visual.position
 	}
 
 	get orientation(): Quaternion {

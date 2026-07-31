@@ -45,7 +45,7 @@ export interface InteractionRuntime {
 export interface EntityState {
 	id: string
 	controls: ControlsState
-	physic?: PhysicState
+	physic: PhysicState
 	visual: VisualState
 	interaction?: InteractionState
 }
