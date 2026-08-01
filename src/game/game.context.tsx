@@ -2,9 +2,11 @@ import { createContext, useContext, type PropsWithChildren, type RefObject } fro
 
 import type { CharacterManager } from './character'
 import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
+import type { EntityManager } from './entity/entity.manager'
 import { type ItemsManager } from './item'
 
 interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
+	entityManager: EntityManager
 	characterManager: CharacterManager<CharacterId, DialogueId>
 	dialogueManager: DialogueManager<DialogueId>
 	canvasRef: RefObject<HTMLCanvasElement | null>
@@ -17,13 +19,16 @@ const GameContext = createContext<GameContextValue | null>(null)
 
 export function GameProvider<CharacterId extends string, DialogueId extends string>({
 	canvasRef,
+	entityManager,
 	characterManager,
 	dialogueManager,
 	itemsManager,
 	children,
 }: PropsWithChildren<GameProviderProps<CharacterId, DialogueId>>) {
 	return (
-		<GameContext.Provider value={{ canvasRef, characterManager, dialogueManager, itemsManager }}>
+		<GameContext.Provider
+			value={{ canvasRef, entityManager, characterManager, dialogueManager, itemsManager }}
+		>
 			{children}
 		</GameContext.Provider>
 	)
@@ -32,9 +37,7 @@ export function GameProvider<CharacterId extends string, DialogueId extends stri
 export function useGame<CharacterId extends string = string, DialogueId extends string = string>() {
 	const context = useContext(GameContext)
 
-	if (!context) {
-		throw new Error('useGame must be used within a GameProvider')
-	}
+	if (!context) throw new Error('useGame must be used within a GameProvider')
 
 	return context as GameProviderProps<CharacterId, DialogueId>
 }

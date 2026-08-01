@@ -1,6 +1,6 @@
 import { Entity } from './entity.model'
 
-class EntityManager {
+export class EntityManager {
 	private readonly entities = new Map<string, Entity>()
 
 	set(id: string, entity: Entity) {
@@ -25,4 +25,6 @@ class EntityManager {
 	}
 }
 
-export const entityManager = new EntityManager()
+export function createEntityManager() {
+	return new EntityManager()
+}

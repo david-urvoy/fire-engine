@@ -1,5 +1,5 @@
 import type { DialogueManager } from '../conversation/dialogue/dialogue.manager'
-import { entityManager } from '../entity/entity.manager'
+import type { EntityManager } from '../entity/entity.manager'
 import type { Entity } from '../entity/entity.model'
 import type { CharacterApi } from './types/character'
 
@@ -21,6 +21,7 @@ export class Character implements CharacterApi<string, string> {
 			lastName: string
 			age: number
 		},
+		public entityManager: EntityManager,
 		public dialogueManager: DialogueManager<string>,
 	) {
 		this.id = id
@@ -42,6 +43,6 @@ export class Character implements CharacterApi<string, string> {
 	}
 
 	get entity(): Entity | undefined {
-		return entityManager.get(this.id)
+		return this.entityManager.get(this.id)
 	}
 }

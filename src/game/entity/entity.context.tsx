@@ -7,15 +7,16 @@ interface EntityContextType {
 	entity: Entity
 }
 
-const EntityContext = createContext<EntityContextType>({
-	id: '',
-	entity: new Entity({ id: '' }),
-})
+const EntityContext = createContext<EntityContextType | null>(null)
 
 export function EntityProvider({ id, entity, children }: PropsWithChildren<EntityContextType>) {
 	return <EntityContext.Provider value={{ id, entity }}>{children}</EntityContext.Provider>
 }
 
 export function useEntity() {
-	return useContext(EntityContext)
+	const context = useContext(EntityContext)
+
+	if (!context) throw new Error('useEntity must be used inside EntityProvider')
+
+	return context
 }

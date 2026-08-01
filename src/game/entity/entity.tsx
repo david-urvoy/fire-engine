@@ -1,8 +1,7 @@
-import { useEffect, useMemo, type PropsWithChildren } from 'react'
+import { useEffect, useId, useMemo, type PropsWithChildren } from 'react'
 
-import { EntityProvider } from '../..'
+import { EntityProvider, useGame } from '../..'
 import type { GroupProps } from '../../lib'
-import { entityManager } from './entity.manager'
 import { Entity as EntityModel } from './entity.model'
 
 export type EntityProps = PropsWithChildren<
@@ -14,7 +13,12 @@ export type EntityProps = PropsWithChildren<
 
 export function Entity({ id, position = [0, 0, 0], children }: EntityProps) {
 	const [x, y, z] = position
-	const entity = useMemo(() => new EntityModel({ id, initialPosition: [x, y, z] }), [id, x, y, z])
+	const { entityManager } = useGame()
+	const ref = useId()
+	const entity = useMemo(
+		() => new EntityModel({ id, ref, initialPosition: [x, y, z] }),
+		[id, ref, x, y, z],
+	)
 
 	useEffect(() => {
 		entityManager.set(id, entity)
@@ -22,7 +26,7 @@ export function Entity({ id, position = [0, 0, 0], children }: EntityProps) {
 		return () => {
 			entityManager.delete(id)
 		}
-	}, [id, entity])
+	}, [id, entity, entityManager])
 
 	return (
 		<EntityProvider id={id} entity={entity}>

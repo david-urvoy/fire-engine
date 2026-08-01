@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import { entityManager, game, MOVEMENT_SMOOTHING, useEntity } from '../../game'
+import { game, MOVEMENT_SMOOTHING, useEntity, useGame } from '../../game'
 import type { GroupProps } from '../../lib'
 import { LAYERS } from '../../lib/enums/layers'
 import { useRegisterVisual } from './use-visual'
@@ -19,6 +19,7 @@ export function Visual({
 		interactable?: boolean
 	}
 >) {
+	const { entityManager } = useGame()
 	const { id } = useEntity()
 	const objectRef = useRegisterVisual()
 

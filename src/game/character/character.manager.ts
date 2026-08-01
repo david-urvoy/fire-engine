@@ -1,4 +1,5 @@
 import type { DialogueManager } from '../conversation/dialogue/dialogue.manager'
+import type { EntityManager } from '../entity/entity.manager'
 import { Character } from './character.model'
 import type { CharacterApi, Character as CharacterData } from './types/character'
 
@@ -16,6 +17,7 @@ export function createCharacterManager<
 	const Source extends Readonly<Record<string, CharacterData<string>>>,
 >(
 	source: Source,
+	entityManager: EntityManager,
 	dialogueManager: DialogueManager<string>,
 ): CharacterManager<Extract<keyof Source, string>> {
 	type CharacterId = Extract<keyof Source, string>
@@ -33,7 +35,7 @@ export function createCharacterManager<
 			const data = source[id]
 			if (!data) throw new Error(`Character "${id}" not found in repository`)
 
-			const instance = new Character({ ...data }, dialogueManager)
+			const instance = new Character({ ...data }, entityManager, dialogueManager)
 			instances.set(id, instance)
 			return instance
 		},

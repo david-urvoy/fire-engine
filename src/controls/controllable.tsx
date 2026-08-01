@@ -1,10 +1,11 @@
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Vector3 } from 'three/src/math/Vector3.js'
 import { useSnapshot } from 'valtio'
 
 import { CameraTracking } from '../camera'
-import { usePlayer } from '../game/character/player.hook'
+import { useEntity } from '../game'
+import { usePlayer } from '../game/character/use-player'
 import { game } from '../game/game.store'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
 import { KeyboardControls } from './input/keyboard/keyboard-controls'
@@ -20,25 +21,31 @@ function usePlayerDirection() {
 
 function useCharacterMove() {
 	const { uiMode } = useSnapshot(game)
-	const controlledCharacter = usePlayer()
+	const getPlayer = usePlayer()
 	const direction = usePlayerDirection()
 	const vec = useRef(new Vector3())
 
 	useFrame((_, delta) => {
-		if (!controlledCharacter?.controls || uiMode !== 'gameplay') return
-		// set velocity to player direction
+		const player = getPlayer()
+		if (!player || uiMode !== 'gameplay') return
+
 		vec.current
 			.set(direction.x, 0, direction.y)
-			.applyQuaternion(controlledCharacter.orientation)
+			.applyQuaternion(player.orientation)
 			.multiplyScalar(450 * delta)
 
-		controlledCharacter.moveBy([vec.current.x, vec.current.y, vec.current.z])
+		player.moveBy([vec.current.x, vec.current.y, vec.current.z])
 	})
 }
 
 export function Controllable() {
 	const { isMobile } = useSnapshot(game)
+	const { id } = useEntity()
 	useCharacterMove()
+
+	useEffect(() => {
+		game.controlledCharacter = id
+	}, [id])
 
 	return (
 		<>

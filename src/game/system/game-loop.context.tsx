@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { createContext, useContext, useRef, type PropsWithChildren } from 'react'
+import { createContext, useContext, useMemo, type PropsWithChildren } from 'react'
 import { useSnapshot } from 'valtio'
 
 import { game } from '../game.store'
@@ -9,13 +9,9 @@ const GameLoopContext = createContext<GameLoopSystem | null>(null)
 
 export function GameLoopProvider({ children }: PropsWithChildren) {
 	const { isPaused } = useSnapshot(game)
-	const systemRef = useRef<GameLoopSystem>(null)
-
-	if (!systemRef.current) {
-		systemRef.current = new GameLoopSystem()
-	}
-
-	const system = systemRef.current
+	const system = useMemo(() => {
+		return new GameLoopSystem()
+	}, [])
 
 	useFrame((_, delta) => {
 		if (isPaused) return

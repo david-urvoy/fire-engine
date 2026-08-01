@@ -34,6 +34,8 @@ class Visual implements VisualState {
 
 export class Entity implements EntityState, EntityApi {
 	readonly id: string
+	readonly ref: string
+	readonly name: string
 	readonly controls: Controls
 	readonly visual: VisualState
 	physic: PhysicState
@@ -42,12 +44,18 @@ export class Entity implements EntityState, EntityApi {
 
 	constructor({
 		id,
+		ref,
+		name = id,
 		initialPosition = [0, 0, 0],
 	}: {
 		id: string
+		ref: string
+		name?: string
 		initialPosition?: [number, number, number]
 	}) {
 		this.id = id
+		this.ref = ref
+		this.name = name
 		this.controls = new Controls()
 		this.physic = {
 			position: new Vector3(...initialPosition),
