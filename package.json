@@ -32,6 +32,7 @@
 	"scripts": {
 		"dev": "bun --hot src/index.ts",
 		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
+		"compile:check": "tsc",
 		"watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
 	},
 	"dependencies": {
