@@ -16,12 +16,10 @@
 	"types": "dist/src/index.d.ts",
 	"exports": {
 		".": {
-			"development": "./src/index.ts",
 			"import": "./dist/src/index.js",
 			"types": "./dist/src/index.d.ts"
 		},
 		"./tools": {
-			"development": "./tools/index.ts",
 			"import": "./dist/tools/index.js",
 			"types": "./dist/tools/index.d.ts"
 		}
@@ -30,10 +28,9 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"scripts": {
-		"dev": "bun --hot src/index.ts",
 		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
 		"compile:check": "tsc",
-		"watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
+		"compile:watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
 	},
 	"dependencies": {
 		"dexie": "^4.4.3",

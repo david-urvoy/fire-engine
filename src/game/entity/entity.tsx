@@ -4,12 +4,11 @@ import { EntityProvider, useGame } from '../..'
 import type { GroupProps } from '../../lib'
 import { Entity as EntityModel } from './entity.model'
 
-export type EntityProps = PropsWithChildren<
-	{
-		id: string
-		position?: [number, number, number]
-	} & Omit<GroupProps, 'id'>
->
+export type EntityProps = PropsWithChildren<{
+	id: string
+	position?: [number, number, number]
+}> &
+	GroupProps
 
 export function Entity({ id, position = [0, 0, 0], children }: EntityProps) {
 	const [x, y, z] = position

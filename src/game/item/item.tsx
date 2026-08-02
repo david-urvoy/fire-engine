@@ -14,21 +14,17 @@ export function Item({
 
 	if (isCollected) return null
 
-	const visual = (
-		<Visual
-			position={position}
-			smoothing={10}
-			onClick={() => eventBus.emit('item_collected', { itemId: id })}
-			interactable
-			{...props}
-		>
-			{children}
-		</Visual>
-	)
-
 	return (
 		<Entity id={id} {...props}>
-			{visual}
+			<Visual
+				position={position}
+				smoothing={10}
+				onClick={() => eventBus.emit('item_collected', { itemId: id })}
+				interactable
+				{...props}
+			>
+				{children}
+			</Visual>
 		</Entity>
 	)
 }

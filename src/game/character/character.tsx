@@ -12,7 +12,6 @@ import { CharacterProvider } from './character.context'
 
 export function Character({
 	id,
-	name,
 	position = [0, 0, 0],
 	children,
 	...props
@@ -24,7 +23,7 @@ export function Character({
 	}, [id, characterManager])
 
 	return (
-		<CharacterProvider id={id} name={name}>
+		<CharacterProvider id={id} name={props.name}>
 			<Entity id={id} {...props}>
 				<KinematicMotor position={position}>
 					<CapsuleCollider
