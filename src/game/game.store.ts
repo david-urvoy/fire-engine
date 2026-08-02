@@ -5,7 +5,7 @@ import { proxy, ref } from 'valtio'
 
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
 
-export const MOVEMENT_SMOOTHING = 20
+export const MOVEMENT_SMOOTHING = 50
 export const POINTER_SPEED = 0.8
 
 export const GRAVITY_CONST = 9.81

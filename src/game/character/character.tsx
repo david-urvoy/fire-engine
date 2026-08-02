@@ -24,7 +24,7 @@ export function Character({
 
 	return (
 		<CharacterProvider id={id} name={props.name}>
-			<Entity id={id} {...props}>
+			<Entity id={id} position={position} {...props}>
 				<KinematicMotor position={position}>
 					<CapsuleCollider
 						args={[characterDimensions.halfHeight, characterDimensions.radius]}
@@ -32,7 +32,6 @@ export function Character({
 					/>
 				</KinematicMotor>
 				<Visual
-					position={position}
 					smoothing={10}
 					onClick={() => eventBus.emit('character_interacted', { characterId: id })}
 					interactable

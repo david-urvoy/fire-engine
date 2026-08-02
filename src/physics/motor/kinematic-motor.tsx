@@ -17,7 +17,7 @@ export function KinematicMotor({
 	useVisualSync()
 
 	return (
-		<RigidBody ref={body} type="kinematicPosition" {...props}>
+		<RigidBody ref={body} {...props} type="kinematicPosition">
 			{children}
 		</RigidBody>
 	)
