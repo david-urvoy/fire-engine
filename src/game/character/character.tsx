@@ -25,7 +25,7 @@ export function Character({
 	return (
 		<CharacterProvider id={id} name={props.name}>
 			<Entity id={id} position={position} {...props}>
-				<KinematicMotor position={position}>
+				<KinematicMotor>
 					<CapsuleCollider
 						args={[characterDimensions.halfHeight, characterDimensions.radius]}
 						activeCollisionTypes={ActiveCollisionTypes.KINEMATIC_FIXED}

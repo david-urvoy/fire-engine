@@ -2,7 +2,7 @@ import { type RapierRigidBody, RigidBody, type RigidBodyProps } from '@react-thr
 import { type PropsWithChildren, useRef } from 'react'
 
 import { useVisualSync } from '../../3d/visual/use-visual'
-import { type CharacterDimensions } from '../../game'
+import { type CharacterDimensions, useEntity } from '../../game'
 import { useCharacterController } from '../character-controller'
 import { useCharacterMovement } from './use-controlled-rigid-body'
 
@@ -10,6 +10,7 @@ export function KinematicMotor({
 	children,
 	...props
 }: PropsWithChildren<{ dimensions?: CharacterDimensions } & RigidBodyProps>) {
+	const { entity } = useEntity()
 	const controller = useCharacterController()
 	const body = useRef<RapierRigidBody>(null)
 
@@ -17,7 +18,7 @@ export function KinematicMotor({
 	useVisualSync()
 
 	return (
-		<RigidBody ref={body} {...props} type="kinematicPosition">
+		<RigidBody ref={body} position={entity.position} {...props} type="kinematicPosition">
 			{children}
 		</RigidBody>
 	)
