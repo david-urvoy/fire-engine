@@ -28,9 +28,9 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"scripts": {
+		"dev": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
 		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
-		"compile:check": "tsc",
-		"compile:watch": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/"
+		"compile:check": "tsc"
 	},
 	"dependencies": {
 		"dexie": "^4.4.3",

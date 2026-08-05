@@ -5,10 +5,10 @@ import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
 import type {
 	ControlsState,
 	EntityApi,
+	EntityRuntime,
 	EntityState,
 	InteractionState,
 	PhysicState,
-	VisualState,
 } from './types/entity'
 
 class Controls implements ControlsState {
@@ -19,27 +19,16 @@ class Controls implements ControlsState {
 	) {}
 }
 
-class Visual implements VisualState {
-	public position: Vector3 = new Vector3()
-	public orientation: Quaternion = new Quaternion()
-	public snap = false
-	public runtime = {}
-
-	constructor(position?: [number, number, number]) {
-		if (position) {
-			this.position.set(...position)
-		}
-	}
-}
-
 export class Entity implements EntityState, EntityApi {
 	readonly id: string
 	readonly ref: string
 	readonly name: string
 	readonly controls: Controls
-	readonly visual: VisualState
-	physic: PhysicState
-	interaction: InteractionState
+	readonly position: Vector3
+	readonly orientation: Quaternion
+	physic?: PhysicState
+	readonly runtime: EntityRuntime
+	interaction?: InteractionState
 	private cameraProxy = CameraProxy
 
 	constructor({
@@ -56,19 +45,18 @@ export class Entity implements EntityState, EntityApi {
 		this.id = id
 		this.ref = ref
 		this.name = name
+		this.position = new Vector3(...initialPosition)
+		this.orientation = new Quaternion()
 		this.controls = new Controls()
 		this.physic = {
-			position: new Vector3(...initialPosition),
-			orientation: new Quaternion(),
 			velocity: new Vector3(),
 			isGrounded: true,
-			runtime: {},
-			active: true,
+			isActive: false,
+			isSleeping: false,
 		}
-		this.visual = new Visual(initialPosition)
+		this.runtime = {}
 		this.interaction = {
 			isInteracting: false,
-			runtime: {},
 		}
 	}
 
@@ -79,8 +67,6 @@ export class Entity implements EntityState, EntityApi {
 
 	teleportTo(target: Vector3) {
 		this.controls.teleport = target.clone()
-
-		if (!this.physic) this.visual.position.copy(target)
 
 		return this
 	}
@@ -111,16 +97,8 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	get position() {
-		return this.physic.active ? this.physic.position : this.visual.position
-	}
-
-	get orientation(): Quaternion {
-		return this.controls.orientation
-	}
-
-	get velocity(): Vector3 {
-		return this.physic?.velocity ?? new Vector3()
+	get velocity(): Vector3 | undefined {
+		return this.physic?.velocity
 	}
 
 	distanceTo(target: Vector3) {

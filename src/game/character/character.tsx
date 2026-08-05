@@ -1,8 +1,7 @@
-import { ActiveCollisionTypes } from '@dimforge/rapier3d-compat'
 import { CapsuleCollider } from '@react-three/rapier'
 import { useEffect } from 'react'
 
-import { Visual } from '../../3d'
+import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
 import { Gravity, KinematicMotor } from '../../physics'
 import { Entity, type EntityProps } from '../entity/entity'
@@ -20,25 +19,21 @@ export function Character({
 
 	useEffect(() => {
 		characterManager.create(id)
+		return () => characterManager.delete(id)
 	}, [id, characterManager])
 
 	return (
 		<CharacterProvider id={id} name={props.name}>
 			<Entity id={id} position={position} {...props}>
 				<KinematicMotor>
-					<CapsuleCollider
-						args={[characterDimensions.halfHeight, characterDimensions.radius]}
-						activeCollisionTypes={ActiveCollisionTypes.KINEMATIC_FIXED}
-					/>
+					<CapsuleCollider args={[characterDimensions.halfHeight, characterDimensions.radius]} />
+					<Visual
+						onClick={() => eventBus.emit('character_interacted', { characterId: id })}
+						interactable
+					>
+						{children}
+					</Visual>
 				</KinematicMotor>
-				<Visual
-					smoothing={10}
-					onClick={() => eventBus.emit('character_interacted', { characterId: id })}
-					interactable
-					{...props}
-				>
-					{children}
-				</Visual>
 				<Gravity />
 			</Entity>
 		</CharacterProvider>

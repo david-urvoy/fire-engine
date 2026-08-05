@@ -1,4 +1,3 @@
-import type { ThreeEvent } from '@react-three/fiber'
 import type { RapierRigidBody } from '@react-three/rapier'
 import type { Object3D, Quaternion, Vector3 } from 'three'
 
@@ -8,47 +7,32 @@ export interface ControlsState {
 	teleport?: Vector3
 }
 
-export interface VisualRuntime {
-	object3D?: Object3D
-}
-
-export interface PhysicRuntime {
-	rigidBody?: RapierRigidBody
-}
-
 export interface PhysicState {
-	position: Vector3
-	orientation: Quaternion
 	velocity: Vector3
 	isGrounded: boolean
-	runtime: PhysicRuntime
-	active: boolean
-}
-
-export interface VisualState {
-	position: Vector3
-	orientation: Quaternion
-	snap?: boolean
-	runtime: VisualRuntime
+	isActive: boolean
+	isSleeping: boolean
+	runtime?: RapierRigidBody
 }
 
 export interface InteractionState {
 	isInteracting: boolean
-	runtime: InteractionRuntime
 }
 
-export interface InteractionRuntime {
-	onClick?: (object: ThreeEvent<MouseEvent>) => void
-	onUpdate?: (object: Object3D) => void
+interface EntityRuntime {
+	rigidBody?: RapierRigidBody
+	object3D?: Object3D
 }
 
 export interface EntityState {
 	id: string
 	ref: string
 	name: string
+	position: Vector3
+	orientation: Quaternion
 	controls: ControlsState
-	physic: PhysicState
-	visual: VisualState
+	physic?: PhysicState
+	runtime: EntityRuntime
 	interaction?: InteractionState
 }
 

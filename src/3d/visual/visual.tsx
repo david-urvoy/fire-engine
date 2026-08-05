@@ -6,7 +6,6 @@ import { LAYERS } from '../../lib/enums/layers'
 import { useRegisterVisual } from './use-visual'
 
 export function Visual({
-	position = [0, 0, 0],
 	smoothing: _smoothing = MOVEMENT_SMOOTHING,
 	interactable = false,
 	children,
@@ -14,19 +13,17 @@ export function Visual({
 	...props
 }: PropsWithChildren<
 	GroupProps & {
-		position?: [number, number, number]
 		smoothing?: number
 		interactable?: boolean
 	}
 >) {
 	const { entityManager } = useGame()
-	const { id } = useEntity()
-	const objectRef = useRegisterVisual()
+	const { id, entity } = useEntity()
+	const objectRef = useRegisterVisual(entity)
 
 	return (
 		<group
 			ref={objectRef}
-			position={position}
 			{...props}
 			onClick={(e) => {
 				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return

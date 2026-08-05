@@ -1,51 +1,60 @@
-import type { KinematicCharacterController, Vector3 } from '@dimforge/rapier3d-compat'
+import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
 import type { RapierRigidBody } from '@react-three/rapier'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useRef, type RefObject } from 'react'
+import { Quaternion, Vector3 } from 'three'
 
-import { useEntity, useGameLoopSystem } from '../../game'
+import { useEntity } from '../../game'
 import { useTeleport } from './use-teleport'
 
 function useComputedMovement(
-	body: RapierRigidBody | null,
-	controller: KinematicCharacterController | null,
+	bodyRef: RefObject<RapierRigidBody | null>,
+	controllerRef: RefObject<KinematicCharacterController | null>,
 ) {
 	const { entity } = useEntity()
+	const lastRotation = useRef(new Quaternion())
+	const tmpDesired = useRef(new Vector3())
 
 	return useCallback(() => {
+		const body = bodyRef?.current
+		const controller = controllerRef?.current
 		if (!body || !entity.physic || !controller) return
 
-		entity.physic.position.copy(body.translation()).add(controller.computedMovement())
+		const desired = tmpDesired.current
+		desired.copy(body.translation()).add(controller.computedMovement())
+
+		if (desired.distanceToSquared(entity.position) > 1e-6) {
+			body.setNextKinematicTranslation(desired)
+			entity.position.copy(desired)
+		}
+
 		entity.physic.isGrounded = controller.computedGrounded()
 
-		body.setRotation(entity.physic.orientation, false)
-		body.setNextKinematicTranslation(entity.physic.position)
-	}, [controller, entity.physic, body])
+		if (!entity.orientation.equals(lastRotation.current)) {
+			body.setRotation(entity.orientation, false)
+			lastRotation.current.copy(entity.orientation)
+		}
+	}, [bodyRef, controllerRef, entity.position, entity.orientation, entity.physic])
 }
 
 export function useCharacterMovement(
-	body: RapierRigidBody | null,
-	controller: KinematicCharacterController | null,
+	bodyRef: RefObject<RapierRigidBody | null>,
+	controllerRef: RefObject<KinematicCharacterController | null>,
 ) {
-	const { entity } = useEntity()
-	const { physic } = useGameLoopSystem()
+	const applyTeleport = useTeleport(bodyRef)
+	const applyComputedMovement = useComputedMovement(bodyRef, controllerRef)
 
-	const applyTeleport = useTeleport(body)
-	const applyComputedMovement = useComputedMovement(body, controller)
-
-	const move = useCallback(
+	return useCallback(
 		(delta: Vector3) => {
 			applyTeleport()
 
+			const body = bodyRef?.current
+			const controller = controllerRef?.current
 			if (!body || !controller) return
 
 			controller.computeColliderMovement(body.collider(0), delta)
 			applyComputedMovement()
 		},
-		[controller, body, applyTeleport, applyComputedMovement],
+		[bodyRef, controllerRef, applyTeleport, applyComputedMovement],
 	)
 
-	useEffect(() => {
-		if (entity.physic.active) physic.register({ entity, move })
-		return () => physic.unregister(entity.id)
-	}, [physic, entity, move])
 }

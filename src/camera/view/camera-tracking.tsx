@@ -6,7 +6,7 @@ function CameraPosition() {
 	const { entity } = useEntity()
 
 	useFrame(({ camera }) => {
-		camera.position.copy(entity.visual.position)
+		camera.position.copy(entity.position)
 		camera.position.y += 0.4
 	})
 

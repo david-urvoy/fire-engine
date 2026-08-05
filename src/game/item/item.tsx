@@ -1,33 +1,60 @@
-import type { ReactNode } from 'react'
-
-import { Visual } from '../../3d'
+import { KinematicMotor } from '../..'
+import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
+import { Physic } from '../../physics/physic'
 import { Entity, type EntityProps } from '../entity/entity'
 import { useIsCollected } from './items.manager'
 
-export function Item({
-	id,
-	position,
-	physic,
-	children,
-	...props
-}: EntityProps & { physic?: ReactNode }) {
+export function KinematicItem({ id, position, children, ...props }: EntityProps) {
 	const isCollected = useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
 		<Entity id={id} position={position} {...props}>
-			{physic}
-			<Visual
-				position={position}
-				smoothing={10}
-				onClick={() => eventBus.emit('item_collected', { itemId: id })}
-				interactable
-				{...props}
-			>
-				{children}
-			</Visual>
+			<KinematicMotor>
+				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+					{children}
+				</Visual>
+			</KinematicMotor>
 		</Entity>
 	)
+}
+
+export function DynamicItem({ id, position, children, ...props }: EntityProps) {
+	const isCollected = useIsCollected(id)
+
+	if (isCollected) return null
+
+	return (
+		<Entity id={id} position={position} {...props}>
+			<Physic colliders="cuboid" type="dynamic" position={position}>
+				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+					{children}
+				</Visual>
+			</Physic>
+		</Entity>
+	)
+}
+
+export function FixedItem({ id, position, children, ...props }: EntityProps) {
+	const isCollected = useIsCollected(id)
+
+	if (isCollected) return null
+
+	return (
+		<Entity id={id} position={position} {...props}>
+			<Physic colliders="cuboid" type="fixed" position={position}>
+				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+					{children}
+				</Visual>
+			</Physic>
+		</Entity>
+	)
+}
+
+export const Item = {
+	Kinematic: KinematicItem,
+	Dynamic: DynamicItem,
+	Fixed: FixedItem,
 }

@@ -11,6 +11,7 @@ export interface CharacterManager<
 	create(id: CharacterId): CharacterApi<CharacterId, DialogueId>
 	has(id: CharacterId): boolean
 	all(): Array<CharacterApi<string, string>>
+	delete(id: CharacterId): void
 }
 
 export function createCharacterManager<
@@ -44,6 +45,9 @@ export function createCharacterManager<
 		},
 		all() {
 			return Array.from(instances.values())
+		},
+		delete(id) {
+			instances.delete(id)
 		},
 	}
 }

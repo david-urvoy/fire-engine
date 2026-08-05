@@ -1,22 +1,22 @@
 import type { RapierRigidBody } from '@react-three/rapier'
-import { useCallback } from 'react'
+import { useCallback, type RefObject } from 'react'
 
 import { useEntity } from '../../game'
 
-export function useTeleport(body: RapierRigidBody | null) {
+export function useTeleport(bodyRef: RefObject<RapierRigidBody | null>) {
 	const { entity } = useEntity()
-	const { physic, visual, controls } = entity
+	const { physic, controls } = entity
 
 	return useCallback(() => {
+		const body = bodyRef?.current
 		if (!body || !physic || !controls.teleport) return
 
 		body.setTranslation(controls.teleport, false)
 
-		physic.position.copy(controls.teleport)
+		entity.position.copy(controls.teleport)
 		physic.velocity.set(0, 0, 0)
 		physic.isGrounded = false
 
-		visual.snap = true
 		controls.teleport = undefined
-	}, [physic, visual, controls, body])
+	}, [physic, controls, entity.position, bodyRef])
 }
