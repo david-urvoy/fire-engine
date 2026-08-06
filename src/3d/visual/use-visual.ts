@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import type { Group } from 'three/src/objects/Group.js'
 
-import { useGameLoopSystem } from '../..'
-import type { Entity } from '../../game/entity/entity.model'
+import { useEntity, useGameLoopSystem } from '../..'
 
-export function useRegisterVisual(entity: Entity) {
+export function useRegisterVisual() {
+	const { entity } = useEntity()
 	const { physic } = useGameLoopSystem()
 	const objectRef = useRef<Group>(null)
 

@@ -18,8 +18,8 @@ export function Visual({
 	}
 >) {
 	const { entityManager } = useGame()
-	const { id, entity } = useEntity()
-	const objectRef = useRegisterVisual(entity)
+	const { id } = useEntity()
+	const objectRef = useRegisterVisual()
 
 	return (
 		<group
