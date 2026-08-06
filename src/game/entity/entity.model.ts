@@ -1,4 +1,6 @@
-import { Quaternion, Vector3 } from 'three'
+import type { RapierRigidBody } from '@react-three/rapier'
+import type { RefObject } from 'react'
+import { Quaternion, Vector3, type Object3D } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
 import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
@@ -36,11 +38,16 @@ export class Entity implements EntityState, EntityApi {
 		ref,
 		name = id,
 		initialPosition = [0, 0, 0],
+		runtime,
 	}: {
 		id: string
 		ref: string
 		name?: string
 		initialPosition?: [number, number, number]
+		runtime: {
+			object3D: RefObject<Object3D | null>
+			rigidBody: RefObject<RapierRigidBody | null>
+		}
 	}) {
 		this.id = id
 		this.ref = ref
@@ -54,7 +61,7 @@ export class Entity implements EntityState, EntityApi {
 			isActive: false,
 			isSleeping: false,
 		}
-		this.runtime = {}
+		this.runtime = runtime
 		this.interaction = {
 			isInteracting: false,
 		}

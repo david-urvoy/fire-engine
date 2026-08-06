@@ -20,7 +20,9 @@ function FirstPersonControls() {
 			ref={controlsRef}
 			onLock={() => (game.isPointerLocked = true)}
 			onUnlock={() => (game.isPointerLocked = false)}
-			onChange={() => entityManager.get(game.controlledCharacter)?.runtime?.rigidBody?.wakeUp()}
+			onChange={() =>
+				entityManager.get(game.controlledCharacter)?.runtime?.rigidBody?.current?.wakeUp()
+			}
 			pointerSpeed={POINTER_SPEED}
 			selector={isPaused ? '#resume' : dialogue?.awaitingChoice ? '#none' : 'canvas'}
 		/>

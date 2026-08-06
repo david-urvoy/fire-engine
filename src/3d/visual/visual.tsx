@@ -18,12 +18,12 @@ export function Visual({
 	}
 >) {
 	const { entityManager } = useGame()
-	const { id } = useEntity()
-	const objectRef = useRegisterVisual()
+	const { id, entity } = useEntity()
+	useRegisterVisual()
 
 	return (
 		<group
-			ref={objectRef}
+			ref={entity.runtime.object3D}
 			{...props}
 			onClick={(e) => {
 				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return

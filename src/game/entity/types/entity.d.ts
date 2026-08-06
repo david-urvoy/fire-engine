@@ -1,4 +1,5 @@
 import type { RapierRigidBody } from '@react-three/rapier'
+import type { RefObject } from 'react'
 import type { Object3D, Quaternion, Vector3 } from 'three'
 
 export interface ControlsState {
@@ -20,8 +21,8 @@ export interface InteractionState {
 }
 
 interface EntityRuntime {
-	rigidBody?: RapierRigidBody
-	object3D?: Object3D
+	rigidBody?: RefObject<RapierRigidBody | null>
+	object3D?: RefObject<Object3D | null>
 }
 
 export interface EntityState {

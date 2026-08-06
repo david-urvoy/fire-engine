@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, type PropsWithChildren } from 'react'
+import { useEffect, useId, useMemo, useRef, type PropsWithChildren } from 'react'
 
 import { EntityProvider, useGame } from '../..'
 import { Entity as EntityModel } from './entity.model'
@@ -12,8 +12,11 @@ export function Entity({ id, position = [0, 0, 0], children }: EntityProps) {
 	const [x, y, z] = position
 	const { entityManager } = useGame()
 	const ref = useId()
+	const object3D = useRef(null)
+	const rigidBody = useRef(null)
 	const entity = useMemo(
-		() => new EntityModel({ id, ref, initialPosition: [x, y, z] }),
+		() =>
+			new EntityModel({ id, ref, initialPosition: [x, y, z], runtime: { object3D, rigidBody } }),
 		[id, ref, x, y, z],
 	)
 
