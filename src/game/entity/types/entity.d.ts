@@ -39,7 +39,9 @@ export interface EntityState {
 
 export interface EntityApi {
 	moveBy: (delta: [number, number, number]) => EntityState
+	moveTo: (target: Vector3) => EntityState
 	teleportTo: (target: Vector3) => EntityState
+	rotateBy: (delta: [number, number, number]) => EntityState
 	lookAt(target: Vector3): EntityState
 	lookInDirection(direction: Vector3): EntityState
 	setVelocity: (vel: Vector3) => EntityState

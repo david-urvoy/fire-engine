@@ -1,6 +1,6 @@
 import type { RapierRigidBody } from '@react-three/rapier'
 import type { RefObject } from 'react'
-import { Quaternion, Vector3, type Object3D } from 'three'
+import { Euler, Matrix4, Quaternion, Vector3, type Object3D } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
 import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
@@ -72,6 +72,11 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
+	moveTo(target: Vector3) {
+		this.controls.move.copy(target).sub(this.physic.position)
+		return this
+	}
+
 	teleportTo(target: Vector3) {
 		this.controls.teleport = target.clone()
 
@@ -85,7 +90,19 @@ export class Entity implements EntityState, EntityApi {
 	}
 
 	lookAt(target: Vector3) {
-		this.cameraProxy?.lookAt(target)
+		if (!this.physic || !this.physic.position) return this
+
+		const matrix = new Matrix4()
+		matrix.lookAt(this.physic.position, target, UP)
+		this.physic.orientation.setFromRotationMatrix(matrix)
+
+		return this
+	}
+
+	rotateBy(delta: [number, number, number]) {
+		const euler = new Euler(...delta)
+		const quaternion = new Quaternion().setFromEuler(euler)
+		this.physic.orientation.multiply(quaternion)
 		return this
 	}
 
