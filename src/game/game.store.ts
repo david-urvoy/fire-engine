@@ -19,6 +19,22 @@ export const UP = new Vector3(0, 1, 0)
 export const characterDimensions = { halfHeight: 0.65, radius: 0.25, offset: 0.01 } as const
 export type CharacterDimensions = typeof characterDimensions
 
+const gameMenu = proxy({
+	isOpen: false,
+	open() {
+		gameMenu.isOpen = true
+		game.pointerLockControls.current?.unlock()
+	},
+	close() {
+		gameMenu.isOpen = false
+		game.pointerLockControls.current?.lock()
+	},
+	toggle() {
+		if (gameMenu.isOpen) gameMenu.close()
+		else gameMenu.open()
+	},
+})
+
 export const game = proxy({
 	isMobile: typeof window !== 'undefined' && 'ontouchstart' in window,
 	toggleMobile() {
@@ -38,10 +54,12 @@ export const game = proxy({
 	resume() {
 		game.isPaused = false
 	},
+	gameMenu,
 
-	get uiMode(): 'gameplay' | 'pause' | 'dialogue' {
+	get uiMode(): 'gameplay' | 'pause' | 'dialogue' | 'hud' {
 		if (this.isPaused) return 'pause'
 		if (dialogueStore.active?.locked) return 'dialogue'
+		if (this.gameMenu.isOpen) return 'hud'
 		return 'gameplay'
 	},
 

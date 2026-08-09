@@ -1,4 +1,6 @@
 export * from './dialogue-box'
-export * from './menu'
+export * from './game-menu/inventory-menu'
+export * from './hud'
+export * from './pause-menu'
 export * from './reticle'
 export * from './tweaks'

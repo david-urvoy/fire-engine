@@ -22,7 +22,7 @@ export const Keymap = {
 	misc: {
 		meta: ['MetaLeft'],
 		alt: ['AltLeft'],
-		holoHud: ['KeyI'],
+		gameMenu: ['KeyH'],
 		snap: ['KeyN'],
 	},
 } as const

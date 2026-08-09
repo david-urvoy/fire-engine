@@ -30,5 +30,6 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			dialogueStore.active.next()
 		},
 		clearInventory: () => eventBus.emit('clear_inventory'),
+		gameMenu: game.gameMenu.toggle,
 	}
 }

@@ -5,7 +5,7 @@ import { useSnapshot } from 'valtio'
 
 import { game } from '../game'
 
-export function Menu() {
+export function PauseMenu() {
 	const { isPaused } = useSnapshot(game)
 
 	return (
