@@ -1,13 +1,13 @@
 import { useFrame } from '@react-three/fiber'
 
-import { game, UP, useEntity } from '../../game'
+import { characterDimensions, game, UP, useEntity } from '../../game'
 
 function CameraPosition() {
 	const { entity } = useEntity()
 
 	useFrame(({ camera }) => {
 		camera.position.copy(entity.position)
-		camera.position.y += 0.4
+		camera.position.y += characterDimensions.halfHeight
 	})
 
 	return <></>
