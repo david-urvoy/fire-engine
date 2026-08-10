@@ -5,7 +5,7 @@ import { game } from '../../game'
 import { Tweaks, useAddBindings } from '../../ui'
 
 export function Grid() {
-	const { isDebug } = useSnapshot(game)
+	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
 
 	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid' })
 	const test = useAddBindings({
@@ -22,7 +22,7 @@ export function Grid() {
 
 	return (
 		<DreiGrid
-			visible={isDebug}
+			visible={isDebugEnabled}
 			infiniteGrid
 			followCamera
 			sectionSize={test[0].sectionSize}

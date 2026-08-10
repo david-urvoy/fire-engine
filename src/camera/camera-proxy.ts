@@ -7,18 +7,18 @@ export const CameraProxy = {
 	_euler: new Euler(),
 
 	get orientation() {
-		return game.pointerLockControls.current?.getObject().quaternion.clone() ?? new Quaternion()
+		return game.pointerLock.ref.current?.getObject().quaternion.clone() ?? new Quaternion()
 	},
 	set orientation(quat: Quaternion) {
-		game.pointerLockControls.current?.getObject().quaternion.copy(quat)
+		game.pointerLock.ref.current?.getObject().quaternion.copy(quat)
 	},
 
 	lookAt(target: Vector3) {
-		game.pointerLockControls.current?.getObject().lookAt(target)
+		game.pointerLock.ref.current?.getObject().lookAt(target)
 	},
 
 	lookInDirection(direction: Vector3) {
-		const controlsObj = game.pointerLockControls.current?.getObject()
+		const controlsObj = game.pointerLock.ref.current?.getObject()
 		if (!controlsObj) return this
 
 		this._cameraDirection.copy(direction)
@@ -29,7 +29,7 @@ export const CameraProxy = {
 	},
 
 	lookInWorldDirection(direction: Vector3) {
-		const controlsObj = game.pointerLockControls.current?.getObject()
+		const controlsObj = game.pointerLock.ref.current?.getObject()
 		if (!controlsObj) return this
 
 		this._cameraDirection.copy(direction)
@@ -40,14 +40,14 @@ export const CameraProxy = {
 	},
 
 	get yaw(): number {
-		const controlsObj = game.pointerLockControls.current?.getObject()
+		const controlsObj = game.pointerLock.ref.current?.getObject()
 		if (!controlsObj) return 0
 		this._euler.setFromQuaternion(controlsObj.quaternion, 'YXZ')
 		return this._euler.y
 	},
 
 	get pitch(): number {
-		const controlsObj = game.pointerLockControls.current?.getObject()
+		const controlsObj = game.pointerLock.ref.current?.getObject()
 		if (!controlsObj) return 0
 		this._euler.setFromQuaternion(controlsObj.quaternion, 'YXZ')
 		return this._euler.x

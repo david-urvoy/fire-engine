@@ -1,7 +1,7 @@
 import { type PropsWithChildren } from 'react'
 
-import { GizmoHelper } from './hud/gizmo/gizmo-helper'
-import { GizmoViewport } from './hud/gizmo/gizmo-viewport'
+import { GizmoHelper } from './gizmo/gizmo-helper'
+import { GizmoViewport } from './gizmo/gizmo-viewport'
 
 export function Hud({
 	renderPriority = 1,

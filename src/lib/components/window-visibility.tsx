@@ -8,7 +8,11 @@ import { useWindowFocus } from '../hooks/window-focus.hook'
 
 export function WindowVisibility() {
 	const isFocused = useWindowFocus()
-	const { isPointerLocked } = useSnapshot(game)
+	const {
+		pointerLock: { isLocked: isPointerLocked },
+		isPaused,
+		dialogue: { isLocked: isDialogueLocked },
+	} = useSnapshot(game)
 
 	const { keepOpen } = useAddBinding({
 		folder: Tweaks.folder({ title: 'Debug' }),
@@ -21,10 +25,10 @@ export function WindowVisibility() {
 	}, [isFocused])
 
 	useEffect(() => {
-		if (game.isPaused || game.isDialogueLocked || keepOpen) return
+		if (isPaused || isDialogueLocked || keepOpen) return
 
 		pane.expanded = !isPointerLocked
-	}, [isPointerLocked, keepOpen])
+	}, [isPointerLocked, isPaused, isDialogueLocked, keepOpen])
 
 	return null
 }

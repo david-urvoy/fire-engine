@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useSnapshot } from 'valtio'
 
-import { game } from '../game'
+import { game } from '../../game'
 
 export function PauseMenu() {
 	const { isPaused } = useSnapshot(game)

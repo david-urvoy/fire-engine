@@ -17,7 +17,7 @@ function CameraOrientation() {
 	const { entity } = useEntity()
 
 	useFrame(() => {
-		const controls = game.pointerLockControls.current
+		const controls = game.pointerLock.ref.current
 		if (!controls) return
 
 		const q = controls.getObject().quaternion

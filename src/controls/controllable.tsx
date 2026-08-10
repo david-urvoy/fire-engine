@@ -13,7 +13,7 @@ import { useKeyboard } from './input/keyboard/keyboard.store'
 import { Keymap } from './input/keyboard/keymap'
 
 function usePlayerDirection() {
-	const { isMobile } = useSnapshot(game)
+	const { isMobile } = useSnapshot(game.responsive)
 	const keyboard = useKeyboard()
 	const control = isMobile ? gamepad : keyboard
 	return control.direction
@@ -39,7 +39,7 @@ function useCharacterMove() {
 }
 
 export function Controllable() {
-	const { isMobile } = useSnapshot(game)
+	const { isMobile } = useSnapshot(game.responsive)
 	const { id } = useEntity()
 	useCharacterMove()
 

@@ -35,12 +35,12 @@ export function useReticleInteraction() {
 
 		if (!hit && lastHit.current) {
 			lastHit.current.userData.isInteracting = false
-			game.clearInteractable()
+			game.interactable.clear()
 		}
 
 		if (hit) {
 			hit.userData.isInteracting = true
-			game.setInteractable(hit.userData.entityId)
+			game.interactable.set(hit.userData.entityId)
 		}
 
 		lastHit.current = hit

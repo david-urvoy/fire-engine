@@ -1,7 +1,7 @@
 import { useSnapshot } from 'valtio'
 
-import { game } from '../game'
-import { InventoryMenu } from './game-menu/inventory-menu'
+import { game } from '../../game'
+import { InventoryMenu } from './inventory-menu'
 
 export function GameMenu() {
 	const { isOpen } = useSnapshot(game.gameMenu)

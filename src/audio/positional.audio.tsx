@@ -20,7 +20,7 @@ export function PositionalAudio({
 	distanceModel?: PositionalAudioDistanceModel
 }) {
 	const audioRef = useRef<PositionalAudioType>(null)
-	const { isDebug } = useSnapshot(game)
+	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
 
 	useEffect(() => {
 		audioRef.current?.setRolloffFactor(rollOffFactor)
@@ -30,7 +30,7 @@ export function PositionalAudio({
 
 	useEffect(() => {
 		const audio = audioRef.current
-		if (!isDebug || !audio) return
+		if (!isDebugEnabled || !audio) return
 
 		const helper = new PositionalAudioHelper(audio, 1)
 		audio.add(helper)
@@ -39,7 +39,7 @@ export function PositionalAudio({
 			audio.remove(helper)
 			helper.dispose()
 		}
-	}, [isDebug])
+	}, [isDebugEnabled])
 
 	return <DreiPositionalAudio distance={distance} ref={audioRef} {...props} />
 }

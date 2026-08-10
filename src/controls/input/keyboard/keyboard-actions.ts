@@ -12,8 +12,8 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 	const { entityManager } = useGame()
 
 	return {
-		mobile: game.toggleMobile,
-		toggleDebug: game.toggleDebug,
+		mobile: game.responsive.toggle,
+		toggleDebug: game.debug.toggle,
 		switchCameraType: () => {
 			CameraType.type = CameraType.type === 'first-person' ? 'orbit' : 'first-person'
 		},

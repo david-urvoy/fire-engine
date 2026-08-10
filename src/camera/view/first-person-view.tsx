@@ -15,7 +15,10 @@ const _tmpQuat = new Quaternion()
 
 function FirstPersonControls() {
 	const { camera } = useThree()
-	const { isMobile, isPaused } = useSnapshot(game)
+	const {
+		responsive: { isMobile },
+		isPaused,
+	} = useSnapshot(game)
 	const { active: dialogue } = useSnapshot(dialogueStore)
 	const controlsRef = usePointerLock()
 	const { entityManager } = useGame()
@@ -25,8 +28,8 @@ function FirstPersonControls() {
 	return (
 		<PointerLockControls
 			ref={controlsRef}
-			onLock={() => (game.isPointerLocked = true)}
-			onUnlock={() => (game.isPointerLocked = false)}
+			onLock={() => (game.pointerLock.isLocked = true)}
+			onUnlock={() => (game.pointerLock.isLocked = false)}
 			onChange={() => {
 				const entity = entityManager.get(game.controlledCharacter)
 				if (!entity) return

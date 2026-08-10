@@ -11,7 +11,7 @@ export type DefaultEventMap = {
 }
 
 function isPointerLocked() {
-	return game.pointerLockControls.current?.isLocked ?? false
+	return game.pointerLock.ref.current?.isLocked ?? false
 }
 
 export const eventBus = new EventBus<DefaultEventMap>({

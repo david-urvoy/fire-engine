@@ -1,9 +1,13 @@
-import { createRef } from 'react'
 import { Vector3 } from 'three'
-import { PointerLockControls } from 'three-stdlib'
-import { proxy, ref } from 'valtio'
+import { proxy } from 'valtio'
 
+import { pointerLock } from '../camera/lock/pointer-lock.store'
+import { responsiveStore } from '../camera/responsive/responsive.store'
+import { gameMenu } from '../ui/game-menu/game-menu.store'
+import { interactable } from '../ui/interactable.store'
+import { pauseMenu } from '../ui/pause-menu/pause-menu.store'
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
+import { debugStore } from './debug/debug.store'
 
 export const MOVEMENT_SMOOTHING = 50
 export const POINTER_SPEED = 0.8
@@ -19,41 +23,8 @@ export const UP = new Vector3(0, 1, 0)
 export const characterDimensions = { halfHeight: 0.65, radius: 0.25, offset: 0.01 } as const
 export type CharacterDimensions = typeof characterDimensions
 
-const gameMenu = proxy({
-	isOpen: false,
-	open() {
-		gameMenu.isOpen = true
-		game.pointerLockControls.current?.unlock()
-	},
-	close() {
-		gameMenu.isOpen = false
-		game.pointerLockControls.current?.lock()
-	},
-	toggle() {
-		if (gameMenu.isOpen) gameMenu.close()
-		else gameMenu.open()
-	},
-})
-
 export const game = proxy({
-	isMobile: typeof window !== 'undefined' && 'ontouchstart' in window,
-	toggleMobile() {
-		game.isMobile = !game.isMobile
-	},
-
-	isDebug: false,
-	toggleDebug() {
-		game.isDebug = !game.isDebug
-	},
-	debug: {} as any,
-
-	isPaused: false,
-	pause() {
-		game.isPaused = true
-	},
-	resume() {
-		game.isPaused = false
-	},
+	...pauseMenu,
 	gameMenu,
 
 	get uiMode(): 'gameplay' | 'pause' | 'dialogue' | 'hud' {
@@ -63,20 +34,11 @@ export const game = proxy({
 		return 'gameplay'
 	},
 
-	get isDialogueLocked(): boolean {
-		return !!dialogueStore.active?.locked
-	},
-
-	pointerLockControls: ref(createRef<PointerLockControls | null>()),
-	isPointerLocked: false,
-
+	pointerLock,
+	interactable,
 	controlledCharacter: '',
+	dialogue: dialogueStore,
 
-	activeInteractable: '',
-	setInteractable(entityId: string) {
-		game.activeInteractable = entityId
-	},
-	clearInteractable() {
-		game.activeInteractable = ''
-	},
+	debug: debugStore,
+	responsive: responsiveStore,
 })

@@ -10,7 +10,7 @@ export const PlayerHud = () => (
 			...(isDev && {
 				debug: {
 					action: () => {
-						game.isDebug = !game.isDebug
+						game.debug.enabled = !game.debug.enabled
 					},
 				},
 			}),

@@ -22,14 +22,14 @@ function DebugUI() {
 	if (Object.entries(debug).length === 0) return null
 
 	return (
-		<div className="absolute top-20 right-1/4 text-amber-300 text-shadow-[-2px_-2px_0_black,2px_-2px_0_black,-2px_2px_0_black,2px_2px_0_black]">
-			{JSON.stringify(debug)}
+		<div className="absolute bottom-0 text-amber-300 text-shadow-[-2px_-2px_0_black,2px_-2px_0_black,-2px_2px_0_black,2px_2px_0_black]">
+			{debug.enabled && JSON.stringify(debug.value)}
 		</div>
 	)
 }
 
 function InteractableLabel() {
-	const { activeInteractable } = useSnapshot(game)
+	const { active } = useSnapshot(game.interactable)
 
 	return (
 		<div
@@ -38,10 +38,10 @@ function InteractableLabel() {
 				'bottom-24 left-1/2 -translate-x-1/2',
 				'rounded-lg px-6 py-2 text-center',
 				'font-bebas text-3xl text-white backdrop-blur-sm transition-opacity duration-200',
-				activeInteractable ? 'bg-black/40 opacity-100' : 'opacity-0',
+				active ? 'bg-black/40 opacity-100' : 'opacity-0',
 			)}
 		>
-			{activeInteractable}
+			{active}
 		</div>
 	)
 }

@@ -11,7 +11,7 @@ export function usePointerLock() {
 	if (isPaused) controlsRef.current?.unlock()
 
 	useEffect(() => {
-		game.pointerLockControls.current = controlsRef.current
+		game.pointerLock.ref.current = controlsRef.current
 	}, [controlsRef])
 
 	return controlsRef
