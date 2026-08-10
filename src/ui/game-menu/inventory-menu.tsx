@@ -1,6 +1,12 @@
 import type { PropsWithChildren } from 'react'
+import { useSnapshot } from 'valtio'
+
+import { game } from '../../game'
 
 export function InventoryMenu() {
+	const { isOpen } = useSnapshot(game.gameMenu)
+	if (!isOpen) return null
+
 	return (
 		<ul className="fixed top-1/2 left-1/2 z-10 grid -translate-x-1/2 -translate-y-1/2 cursor-default grid-cols-5 gap-2 rounded-xs bg-blue-600 p-2">
 			<InventoryItem>Item 1</InventoryItem>
