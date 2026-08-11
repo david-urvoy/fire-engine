@@ -1,16 +1,16 @@
+import { type Dexie } from 'dexie'
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
 
 import type { CharacterManager } from './character'
 import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
 import type { EntityManager } from './entity/entity.manager'
-import { type ItemsManager } from './item'
 
 interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
 	entityManager: EntityManager
 	characterManager: CharacterManager<CharacterId, DialogueId>
 	dialogueManager: DialogueManager<DialogueId>
 	canvasRef: RefObject<HTMLCanvasElement | null>
-	itemsManager: ItemsManager
+	database: Dexie
 }
 
 type GameContextValue = GameProviderProps<string, string>
@@ -22,12 +22,12 @@ export function GameProvider<CharacterId extends string, DialogueId extends stri
 	entityManager,
 	characterManager,
 	dialogueManager,
-	itemsManager,
+	database,
 	children,
 }: PropsWithChildren<GameProviderProps<CharacterId, DialogueId>>) {
 	return (
 		<GameContext.Provider
-			value={{ canvasRef, entityManager, characterManager, dialogueManager, itemsManager }}
+			value={{ canvasRef, entityManager, characterManager, dialogueManager, database }}
 		>
 			{children}
 		</GameContext.Provider>

@@ -2,24 +2,25 @@ import { useEffect } from 'react'
 
 import { eventBus } from '../../lib'
 import { Tweaks, useAddButton } from '../../ui'
-import { useGame } from '../game.context'
+import { Items } from './items.hooks'
 
 export function Inventory() {
-	const { itemsManager } = useGame()
+	const collect = Items.useCollect()
+	const clear = Items.useClear()
 
 	useEffect(() => {
 		const unsubscribeCollectedItem = eventBus.on('item_collected', (item) => {
-			itemsManager
-				.collect({ id: item.itemId, collectedAt: Date.now() })
-				.catch((err) => console.error('Failed to persist collected item', err))
+			collect(item.itemId).catch((err) => console.error('Failed to persist collected item', err))
 		})
-		const unsubscribeClearInventory = eventBus.on('clear_inventory', () => itemsManager.clear())
+		const unsubscribeClearInventory = eventBus.on('clear_inventory', () =>
+			clear().catch((err) => console.error('Failed to clear inventory', err)),
+		)
 
 		return () => {
 			unsubscribeCollectedItem()
 			unsubscribeClearInventory()
 		}
-	}, [itemsManager])
+	}, [collect, clear])
 
 	const folder = Tweaks.folder({ title: 'Intenvory' })
 	useAddButton({

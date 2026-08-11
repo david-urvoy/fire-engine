@@ -2,10 +2,10 @@ import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
 import { Physic } from '../../physics/physic'
 import { Entity, type EntityProps } from '../entity/entity'
-import { useIsCollected } from './items.manager'
+import { Items } from './items.hooks'
 
 export function KinematicItem({ id, position, children, ...props }: EntityProps) {
-	const isCollected = useIsCollected(id)
+	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
@@ -19,7 +19,7 @@ export function KinematicItem({ id, position, children, ...props }: EntityProps)
 }
 
 export function DynamicItem({ id, position, children, ...props }: EntityProps) {
-	const isCollected = useIsCollected(id)
+	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
@@ -35,7 +35,7 @@ export function DynamicItem({ id, position, children, ...props }: EntityProps) {
 }
 
 export function FixedItem({ id, position, children, ...props }: EntityProps) {
-	const isCollected = useIsCollected(id)
+	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
