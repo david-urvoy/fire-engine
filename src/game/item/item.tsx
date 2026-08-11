@@ -1,4 +1,3 @@
-import { KinematicMotor } from '../..'
 import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
 import { Physic } from '../../physics/physic'
@@ -12,11 +11,9 @@ export function KinematicItem({ id, position, children, ...props }: EntityProps)
 
 	return (
 		<Entity id={id} position={position} {...props}>
-			<KinematicMotor>
-				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
-					{children}
-				</Visual>
-			</KinematicMotor>
+			<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+				{children}
+			</Visual>
 		</Entity>
 	)
 }

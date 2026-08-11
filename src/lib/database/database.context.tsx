@@ -1,18 +1,16 @@
 import { Dexie, type DexieOptions } from 'dexie'
 import { createContext, useContext, type PropsWithChildren } from 'react'
 
-export type DatabaseStores = Record<string, string>
-
 export interface DatabaseConfiguration {
 	name: string
 	version: number
-	stores: DatabaseStores
+	stores: Record<string, string>
 	options?: DexieOptions
 }
 
 const DatabaseContext = createContext<Dexie | null>(null)
 
-export function createDatabase({ name, version, stores, options }: DatabaseConfiguration): Dexie {
+export function createDatabase({ name, version, stores, options }: DatabaseConfiguration) {
 	const database = new Dexie(name, options)
 	database.version(version).stores(stores)
 	return database
