@@ -1,13 +1,12 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
 import { useCallback, useRef, type RefObject } from 'react'
-import { Quaternion, Vector3 } from 'three'
+import { Vector3 } from 'three'
 
 import { useEntity } from '../../game'
 import { useTeleport } from './use-teleport'
 
 function useComputedMovement(controllerRef: RefObject<KinematicCharacterController | null>) {
 	const { entity } = useEntity()
-	const lastRotation = useRef(new Quaternion())
 	const tmpDesired = useRef(new Vector3())
 
 	return useCallback(() => {
@@ -25,11 +24,6 @@ function useComputedMovement(controllerRef: RefObject<KinematicCharacterControll
 		}
 
 		entity.physic.isGrounded = controller.computedGrounded()
-
-		if (!entity.orientation.equals(lastRotation.current)) {
-			body.setRotation(entity.orientation, false)
-			lastRotation.current.copy(entity.orientation)
-		}
 	}, [controllerRef, entity])
 }
 
@@ -47,6 +41,8 @@ export function useCharacterMovement(
 			const body = entity.runtime.rigidBody?.current
 			const controller = controllerRef?.current
 			if (!body || !controller) return
+
+			body.setNextKinematicRotation(entity.orientation)
 
 			controller.computeColliderMovement(body.collider(0), delta)
 			applyComputedMovement()
