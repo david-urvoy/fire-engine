@@ -7,7 +7,7 @@ import { LAYERS } from '../lib/enums/layers'
 
 export function Reticle() {
 	return (
-		<div className="shadow-reticle pointer-events-none fixed top-1/2 left-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+		<div className="pointer-events-none fixed top-1/2 left-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
 	)
 }
 

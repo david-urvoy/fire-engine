@@ -10,7 +10,7 @@ export function Inventory() {
 
 	useEffect(() => {
 		const unsubscribeCollectedItem = eventBus.on('item_collected', (item) => {
-			collect(item.itemId).catch((err) => console.error('Failed to persist collected item', err))
+			collect(item).catch((err) => console.error('Failed to persist collected item', err))
 		})
 		const unsubscribeClearInventory = eventBus.on('clear_inventory', () =>
 			clear().catch((err) => console.error('Failed to clear inventory', err)),

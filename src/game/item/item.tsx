@@ -4,21 +4,26 @@ import { Physic } from '../../physics/physic'
 import { Entity, type EntityProps } from '../entity/entity'
 import { Items } from './items.hooks'
 
-export function KinematicItem({ id, position, children, ...props }: EntityProps) {
+interface ItemProps extends EntityProps {
+	name: string
+	image?: string
+}
+
+export function KinematicItem({ id, name, image, position, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
 		<Entity id={id} position={position} {...props}>
-			<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+			<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 				{children}
 			</Visual>
 		</Entity>
 	)
 }
 
-export function DynamicItem({ id, position, children, ...props }: EntityProps) {
+export function DynamicItem({ id, name, image, position, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
@@ -26,7 +31,7 @@ export function DynamicItem({ id, position, children, ...props }: EntityProps) {
 	return (
 		<Entity id={id} position={position} {...props}>
 			<Physic colliders="cuboid" type="dynamic" position={position}>
-				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
 			</Physic>
@@ -34,7 +39,7 @@ export function DynamicItem({ id, position, children, ...props }: EntityProps) {
 	)
 }
 
-export function FixedItem({ id, position, children, ...props }: EntityProps) {
+export function FixedItem({ id, name, image, position, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
@@ -42,7 +47,7 @@ export function FixedItem({ id, position, children, ...props }: EntityProps) {
 	return (
 		<Entity id={id} position={position} {...props}>
 			<Physic colliders="cuboid" type="fixed" position={position}>
-				<Visual onClick={() => eventBus.emit('item_collected', { itemId: id })} interactable>
+				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
 			</Physic>

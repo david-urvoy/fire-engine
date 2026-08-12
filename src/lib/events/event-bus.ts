@@ -1,11 +1,11 @@
-import { game } from '../../game'
+import { game, type ItemRecord } from '../../game'
 import { EventBus } from './event-bus.model'
 
 export type DefaultEventMap = {
 	character_interacted: { characterId: string }
 	dialogue_started: { dialogueId: string }
 	dialogue_ended: { dialogueId: string }
-	item_collected: { itemId: string }
+	item_collected: ItemRecord
 	clear_inventory: void
 	quest_completed: { questId: string }
 }
