@@ -12,9 +12,10 @@ import { CharacterProvider } from './character.context'
 export function Character({
 	id,
 	position = [0, 0, 0],
+	height = characterDimensions.height,
 	children,
 	...props
-}: EntityProps & { name: string }) {
+}: EntityProps & { height?: number; name: string }) {
 	const { characterManager } = useGame()
 
 	useEffect(() => {
@@ -26,7 +27,9 @@ export function Character({
 		<CharacterProvider id={id} name={props.name}>
 			<Entity id={id} position={position} {...props}>
 				<KinematicMotor colliders={false}>
-					<CapsuleCollider args={[characterDimensions.halfHeight, characterDimensions.radius]} />
+					<CapsuleCollider
+						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
+					/>
 					<Visual
 						onClick={() => eventBus.emit('character_interacted', { characterId: id })}
 						interactable

@@ -20,7 +20,7 @@ export const INTERACTION_MAX_DISTANCE = 2
 export const FORWARD = new Vector3(0, 0, -1)
 export const UP = new Vector3(0, 1, 0)
 
-export const characterDimensions = { halfHeight: 0.65, radius: 0.25, offset: 0.01 } as const
+export const characterDimensions = { height: 1.8, radius: 0.25, offset: 0.01 } as const
 export type CharacterDimensions = typeof characterDimensions
 
 export const game = proxy({
