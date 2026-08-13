@@ -1,5 +1,6 @@
 import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
+import { KinematicMotor } from '../../physics'
 import { Physic } from '../../physics/physic'
 import { Entity, type EntityProps } from '../entity/entity'
 import { Items } from './items.hooks'
@@ -16,9 +17,11 @@ export function KinematicItem({ id, name, image, position, children, ...props }:
 
 	return (
 		<Entity id={id} position={position} {...props}>
-			<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
-				{children}
-			</Visual>
+			<KinematicMotor>
+				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
+					{children}
+				</Visual>
+			</KinematicMotor>
 		</Entity>
 	)
 }

@@ -25,7 +25,7 @@ export function Character({
 	return (
 		<CharacterProvider id={id} name={props.name}>
 			<Entity id={id} position={position} {...props}>
-				<KinematicMotor>
+				<KinematicMotor colliders={false}>
 					<CapsuleCollider args={[characterDimensions.halfHeight, characterDimensions.radius]} />
 					<Visual
 						onClick={() => eventBus.emit('character_interacted', { characterId: id })}

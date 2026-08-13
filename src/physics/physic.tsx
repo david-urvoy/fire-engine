@@ -16,19 +16,9 @@ export function Physic({
 	useEffect(() => {
 		if (!entity.physic) return
 
-		entity.physic.isActive = true
-
 		physic.register({
 			entity,
-			move:
-				move ??
-				(() => {
-					const rigidBody = entity.runtime.rigidBody?.current
-					if (!rigidBody) return
-
-					if (entity.physic) entity.physic.isSleeping = rigidBody.isSleeping()
-					entity.position.copy(rigidBody.translation())
-				}),
+			move,
 		})
 
 		return () => physic.unregister(entity.id)

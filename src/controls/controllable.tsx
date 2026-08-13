@@ -25,14 +25,14 @@ function useCharacterMove() {
 	const direction = usePlayerDirection()
 	const vec = useRef(new Vector3())
 
-	useFrame((_, delta) => {
+	useFrame(() => {
 		const player = getPlayer()
 		if (!player || (uiMode !== 'gameplay' && uiMode !== 'hud')) return
 
 		vec.current
 			.set(direction.x, 0, direction.y)
 			.applyQuaternion(player.orientation)
-			.multiplyScalar(450 * delta)
+			.multiplyScalar(8)
 
 		player.moveBy([vec.current.x, vec.current.y, vec.current.z])
 	})

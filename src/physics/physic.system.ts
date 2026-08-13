@@ -12,7 +12,7 @@ export class PhysicSystem {
 
 	step(delta: number) {
 		this.entities.forEach(({ entity, tmpVelocity, move }) => {
-			if (!entity.physic || !entity.physic.isActive || entity.physic.isSleeping) return
+			if (!entity.physic || entity.physic.isSleeping) return
 
 			tmpVelocity
 				.copy(entity.controls.move)

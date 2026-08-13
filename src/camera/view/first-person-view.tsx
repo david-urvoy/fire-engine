@@ -34,7 +34,7 @@ function FirstPersonControls() {
 				const entity = entityManager.get(game.controlledCharacter)
 				if (!entity) return
 
-				entity.runtime.rigidBody.current?.wakeUp()
+				entity.runtime.rigidBody?.current?.wakeUp()
 
 				camera.getWorldDirection(_tmpDir)
 				const x = -_tmpDir.x
@@ -42,7 +42,7 @@ function FirstPersonControls() {
 				if (x !== 0 || z !== 0) {
 					const yaw = Math.atan2(x, z)
 					_tmpQuat.setFromAxisAngle(Y_AXIS, yaw)
-					entity.physic.orientation.copy(_tmpQuat)
+					entity.orientation.copy(_tmpQuat)
 				}
 			}}
 			pointerSpeed={POINTER_SPEED}

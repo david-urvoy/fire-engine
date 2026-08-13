@@ -3,6 +3,7 @@ import { useCallback, useRef, type RefObject } from 'react'
 import { Vector3 } from 'three'
 
 import { useEntity } from '../../game'
+import { useCharacterController } from '../character-controller'
 import { useTeleport } from './use-teleport'
 
 function useComputedMovement(controllerRef: RefObject<KinematicCharacterController | null>) {
@@ -27,19 +28,18 @@ function useComputedMovement(controllerRef: RefObject<KinematicCharacterControll
 	}, [controllerRef, entity])
 }
 
-export function useCharacterMovement(
-	controllerRef: RefObject<KinematicCharacterController | null>,
-) {
+export function useCharacterMovement() {
+	const characterController = useCharacterController()
 	const { entity } = useEntity()
 	const applyTeleport = useTeleport()
-	const applyComputedMovement = useComputedMovement(controllerRef)
+	const applyComputedMovement = useComputedMovement(characterController)
 
 	return useCallback(
 		(delta: Vector3) => {
 			applyTeleport()
 
 			const body = entity.runtime.rigidBody?.current
-			const controller = controllerRef?.current
+			const controller = characterController?.current
 			if (!body || !controller) return
 
 			body.setNextKinematicRotation(entity.orientation)
@@ -47,6 +47,6 @@ export function useCharacterMovement(
 			controller.computeColliderMovement(body.collider(0), delta)
 			applyComputedMovement()
 		},
-		[entity, controllerRef, applyTeleport, applyComputedMovement],
+		[entity, characterController, applyTeleport, applyComputedMovement],
 	)
 }

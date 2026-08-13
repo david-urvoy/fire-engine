@@ -1,25 +1,29 @@
-import { type PropsWithChildren } from 'react'
+import { useLayoutEffect, type PropsWithChildren } from 'react'
 
-import { game, MOVEMENT_SMOOTHING, useEntity, useGame } from '../../game'
+import { game, useEntity, useGame } from '../../game'
 import type { GroupProps } from '../../lib'
 import { LAYERS } from '../../lib/enums/layers'
-import { useRegisterVisual } from './use-visual'
 
 export function Visual({
-	smoothing: _smoothing = MOVEMENT_SMOOTHING,
 	interactable = false,
 	children,
 	onClick,
 	...props
 }: PropsWithChildren<
 	GroupProps & {
-		smoothing?: number
 		interactable?: boolean
 	}
 >) {
 	const { entityManager } = useGame()
 	const { id, entity } = useEntity()
-	useRegisterVisual()
+
+	useLayoutEffect(() => {
+		entity.runtime.object3D?.current?.traverse((child) => {
+			child.userData.entityId = entity.id
+		})
+
+		return () => (entity.runtime.object3D = undefined)
+	}, [entity])
 
 	return (
 		<group

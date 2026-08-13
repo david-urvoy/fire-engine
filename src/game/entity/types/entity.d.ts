@@ -11,7 +11,6 @@ export interface ControlsState {
 export interface PhysicState {
 	velocity: Vector3
 	isGrounded: boolean
-	isActive: boolean
 	isSleeping: boolean
 	runtime?: RapierRigidBody
 }

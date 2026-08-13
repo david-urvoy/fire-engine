@@ -58,7 +58,6 @@ export class Entity implements EntityState, EntityApi {
 		this.physic = {
 			velocity: new Vector3(),
 			isGrounded: true,
-			isActive: false,
 			isSleeping: false,
 		}
 		this.runtime = runtime
@@ -73,7 +72,7 @@ export class Entity implements EntityState, EntityApi {
 	}
 
 	moveTo(target: Vector3) {
-		this.controls.move.copy(target).sub(this.physic.position)
+		this.controls.move.copy(target).sub(this.position)
 		return this
 	}
 
@@ -90,11 +89,11 @@ export class Entity implements EntityState, EntityApi {
 	}
 
 	lookAt(target: Vector3) {
-		if (!this.physic || !this.physic.position) return this
+		if (!this.physic || !this.position) return this
 
 		const matrix = new Matrix4()
-		matrix.lookAt(this.physic.position, target, UP)
-		this.physic.orientation.setFromRotationMatrix(matrix)
+		matrix.lookAt(this.position, target, UP)
+		this.orientation.setFromRotationMatrix(matrix)
 
 		return this
 	}
@@ -102,7 +101,7 @@ export class Entity implements EntityState, EntityApi {
 	rotateBy(delta: [number, number, number]) {
 		const euler = new Euler(...delta)
 		const quaternion = new Quaternion().setFromEuler(euler)
-		this.physic.orientation.multiply(quaternion)
+		this.orientation.multiply(quaternion)
 		return this
 	}
 
