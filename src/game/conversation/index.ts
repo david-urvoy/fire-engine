@@ -1,7 +1,7 @@
 export { createDialogueManager } from './dialogue/dialogue.manager'
 export type { DialogueManager } from './dialogue/dialogue.manager'
-export * from './dialogue/dialogue.resolver'
 export * from './dialogue/dialogue.store'
+export * from './dialogue/dialogues'
 export type { DialogueDefinition as Dialogue } from './dsl/dialogue.types'
 
 export type { Bark as BarkType } from './bark/bark'

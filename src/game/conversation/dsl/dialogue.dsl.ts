@@ -128,10 +128,5 @@ class DialogueBuilder<
 	}
 }
 
-export const dialogue = <AllowedId extends string, Id extends string = string>(dialogueId: Id) =>
+export const dialogue = <AllowedId extends string, Id extends string>(dialogueId: Id) =>
 	new DialogueBuilder<AllowedId, Id>(dialogueId)
-
-export const dialogueFor =
-	<AllowedId extends string>() =>
-	<Id extends string>(dialogueId: Id) =>
-		new DialogueBuilder<AllowedId, Id>(dialogueId)
