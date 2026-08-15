@@ -1,6 +1,6 @@
 import { eventBus } from '../../../lib'
 import type { Character } from '../../character/types/character'
-import type { DialogueDefinition } from './dialogue'
+import type { DialogueDefinition } from '../dsl/dialogue.types'
 import { NpcDialogue, PlayerDialogue } from './dialogue.model'
 import { dialogueStore } from './dialogue.store'
 

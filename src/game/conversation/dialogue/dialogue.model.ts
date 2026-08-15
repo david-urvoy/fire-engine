@@ -4,7 +4,7 @@ import type {
 	DialogueNode,
 	DialogueOption,
 	DialogueParticipant,
-} from './dialogue'
+} from '../dsl/dialogue.types'
 import { dialogueStore } from './dialogue.store'
 
 export abstract class AbstractDialogue {

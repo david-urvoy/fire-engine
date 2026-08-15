@@ -1,5 +1,5 @@
 import type { Character } from '../../character/types/character'
-import type { DialogueDefinition, DialogueNode } from '../dialogue/dialogue'
+import type { DialogueDefinition, DialogueNode } from './dialogue.types'
 
 class DialogueBuilder<
 	CharacterId extends string,
