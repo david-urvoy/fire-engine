@@ -55,11 +55,6 @@ export class Entity implements EntityState, EntityApi {
 		this.position = new Vector3(...initialPosition)
 		this.orientation = new Quaternion()
 		this.controls = new Controls()
-		this.physic = {
-			velocity: new Vector3(),
-			isGrounded: true,
-			isSleeping: false,
-		}
 		this.runtime = runtime
 		this.interaction = {
 			isInteracting: false,

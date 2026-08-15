@@ -1,6 +1,6 @@
 import { RigidBody, type RigidBodyProps } from '@react-three/rapier'
 import { useEffect } from 'react'
-import type { Vector3 } from 'three'
+import { Vector3 } from 'three'
 
 import { useEntity, useGameLoopSystem } from '../game'
 
@@ -14,7 +14,11 @@ export function Physic({
 	const { physic } = useGameLoopSystem()
 
 	useEffect(() => {
-		if (!entity.physic) return
+		entity.physic = {
+			velocity: new Vector3(),
+			isGrounded: true,
+			isSleeping: false,
+		}
 
 		physic.register({
 			entity,
