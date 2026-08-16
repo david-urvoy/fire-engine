@@ -8,6 +8,7 @@ import { Items } from './items.hooks'
 interface ItemProps extends EntityProps {
 	name: string
 	image?: string
+	position?: [number, number, number]
 }
 
 export function KinematicItem({ id, name, image, position, children, ...props }: ItemProps) {
@@ -16,8 +17,8 @@ export function KinematicItem({ id, name, image, position, children, ...props }:
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} position={position} {...props}>
-			<KinematicMotor>
+		<Entity id={id} {...props}>
+			<KinematicMotor position={position}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
@@ -32,7 +33,7 @@ export function DynamicItem({ id, name, image, position, children, ...props }: I
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} position={position} {...props}>
+		<Entity id={id} {...props}>
 			<Physic colliders="cuboid" type="dynamic" position={position}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
@@ -48,7 +49,7 @@ export function FixedItem({ id, name, image, position, children, ...props }: Ite
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} position={position} {...props}>
+		<Entity id={id} {...props}>
 			<Physic colliders="cuboid" type="fixed" position={position}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}

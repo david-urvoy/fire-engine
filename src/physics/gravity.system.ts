@@ -1,5 +1,5 @@
 import { GRAVITY_CONST, MAX_FALLING_SPEED } from '../game'
-import type { EntityState } from '../game/entity/types/entity'
+import type { EntityState } from '../game/entity/entity.types'
 
 export class GravitySystem {
 	private entities = new Set<EntityState>()

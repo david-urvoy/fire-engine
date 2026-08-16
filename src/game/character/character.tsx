@@ -15,7 +15,7 @@ export function Character({
 	height = characterDimensions.height,
 	children,
 	...props
-}: EntityProps & { height?: number; name: string }) {
+}: EntityProps & { height?: number; name: string; position?: [number, number, number] }) {
 	const { characterManager } = useGame()
 
 	useEffect(() => {
@@ -25,8 +25,8 @@ export function Character({
 
 	return (
 		<CharacterProvider id={id} name={props.name}>
-			<Entity id={id} position={position} {...props}>
-				<KinematicMotor colliders={false}>
+			<Entity id={id} {...props}>
+				<KinematicMotor colliders={false} position={position}>
 					<CapsuleCollider
 						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
 					/>

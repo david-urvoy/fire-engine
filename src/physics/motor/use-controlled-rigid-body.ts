@@ -1,6 +1,6 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
 import { useCallback, useRef, type RefObject } from 'react'
-import { Vector3 } from 'three'
+import { Vector3, type Quaternion } from 'three'
 
 import { useEntity } from '../../game'
 import { useCharacterController } from '../character-controller'
@@ -19,10 +19,7 @@ function useComputedMovement(controllerRef: RefObject<KinematicCharacterControll
 		const desired = tmpDesired.current
 		desired.copy(body.translation()).add(controller.computedMovement())
 
-		if (desired.distanceToSquared(entity.position) > 1e-6) {
-			body.setNextKinematicTranslation(desired)
-			entity.position.copy(desired)
-		}
+		if (desired.distanceToSquared(entity.position) > 1e-6) body.setNextKinematicTranslation(desired)
 
 		entity.physic.isGrounded = controller.computedGrounded()
 	}, [controllerRef, entity])
@@ -35,16 +32,16 @@ export function useCharacterMovement() {
 	const applyComputedMovement = useComputedMovement(characterController)
 
 	return useCallback(
-		(delta: Vector3) => {
+		(translation: Vector3, rotation: Quaternion) => {
 			applyTeleport()
 
 			const body = entity.runtime.rigidBody?.current
 			const controller = characterController?.current
 			if (!body || !controller) return
 
-			body.setNextKinematicRotation(entity.orientation)
+			controller.computeColliderMovement(body.collider(0), translation)
 
-			controller.computeColliderMovement(body.collider(0), delta)
+			body.setNextKinematicRotation(rotation)
 			applyComputedMovement()
 		},
 		[entity, characterController, applyTeleport, applyComputedMovement],

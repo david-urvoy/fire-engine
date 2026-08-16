@@ -1,28 +1,31 @@
-import { useLayoutEffect, type PropsWithChildren } from 'react'
+import { useEffect, type PropsWithChildren } from 'react'
 
 import { game, useEntity, useGame } from '../../game'
 import type { GroupProps } from '../../lib'
 import { LAYERS } from '../../lib/enums/layers'
+
+export interface VisualProps extends GroupProps {
+	interactable?: boolean
+}
 
 export function Visual({
 	interactable = false,
 	children,
 	onClick,
 	...props
-}: PropsWithChildren<
-	GroupProps & {
-		interactable?: boolean
-	}
->) {
+}: PropsWithChildren<VisualProps>) {
 	const { entityManager } = useGame()
 	const { id, entity } = useEntity()
 
-	useLayoutEffect(() => {
-		entity.runtime.object3D?.current?.traverse((child) => {
+	useEffect(() => {
+		const object3D = entity.runtime.object3D
+		object3D.current?.traverse((child) => {
 			child.userData.entityId = entity.id
 		})
 
-		return () => (entity.runtime.object3D = undefined)
+		return () => {
+			object3D.current = null
+		}
 	}, [entity])
 
 	return (

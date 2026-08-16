@@ -1,6 +1,4 @@
-import type { RapierRigidBody } from '@react-three/rapier'
-import type { RefObject } from 'react'
-import { Euler, Matrix4, Quaternion, Vector3, type Object3D } from 'three'
+import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
 import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
@@ -11,7 +9,7 @@ import type {
 	EntityState,
 	InteractionState,
 	PhysicState,
-} from './types/entity'
+} from './entity.types'
 
 class Controls implements ControlsState {
 	constructor(
@@ -26,34 +24,29 @@ export class Entity implements EntityState, EntityApi {
 	readonly ref: string
 	readonly name: string
 	readonly controls: Controls
-	readonly position: Vector3
-	readonly orientation: Quaternion
 	physic?: PhysicState
 	readonly runtime: EntityRuntime
 	interaction?: InteractionState
+
+	private _position = new Vector3()
+	private _orientation = new Quaternion()
 	private cameraProxy = CameraProxy
 
 	constructor({
 		id,
 		ref,
 		name = id,
-		initialPosition = [0, 0, 0],
 		runtime,
 	}: {
 		id: string
 		ref: string
 		name?: string
 		initialPosition?: [number, number, number]
-		runtime: {
-			object3D: RefObject<Object3D | null>
-			rigidBody: RefObject<RapierRigidBody | null>
-		}
+		runtime: EntityRuntime
 	}) {
 		this.id = id
 		this.ref = ref
 		this.name = name
-		this.position = new Vector3(...initialPosition)
-		this.orientation = new Quaternion()
 		this.controls = new Controls()
 		this.runtime = runtime
 		this.interaction = {
@@ -96,7 +89,7 @@ export class Entity implements EntityState, EntityApi {
 	rotateBy(delta: [number, number, number]) {
 		const euler = new Euler(...delta)
 		const quaternion = new Quaternion().setFromEuler(euler)
-		this.orientation.multiply(quaternion)
+		this.controls.orientation.copy(quaternion)
 		return this
 	}
 
@@ -113,6 +106,23 @@ export class Entity implements EntityState, EntityApi {
 		this.cameraProxy?.lookInWorldDirection(direction)
 
 		return this
+	}
+
+	get position(): Vector3 {
+		const pos = this.runtime.rigidBody.current?.translation()
+
+		if (pos) return this._position.copy(pos)
+
+		this.runtime.object3D.current?.getWorldPosition(this._position)
+		return this._position
+	}
+
+	get orientation(): Quaternion {
+		const rot =
+			this.runtime.rigidBody.current?.rotation() ?? this.runtime.object3D?.current?.quaternion
+
+		if (rot) return this._orientation.copy(rot)
+		return this._orientation
 	}
 
 	get velocity(): Vector3 | undefined {

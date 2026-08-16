@@ -5,19 +5,16 @@ import { Entity as EntityModel } from './entity.model'
 
 export type EntityProps = PropsWithChildren<{
 	id: string
-	position?: [number, number, number]
 }>
 
-export function Entity({ id, position = [0, 0, 0], children }: EntityProps) {
-	const [x, y, z] = position
+export function Entity({ id, children }: EntityProps) {
 	const { entityManager } = useGame()
 	const ref = useId()
 	const object3D = useRef(null)
 	const rigidBody = useRef(null)
 	const entity = useMemo(
-		() =>
-			new EntityModel({ id, ref, initialPosition: [x, y, z], runtime: { object3D, rigidBody } }),
-		[id, ref, x, y, z],
+		() => new EntityModel({ id, ref, runtime: { object3D, rigidBody } }),
+		[id, ref],
 	)
 
 	useEffect(() => {

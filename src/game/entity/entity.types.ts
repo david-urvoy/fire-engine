@@ -19,9 +19,9 @@ export interface InteractionState {
 	isInteracting: boolean
 }
 
-interface EntityRuntime {
-	rigidBody?: RefObject<RapierRigidBody | null>
-	object3D?: RefObject<Object3D | null>
+export interface EntityRuntime {
+	rigidBody: RefObject<RapierRigidBody | null>
+	object3D: RefObject<Object3D | null>
 }
 
 export interface EntityState {

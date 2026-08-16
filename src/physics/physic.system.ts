@@ -1,25 +1,30 @@
-import { Vector3 } from 'three'
+import { Quaternion, Vector3 } from 'three'
 
-import type { EntityState } from '../game/entity/types/entity'
+import type { EntityState } from '../game/entity/entity.types'
 
 type PhysicEntry = {
 	entity: EntityState
-	move?: (delta: Vector3) => void
+	move?: (delta: Vector3, rotation: Quaternion) => void
 }
 
 export class PhysicSystem {
-	private entities = new Map<string, PhysicEntry & { tmpVelocity: Vector3; refCount: number }>()
+	private entities = new Map<
+		string,
+		PhysicEntry & { velocity: Vector3; rotation: Quaternion; refCount: number }
+	>()
 
 	step(delta: number) {
-		this.entities.forEach(({ entity, tmpVelocity, move }) => {
+		this.entities.forEach(({ entity, velocity, rotation, move }) => {
 			if (!entity.physic || entity.physic.isSleeping) return
 
-			tmpVelocity
+			velocity
 				.copy(entity.controls.move)
 				.addScaledVector(entity.physic.velocity, 1)
 				.multiplyScalar(delta)
 
-			move?.(tmpVelocity)
+			rotation.copy(entity.controls.orientation)
+
+			move?.(velocity, rotation)
 		})
 	}
 
@@ -31,7 +36,12 @@ export class PhysicSystem {
 			if (character.move && !existing.move) existing.move = character.move
 			existing.refCount = (existing.refCount ?? 1) + 1
 		} else {
-			this.entities.set(id, { ...character, tmpVelocity: new Vector3(), refCount: 1 })
+			this.entities.set(id, {
+				...character,
+				velocity: new Vector3(),
+				rotation: new Quaternion(),
+				refCount: 1,
+			})
 		}
 	}
 

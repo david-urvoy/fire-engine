@@ -1,6 +1,6 @@
 import { RigidBody, type RigidBodyProps } from '@react-three/rapier'
 import { useEffect } from 'react'
-import { Vector3 } from 'three'
+import { Vector3, type Quaternion } from 'three'
 
 import { useEntity, useGameLoopSystem } from '../game'
 
@@ -8,7 +8,7 @@ export function Physic({
 	move,
 	...props
 }: RigidBodyProps & {
-	move?: (delta: Vector3) => void
+	move?: (translation: Vector3, rotation: Quaternion) => void
 }) {
 	const { entity } = useEntity()
 	const { physic } = useGameLoopSystem()
@@ -28,5 +28,5 @@ export function Physic({
 		return () => physic.unregister(entity.id)
 	}, [physic, entity, move])
 
-	return <RigidBody ref={entity.runtime.rigidBody} position={entity.position} {...props} />
+	return <RigidBody ref={entity.runtime.rigidBody} {...props} />
 }

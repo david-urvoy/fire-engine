@@ -23,7 +23,7 @@ function CameraOrientation() {
 		const q = controls.getObject().quaternion
 		const yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z))
 
-		entity.orientation.setFromAxisAngle(UP, yaw)
+		entity.controls.orientation.setFromAxisAngle(UP, yaw)
 	})
 
 	return <></>
