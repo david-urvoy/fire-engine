@@ -22,8 +22,8 @@ function DebugUI() {
 	if (Object.entries(debug).length === 0) return null
 
 	return (
-		<div className="absolute bottom-0 text-amber-300 text-shadow-[-2px_-2px_0_black,2px_-2px_0_black,-2px_2px_0_black,2px_2px_0_black]">
-			{debug.enabled && JSON.stringify(debug.value)}
+		<div className="absolute bottom-0 whitespace-pre-wrap text-amber-300 text-shadow-[-2px_-2px_0_black,2px_-2px_0_black,-2px_2px_0_black,2px_2px_0_black]">
+			{debug.enabled && JSON.stringify(debug.value, null, 2)}
 		</div>
 	)
 }

@@ -1,12 +1,7 @@
-import { useSnapshot } from 'valtio'
-
-import { game, Items } from '../../game'
+import { Items } from '../../game'
 
 export function InventoryMenu() {
 	const items = Items.useAll()
-
-	const { isOpen } = useSnapshot(game.gameMenu)
-	if (!isOpen) return null
 
 	return (
 		<div className="z-10 flex h-full w-full flex-col p-8 pt-24">

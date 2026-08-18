@@ -1,4 +1,5 @@
 import { game, type ItemRecord } from '../../game'
+import type { QuestEvents } from '../../game/quest/quest.events'
 import { EventBus } from './event-bus.model'
 
 export type DefaultEventMap = {
@@ -7,8 +8,7 @@ export type DefaultEventMap = {
 	dialogue_ended: { dialogueId: string }
 	item_collected: ItemRecord
 	clear_inventory: void
-	quest_completed: { questId: string }
-}
+} & QuestEvents
 
 function isPointerLocked() {
 	return game.pointerLock.ref.current?.isLocked ?? false

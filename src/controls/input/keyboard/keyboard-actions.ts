@@ -29,7 +29,10 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			if (!dialogueStore.active?.locked) return
 			dialogueStore.active.next()
 		},
-		clearInventory: () => eventBus.emit('clear_inventory'),
+		clearInventory: () => {
+			eventBus.emit('clear_inventory')
+			eventBus.emit('reset_quests')
+		},
 		gameMenu: game.gameMenu.toggle,
 	}
 }
