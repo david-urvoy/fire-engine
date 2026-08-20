@@ -1,5 +1,6 @@
 import { Vector3 } from 'three'
 
+import { pane } from '../../..'
 import { CameraType } from '../../../camera'
 import { game, useGame } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
@@ -34,5 +35,9 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			eventBus.emit('reset_quests')
 		},
 		gameMenu: game.gameMenu.toggle,
+		toggleTweaks: () => {
+			pane.expanded = !pane.expanded
+			if (pane.expanded) game.pointerLock.ref.current?.unlock()
+		},
 	}
 }

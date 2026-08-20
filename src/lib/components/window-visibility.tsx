@@ -10,8 +10,6 @@ export function WindowVisibility() {
 	const isFocused = useWindowFocus()
 	const {
 		pointerLock: { isLocked: isPointerLocked },
-		isPaused,
-		dialogue: { isLocked: isDialogueLocked },
 	} = useSnapshot(game)
 
 	const { keepOpen } = useAddBinding({
@@ -25,10 +23,8 @@ export function WindowVisibility() {
 	}, [isFocused])
 
 	useEffect(() => {
-		if (isPaused || isDialogueLocked || keepOpen) return
-
-		pane.expanded = isPaused
-	}, [isPointerLocked, isPaused, isDialogueLocked, keepOpen])
+		if (isPointerLocked) pane.expanded = false
+	}, [isPointerLocked, keepOpen])
 
 	return null
 }
