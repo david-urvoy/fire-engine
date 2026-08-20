@@ -1,5 +1,5 @@
 export * from './dialogue-box'
-export * from './game-menu/inventory-menu'
+export * from './game-menu/game-menu'
 export * from './hud/hud'
 export * from './interface'
 export * from './pause-menu/pause-menu'

@@ -4,16 +4,11 @@ export function InventoryMenu() {
 	const items = Items.useAll()
 
 	return (
-		<div className="z-10 flex h-full w-full flex-col p-8 pt-24">
-			<div className="pointer-events-auto flex flex-1 flex-col">
-				<h3 className="text-sm font-bold text-cyan-300 uppercase">[INVENTORY]</h3>
-				<ul className="grid flex-1 grid-cols-4 content-start gap-3 rounded-lg border border-cyan-400/50 bg-slate-900 p-4 shadow-2xl backdrop-blur-sm">
-					{items?.map((item) => (
-						<InventoryItem key={item.id} id={item.id} name={item.name} image={item.image} />
-					))}
-				</ul>
-			</div>
-		</div>
+		<ul className="grid h-full flex-1 grid-cols-4 content-start gap-3 rounded-lg border p-4 shadow-2xl backdrop-blur-sm">
+			{items?.map((item) => (
+				<InventoryItem key={item.id} id={item.id} name={item.name} image={item.image} />
+			))}
+		</ul>
 	)
 }
 

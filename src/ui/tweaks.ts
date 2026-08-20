@@ -8,8 +8,6 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { Pane, type FolderApi, type FolderParams as TweakpaneFolderParams } from 'tweakpane'
 
-// Singleton pane instance
-
 const isBrowser = typeof document !== 'undefined'
 
 export const pane = isBrowser

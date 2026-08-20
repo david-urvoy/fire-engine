@@ -27,7 +27,7 @@ export function WindowVisibility() {
 	useEffect(() => {
 		if (isPaused || isDialogueLocked || keepOpen) return
 
-		pane.expanded = !isPointerLocked
+		pane.expanded = isPaused
 	}, [isPointerLocked, isPaused, isDialogueLocked, keepOpen])
 
 	return null
