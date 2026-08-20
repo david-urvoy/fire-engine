@@ -12,15 +12,13 @@ export function Dialogues({ resolver }: { resolver: () => string | undefined }) 
 		const unsubscribe = eventBus.on('character_interacted', ({ characterId }) => {
 			if (characterId === id) {
 				const dialogueId = resolver()
-				if (!dialogueId) return
+				if (!dialogueId) throw new Error(`Missing dialogue for character "${id}"`)
 
 				dialogueManager.trigger(dialogueId)
 			}
 		})
 
-		return () => {
-			unsubscribe()
-		}
+		return () => unsubscribe()
 	}, [id, dialogueManager, resolver])
 
 	return <></>
