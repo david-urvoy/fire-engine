@@ -12,7 +12,10 @@ export interface DialogueOption {
 
 export interface DialogueNode<Id extends string> {
 	lines: DialogueLine<Id>[]
-	choice?: DialogueOption[]
+	choice?: {
+		options: DialogueOption[]
+		type?: 'fixed' | 'extensible'
+	}
 	nextNodeId?: string
 }
 
@@ -24,6 +27,7 @@ export interface DialogueParticipant<Id extends string> {
 export type DialogueDefinition<P extends string, Id extends string = string> = {
 	id: Id
 	participants: readonly DialogueParticipant<P>[]
+} & ({
 	entryNodeId: string
 	nodes: Record<string, DialogueNode<P>>
 } & (
@@ -35,4 +39,12 @@ export type DialogueDefinition<P extends string, Id extends string = string> = {
 			isNpcOnly: boolean
 			locked?: boolean
 	  }
-)
+))
+
+export interface QuestDialogueDefinition<P extends string> {
+	option: {
+		label: string
+		nextNodeId: string
+	}
+	nodes: Record<string, DialogueNode<P>>
+}

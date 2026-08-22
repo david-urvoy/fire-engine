@@ -1,43 +1,35 @@
 import { type Dexie } from 'dexie'
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
 
-import type { CharacterManager } from './character'
-import type { DialogueManager } from './conversation/dialogue/dialogue.manager'
 import type { EntityManager } from './entity/entity.manager'
 
-interface GameProviderProps<CharacterId extends string, DialogueId extends string> {
+interface GameProviderProps {
 	entityManager: EntityManager
-	characterManager: CharacterManager<CharacterId, DialogueId>
-	dialogueManager: DialogueManager<DialogueId>
 	canvasRef: RefObject<HTMLCanvasElement | null>
 	database: Dexie
 }
 
-type GameContextValue = GameProviderProps<string, string>
+type GameContextValue = GameProviderProps
 
 const GameContext = createContext<GameContextValue | null>(null)
 
-export function GameProvider<CharacterId extends string, DialogueId extends string>({
+export function GameProvider({
 	canvasRef,
 	entityManager,
-	characterManager,
-	dialogueManager,
 	database,
 	children,
-}: PropsWithChildren<GameProviderProps<CharacterId, DialogueId>>) {
+}: PropsWithChildren<GameProviderProps>) {
 	return (
-		<GameContext.Provider
-			value={{ canvasRef, entityManager, characterManager, dialogueManager, database }}
-		>
+		<GameContext.Provider value={{ canvasRef, entityManager, database }}>
 			{children}
 		</GameContext.Provider>
 	)
 }
 
-export function useGame<CharacterId extends string = string, DialogueId extends string = string>() {
+export function useGame() {
 	const context = useContext(GameContext)
 
 	if (!context) throw new Error('useGame must be used within a GameProvider')
 
-	return context as GameProviderProps<CharacterId, DialogueId>
+	return context as GameProviderProps
 }

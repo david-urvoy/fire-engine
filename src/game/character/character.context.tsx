@@ -1,14 +1,18 @@
 import { createContext, useContext, type PropsWithChildren } from 'react'
 
+import type { Character } from './character.model'
+
 type CharacterContextType = {
-	id: string
-	name: string
+	character: Character
 }
 
 const CharacterContext = createContext<CharacterContextType | null>(null)
 
-export function CharacterProvider({ id, name, children }: PropsWithChildren<CharacterContextType>) {
-	return <CharacterContext.Provider value={{ id, name }}>{children}</CharacterContext.Provider>
+export function CharacterProvider({
+	character,
+	children,
+}: PropsWithChildren<CharacterContextType>) {
+	return <CharacterContext.Provider value={{ character }}>{children}</CharacterContext.Provider>
 }
 
 export function useCharacter() {

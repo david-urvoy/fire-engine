@@ -28,9 +28,9 @@ export const DialogueBox = () => {
 			<p>
 				{speakerId.charAt(0).toUpperCase() + speakerId.slice(1)}: {text}
 			</p>
-			{isLockedDialogue && !!choices?.length && (
+			{isLockedDialogue && !!choices?.options?.length && (
 				<div className="flex gap-4">
-					{choices.map((choice) => (
+					{choices.options.map((choice) => (
 						<button
 							className="underline hover:bg-amber-200"
 							key={choice.label}

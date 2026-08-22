@@ -1,13 +1,12 @@
 import { CapsuleCollider } from '@react-three/rapier'
-import { useEffect } from 'react'
 
 import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
 import { Gravity, KinematicMotor } from '../../physics'
 import { Entity, type EntityProps } from '../entity/entity'
-import { useGame } from '../game.context'
 import { characterDimensions } from '../game.store'
 import { CharacterProvider } from './character.context'
+import { Character as CharacterModel } from './character.model'
 
 export function Character({
 	id,
@@ -16,16 +15,9 @@ export function Character({
 	children,
 	...props
 }: EntityProps & { height?: number; name: string; position?: [number, number, number] }) {
-	const { characterManager } = useGame()
-
-	useEffect(() => {
-		characterManager.create(id)
-		return () => characterManager.delete(id)
-	}, [id, characterManager])
-
 	return (
-		<CharacterProvider id={id} name={props.name}>
-			<Entity id={id} {...props}>
+		<Entity id={id} {...props}>
+			<CharacterProvider character={new CharacterModel(id, props.name, '', 0)}>
 				<KinematicMotor colliders={false} position={position}>
 					<CapsuleCollider
 						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
@@ -38,7 +30,7 @@ export function Character({
 					</Visual>
 				</KinematicMotor>
 				<Gravity />
-			</Entity>
-		</CharacterProvider>
+			</CharacterProvider>
+		</Entity>
 	)
 }

@@ -2,24 +2,29 @@ import { useEffect } from 'react'
 
 import { eventBus } from '../../../lib'
 import { useCharacter } from '../../character/character.context'
-import { useGame } from '../../game.context'
+import type { DialogueDefinition } from '../dsl/dialogue-definition.type'
+import { useDialogues } from './use-dialogues'
 
-export function Dialogues({ resolver }: { resolver: () => string | undefined }) {
-	const { dialogueManager } = useGame()
-	const { id } = useCharacter()
+export interface DialogueProps {
+	dialogues: Record<string, DialogueDefinition<string>>
+	resolver: () => string
+}
+
+export function Dialogues({ dialogues, resolver }: DialogueProps) {
+	const { trigger } = useDialogues(dialogues)
+	const {
+		character: { id },
+	} = useCharacter()
 
 	useEffect(() => {
 		const unsubscribe = eventBus.on('character_interacted', ({ characterId }) => {
-			if (characterId === id) {
-				const dialogueId = resolver()
-				if (!dialogueId) throw new Error(`Missing dialogue for character "${id}"`)
-
-				dialogueManager.trigger(dialogueId)
-			}
+			if (characterId !== id) return
+			const dialogueId = resolver()
+			trigger(dialogueId)
 		})
 
 		return () => unsubscribe()
-	}, [id, dialogueManager, resolver])
+	}, [id, trigger, resolver])
 
 	return <></>
 }

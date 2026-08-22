@@ -1,4 +1,4 @@
-import type { Character } from '../../character/types/character'
+import type { Character } from '../../character/character.types'
 
 export type Bark<C extends Character<string>> = {
 	id: string

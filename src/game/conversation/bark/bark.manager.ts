@@ -1,4 +1,4 @@
-import type { Character } from '../../character/types/character'
+import type { Character } from '../../character/character.types'
 import type { Bark } from './bark'
 
 export interface BarkManager<C extends Character<string> = Character<string>> {

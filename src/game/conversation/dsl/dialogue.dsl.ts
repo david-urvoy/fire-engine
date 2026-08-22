@@ -1,5 +1,5 @@
-import type { Character } from '../../character/types/character'
-import type { DialogueDefinition, DialogueNode } from './dialogue.types'
+import type { Character } from '../../character/character.types'
+import type { DialogueDefinition, DialogueNode } from './dialogue-definition.type'
 
 class DialogueBuilder<
 	CharacterId extends string,
@@ -38,6 +38,8 @@ class DialogueBuilder<
 		return this
 	}
 
+	option() {}
+
 	node(nodeId: string, input: DialogueNode<ParticipantId>) {
 		if (this.nodes[nodeId]) {
 			throw new Error(`Node "${nodeId}" is already defined.`)
@@ -49,7 +51,7 @@ class DialogueBuilder<
 			text: line.text,
 		}))
 
-		const choices = (input.choice ?? []).map((choice, index) => {
+		const choices = (input.choice?.options ?? []).map((choice, index) => {
 			return {
 				id: `${nodeId}_choice_${index + 1}`,
 				label: choice.label,
@@ -59,7 +61,12 @@ class DialogueBuilder<
 
 		this.nodes[nodeId] = {
 			lines,
-			choice: choices.length ? choices : undefined,
+			choice: choices.length
+				? {
+						options: choices,
+						type: input.choice?.type ?? 'fixed',
+					}
+				: undefined,
 			nextNodeId: input.nextNodeId,
 		}
 
@@ -80,10 +87,10 @@ class DialogueBuilder<
 			const node = this.nodes[nodeId]
 			if (!node) continue
 
-			if (node.choice?.length) return true
+			if (node.choice?.options?.length) return true
 
 			if (node.nextNodeId) toVisit.push(node.nextNodeId)
-			for (const choice of node.choice ?? []) {
+			for (const choice of node.choice?.options ?? []) {
 				toVisit.push(choice.nextNodeId)
 			}
 		}
@@ -102,18 +109,6 @@ class DialogueBuilder<
 			throw new Error('An npcOnly dialogue cannot contain reachable choices.')
 		}
 
-		if (this.isNpcOnly)
-			return {
-				id: this.dialogueId,
-				participants: [
-					...this.requiredParticipants.map((id) => ({ id, required: true })),
-					...this.optionalParticipants.map((id) => ({ id, required: false })),
-				],
-				entryNodeId: this.entryNodeId,
-				nodes: this.nodes,
-				isNpcOnly: true,
-			}
-
 		return {
 			id: this.dialogueId,
 			participants: [
@@ -122,8 +117,8 @@ class DialogueBuilder<
 			],
 			entryNodeId: this.entryNodeId,
 			nodes: this.nodes,
-			isNpcOnly: false,
-			locked: this.isLocked || hasChoice,
+			isNpcOnly: this.isNpcOnly,
+			...(this.isNpcOnly ? {} : { locked: this.isLocked || hasChoice }),
 		}
 	}
 }

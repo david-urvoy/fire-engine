@@ -1,10 +1,10 @@
-import type { Character } from '../../character/types/character'
+import type { Character } from '../../character/character.types'
 import type {
 	DialogueDefinition,
 	DialogueNode,
 	DialogueOption,
 	DialogueParticipant,
-} from '../dsl/dialogue.types'
+} from '../dsl/dialogue-definition.type'
 import { dialogueStore } from './dialogue.store'
 
 export abstract class AbstractDialogue {
@@ -17,10 +17,10 @@ export abstract class AbstractDialogue {
 	protected currentLineIndex: number
 	protected participants: readonly DialogueParticipant<string>[]
 
-	constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
+	protected constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
 		this.id = dialogue.id
 		this.startedAt = Date.now()
-		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.length
+		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.options.length
 		this.currentNodeId = dialogue.entryNodeId
 		this.timer = 0
 		this.currentLineIndex = 0
@@ -54,7 +54,7 @@ export abstract class AbstractDialogue {
 		if (node.nextNodeId) {
 			this.currentNodeId = node.nextNodeId
 			this.currentLineIndex = 0
-			this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.length
+			this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.options.length
 			return true
 		}
 
@@ -78,7 +78,7 @@ export abstract class AbstractDialogue {
 		}
 
 		const node = this.nodes[this.currentNodeId]
-		const validOption = node?.choice?.find(({ label }) => label === choice.label)
+		const validOption = node?.choice?.options.find(({ label }) => label === choice.label)
 
 		if (!validOption) {
 			console.warn(`Invalid choice: ${choice.label}`)
@@ -87,7 +87,7 @@ export abstract class AbstractDialogue {
 
 		this.currentNodeId = validOption.nextNodeId
 		this.currentLineIndex = 0
-		this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.length
+		this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.options.length
 
 		return this
 	}
@@ -110,6 +110,10 @@ export abstract class AbstractDialogue {
 }
 
 export class NpcDialogue extends AbstractDialogue {
+	public constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
+		super(dialogue)
+	}
+
 	private remove() {
 		const dialogueIndex = dialogueStore.all.indexOf(this)
 
@@ -132,7 +136,7 @@ export class NpcDialogue extends AbstractDialogue {
 export class PlayerDialogue extends AbstractDialogue {
 	locked = true
 
-	constructor({
+	public constructor({
 		dialogue,
 		locked = true,
 		onEnd,
