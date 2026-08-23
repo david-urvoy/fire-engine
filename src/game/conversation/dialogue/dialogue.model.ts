@@ -1,3 +1,4 @@
+import { eventBus } from '../../../lib'
 import type { Character } from '../../character/character.types'
 import type {
 	DialogueDefinition,
@@ -27,6 +28,7 @@ export abstract class AbstractDialogue {
 
 		this.participants = dialogue.participants
 		this.nodes = dialogue.nodes
+		eventBus.emit('dialogue_started', { dialogueId: this.id })
 	}
 
 	private nextLine() {
@@ -67,8 +69,7 @@ export abstract class AbstractDialogue {
 		if (this.nextLine()) return this
 		if (this.nextNode()) return this
 
-		console.debug(`Dialogue "${this.id}" has ended.`)
-		return undefined
+		return this.end()
 	}
 
 	choose(choice: DialogueOption) {
@@ -92,10 +93,8 @@ export abstract class AbstractDialogue {
 		return this
 	}
 
-	protected onEnd?: (dialogue: AbstractDialogue) => void
-
 	end() {
-		this.onEnd?.(this)
+		eventBus.emit('dialogue_ended', { dialogueId: this.id })
 	}
 
 	get line() {
@@ -114,52 +113,41 @@ export class NpcDialogue extends AbstractDialogue {
 		super(dialogue)
 	}
 
-	private remove() {
+	override end() {
+		super.end()
 		const dialogueIndex = dialogueStore.all.indexOf(this)
 
 		if (dialogueIndex !== -1) dialogueStore.all.splice(dialogueIndex, 1)
 		else console.warn(`Dialogue with id ${this.id} not found in dialogues array.`)
-	}
-
-	override next() {
-		const dialogue = super.next()
-
-		if (!dialogue) {
-			this.remove()
-			return
-		}
-
-		return this
 	}
 }
 
 export class PlayerDialogue extends AbstractDialogue {
 	locked = true
 
-	public constructor({
-		dialogue,
-		locked = true,
-		onEnd,
-	}: {
-		dialogue: DialogueDefinition<Character<string>['id']>
-		locked?: boolean
-		onEnd?: (dialogue: AbstractDialogue) => void
-	}) {
+	public constructor(
+		dialogue: DialogueDefinition<Character<string>['id']>,
+		{
+			locked = true,
+		}: {
+			locked?: boolean
+		},
+	) {
 		super(dialogue)
 		dialogueStore.active = this
 		this.locked = locked
-		this.onEnd = onEnd
 	}
 
-	override next() {
-		const dialogue = super.next()
-
-		if (!dialogue) {
-			this.onEnd?.(this)
-			dialogueStore.active = undefined
-			return
-		}
-
-		return this
+	override end() {
+		super.end()
+		dialogueStore.active = undefined
 	}
+}
+
+export function createDialogue(
+	dialogue: DialogueDefinition<Character<string>['id']>,
+): AbstractDialogue {
+	return dialogue.isNpcOnly
+		? new NpcDialogue(dialogue)
+		: new PlayerDialogue(dialogue, { locked: dialogue.locked })
 }

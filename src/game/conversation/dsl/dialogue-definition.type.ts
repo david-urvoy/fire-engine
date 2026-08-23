@@ -43,6 +43,7 @@ export type DialogueDefinition<P extends string, Id extends string = string> = {
 
 export interface QuestDialogueDefinition<P extends string> {
 	option: {
+		speakerId: P
 		label: string
 		nextNodeId: string
 	}

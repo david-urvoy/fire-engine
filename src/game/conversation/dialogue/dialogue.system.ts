@@ -5,7 +5,7 @@ export class DialogueSystem {
 	private _step({ dialogue, delta }: { dialogue: AbstractDialogue; delta: number }) {
 		dialogue.timer = (dialogue.timer || 0) + delta
 
-		if (dialogue.timer >= 10) {
+		if (dialogue.timer >= 5) {
 			dialogue.timer = 0
 			dialogue.next()
 		}
