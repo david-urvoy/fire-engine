@@ -2,16 +2,14 @@ import { useEffect } from 'react'
 
 import { eventBus } from '../../../lib'
 import { useCharacter } from '../../character/character.context'
-import type { DialogueDefinition } from '../dsl/dialogue-definition.type'
-import { useDialogues } from './use-dialogues'
+import { useDialogues } from './dialogue.context'
 
 export interface DialogueProps {
-	dialogues: Record<string, DialogueDefinition<string>>
 	resolver: () => string
 }
 
-export function Dialogues({ dialogues, resolver }: DialogueProps) {
-	const { trigger } = useDialogues(dialogues)
+export function Dialogues({ resolver }: DialogueProps) {
+	const { trigger } = useDialogues()
 	const {
 		character: { id },
 	} = useCharacter()

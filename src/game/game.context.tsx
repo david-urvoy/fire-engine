@@ -1,6 +1,7 @@
 import { type Dexie } from 'dexie'
 import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
 
+import { DialogueProvider } from './conversation/dialogue/dialogue.context'
 import type { EntityManager } from './entity/entity.manager'
 
 interface GameProviderProps {
@@ -21,7 +22,7 @@ export function GameProvider({
 }: PropsWithChildren<GameProviderProps>) {
 	return (
 		<GameContext.Provider value={{ canvasRef, entityManager, database }}>
-			{children}
+			<DialogueProvider>{children}</DialogueProvider>
 		</GameContext.Provider>
 	)
 }

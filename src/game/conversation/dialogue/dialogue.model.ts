@@ -64,9 +64,12 @@ export abstract class AbstractDialogue {
 	}
 
 	next() {
+		this.timer = 0
 		if (this.awaitingChoice) return this
 
 		if (this.nextLine()) return this
+
+		eventBus.emit('dialogue_node_ended', { dialogueId: this.id, nodeId: this.currentNodeId })
 		if (this.nextNode()) return this
 
 		return this.end()
@@ -102,7 +105,7 @@ export abstract class AbstractDialogue {
 		return node?.lines[this.currentLineIndex]
 	}
 
-	get choices() {
+	get choice() {
 		const node = this.nodes[this.currentNodeId]
 		return node?.choice
 	}

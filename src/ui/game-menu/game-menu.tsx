@@ -18,7 +18,7 @@ export function GameMenu() {
 	return (
 		<div className="z-10 flex h-full w-full flex-col border-cyan-400/50 p-8 pt-24">
 			<Tabs
-				defaultValue={selectedTab}
+				value={selectedTab}
 				onValueChange={selectTab}
 				className="pointer-events-auto flex flex-1 flex-col bg-slate-900"
 			>

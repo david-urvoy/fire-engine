@@ -41,6 +41,12 @@ export type DialogueDefinition<P extends string, Id extends string = string> = {
 	  }
 ))
 
+export function isDialogueDefinition<P extends string, Id extends string = string>(
+	dialogue: DialogueDefinition<P, Id> | QuestDialogueDefinition<P>,
+): dialogue is DialogueDefinition<P, Id> {
+	return 'entryNodeId' in dialogue && 'nodes' in dialogue
+}
+
 export interface QuestDialogueDefinition<P extends string> {
 	option: {
 		speakerId: P

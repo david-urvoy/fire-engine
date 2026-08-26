@@ -1,40 +1,10 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect, type PropsWithChildren } from 'react'
 
 import { eventBus } from '../../lib'
 import { useGame } from '../game.context'
-import type { QuestRecord } from './quest-store'
-import type { Quest } from './quest.model'
+import { useCompleteQuest, useFailQuest, useStartQuest, type QuestRecord } from './quest-store'
 
-function useStartQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		({ id, name }: Omit<Quest, 'status'>) =>
-			database.table<QuestRecord, string>('quests').put({ id, name, status: 'ongoing' }),
-		[database],
-	)
-}
-
-function useCompleteQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		(id: string) =>
-			database.table<QuestRecord, string>('quests').update(id, { status: 'completed' }),
-		[database],
-	)
-}
-
-function useFailQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		(id: string) => database.table<QuestRecord, string>('quests').update(id, { status: 'failed' }),
-		[database],
-	)
-}
-
-export function Quests() {
+export function QuestsProvider({ children }: PropsWithChildren) {
 	const startQuest = useStartQuest()
 	const completeQuest = useCompleteQuest()
 	const failQuest = useFailQuest()
@@ -62,5 +32,5 @@ export function Quests() {
 		}
 	}, [startQuest, completeQuest, failQuest, database])
 
-	return <></>
+	return <>{children}</>
 }

@@ -1,4 +1,4 @@
-import { useQuests, type QuestRecord } from '../../game'
+import { useQuests, type QuestRecord } from '../../game/quest/quest-store'
 
 export function QuestMenu() {
 	const quests = useQuests()

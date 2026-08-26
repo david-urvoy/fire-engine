@@ -12,7 +12,7 @@ export const DialogueBox = () => {
 
 	const { text, speakerId } = dialogue.line
 	const isLockedDialogue = !!dialogue.locked
-	const choices = dialogue.choices
+	const choice = dialogue.choice
 
 	return (
 		<div
@@ -28,9 +28,9 @@ export const DialogueBox = () => {
 			<p>
 				{speakerId.charAt(0).toUpperCase() + speakerId.slice(1)}: {text}
 			</p>
-			{isLockedDialogue && !!choices?.options?.length && (
+			{isLockedDialogue && !!choice?.options?.length && (
 				<div className="flex gap-4">
-					{choices.options.map((choice) => (
+					{choice.options.map((choice) => (
 						<button
 							className="underline hover:bg-amber-200"
 							key={choice.label}
