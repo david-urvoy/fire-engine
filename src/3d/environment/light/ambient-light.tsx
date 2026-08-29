@@ -4,7 +4,7 @@ import { useLight } from './use-light'
 
 export function AmbientLight({
 	color = new Color('#fcfcfc'),
-	intensity = 0.3,
+	intensity = 1,
 }: {
 	color?: Color
 	intensity?: number
