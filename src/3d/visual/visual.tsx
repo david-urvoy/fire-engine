@@ -1,4 +1,5 @@
 import { useEffect, type PropsWithChildren } from 'react'
+import { Mesh } from 'three'
 
 import { game, useEntity, useGame } from '../../game'
 import type { GroupProps } from '../../lib'
@@ -41,7 +42,7 @@ export function Visual({
 			onUpdate={(mesh) => {
 				mesh.traverse((child) => {
 					child.userData.entityId = id
-					if (interactable && child.type === 'Mesh') {
+					if (interactable && child instanceof Mesh) {
 						child.layers.enable(LAYERS.INTERACTABLE)
 					}
 				})
