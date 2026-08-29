@@ -1,7 +1,7 @@
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
-import { INTERACTION_MAX_DISTANCE, UP } from '../game.store'
+import { game, INTERACTION_MAX_DISTANCE, UP } from '../game.store'
 import type {
 	ControlsState,
 	EntityApi,
@@ -81,7 +81,7 @@ export class Entity implements EntityState, EntityApi {
 
 		const matrix = new Matrix4()
 		matrix.lookAt(this.position, target, UP)
-		this.orientation.setFromRotationMatrix(matrix)
+		this.controls.orientation.setFromRotationMatrix(matrix)
 
 		return this
 	}
@@ -100,10 +100,10 @@ export class Entity implements EntityState, EntityApi {
 		const z = -direction.z
 		if (x !== 0 || z !== 0) {
 			const yaw = Math.atan2(x, z)
-			this.orientation.setFromAxisAngle(UP, yaw)
+			this.controls.orientation.setFromAxisAngle(UP, yaw)
 		}
 
-		this.cameraProxy?.lookInWorldDirection(direction)
+		if (this.id === game.controlledCharacter) this.cameraProxy?.lookInWorldDirection(direction)
 
 		return this
 	}

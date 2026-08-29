@@ -14,7 +14,11 @@ export function Character({
 	height = characterDimensions.height,
 	children,
 	...props
-}: EntityProps & { height?: number; name: string; position?: [number, number, number] }) {
+}: EntityProps & {
+	height?: number
+	name: string
+	position?: [number, number, number]
+}) {
 	return (
 		<Entity id={id} {...props}>
 			<CharacterProvider character={new CharacterModel(id, props.name, '', 0)}>

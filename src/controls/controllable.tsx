@@ -9,14 +9,13 @@ import { usePlayer } from '../game/character/use-player'
 import { game } from '../game/game.store'
 import { gamepad, Gamepad } from './input/gamepad/gamepad'
 import { KeyboardControls } from './input/keyboard/keyboard-controls'
-import { useKeyboard } from './input/keyboard/keyboard.store'
+import { useKeyboardDirection } from './input/keyboard/keyboard.store'
 import { Keymap } from './input/keyboard/keymap'
 
 function usePlayerDirection() {
 	const { isMobile } = useSnapshot(game.responsive)
-	const keyboard = useKeyboard()
-	const control = isMobile ? gamepad : keyboard
-	return control.direction
+	const keyboardDirection = useKeyboardDirection()
+	return isMobile ? gamepad.direction : keyboardDirection
 }
 
 function useCharacterMove() {

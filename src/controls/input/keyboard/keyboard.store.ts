@@ -25,9 +25,7 @@ const keyboardCommands = computed({
 })
 
 export function useKeyboard() {
-	const keys = useSnapshot(keyboardKeys)
-	const direction = useKeyboardDirection()
-	return { ...keys, direction }
+	return useSnapshot(keyboardKeys)
 }
 
 export function useKeyboardDirection() {

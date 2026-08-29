@@ -1,36 +1,38 @@
 import { useEffect, useRef } from 'react'
 import type { AnimationAction } from 'three'
-import { useSnapshot } from 'valtio'
-
-import { keyboardKeys } from '../controls/input/keyboard/keyboard.store'
 
 type Actions = 'idle' | 'walk' | 'run'
 export type Animations = { [key in Actions]: AnimationAction | null }
 
-export function useAnimations(bindAnimations: () => Animations) {
+export function useAnimations(bindAnimations: () => Animations, moving?: boolean) {
 	const animations = useRef<Animations>(null)
 	const animation = useRef(animations.current?.idle)
-	const { up, down, right, left } = useSnapshot(keyboardKeys)
 
 	useEffect(() => {
 		animations.current = bindAnimations()
 		animation.current = animations.current?.idle
 		animation.current?.play()
+
+		return () => {
+			animation.current?.stop()
+		}
 	}, [bindAnimations])
 
-	const action = up || down || right || left ? animations.current?.run : animations.current?.idle
+	useEffect(() => {
+		const action = moving ? animations.current?.walk : animations.current?.idle
 
-	if (animation.current?.getClip().name !== action?.getClip().name) {
-		animation.current?.stop()
-		animation.current = action
-		animation.current?.play()
-	}
+		if (action !== animation.current) {
+			animation.current?.stop()
+			animation.current = action
+			animation.current?.play()
+		}
+	}, [moving])
 }
 
 export function animate() {
-	let runningAnimation: AnimationAction | null | undefined
+	let runningAnimation: AnimationAction | null = null
 	return (action?: AnimationAction | null) => {
-		if (!runningAnimation || runningAnimation.getClip().name !== action?.getClip().name) {
+		if (action !== runningAnimation && action) {
 			runningAnimation?.stop()
 			runningAnimation = action
 			runningAnimation?.play()
