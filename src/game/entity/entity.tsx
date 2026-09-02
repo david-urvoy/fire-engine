@@ -12,8 +12,9 @@ export function Entity({ id, children }: EntityProps) {
 	const ref = useId()
 	const object3D = useRef(null)
 	const rigidBody = useRef(null)
+	const animations = useRef(null)
 	const entity = useMemo(
-		() => new EntityModel({ id, ref, runtime: { object3D, rigidBody } }),
+		() => new EntityModel({ id, ref, runtime: { object3D, rigidBody, animations } }),
 		[id, ref],
 	)
 

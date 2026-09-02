@@ -1,9 +1,10 @@
 import { Quaternion, Vector3 } from 'three'
 
-import type { EntityState } from '../game/entity/entity.types'
+import { MOVEMENT_SMOOTHING } from '../game'
+import type { Entity } from '../game/entity/entity.model'
 
 type PhysicEntry = {
-	entity: EntityState
+	entity: Entity
 	move?: (delta: Vector3, rotation: Quaternion) => void
 }
 
@@ -17,11 +18,14 @@ export class PhysicSystem {
 		this.entities.forEach(({ entity, velocity, rotation, move }) => {
 			if (!entity.physic || entity.physic.isSleeping) return
 
-			velocity
-				.copy(entity.controls.move)
-				.addScaledVector(entity.physic.velocity, 1)
-				.multiplyScalar(delta)
+			const vel = entity.physic.velocity
+			const targetX = entity.controls.move.x
+			const targetZ = entity.controls.move.z
+			const alpha = 1 - Math.exp(-MOVEMENT_SMOOTHING * delta)
+			vel.x += (targetX - vel.x) * alpha
+			vel.z += (targetZ - vel.z) * alpha
 
+			velocity.copy(vel).multiplyScalar(delta)
 			rotation.copy(entity.controls.orientation)
 
 			move?.(velocity, rotation)

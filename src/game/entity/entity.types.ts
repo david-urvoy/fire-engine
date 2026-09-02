@@ -2,6 +2,8 @@ import type { RapierRigidBody } from '@react-three/rapier'
 import type { RefObject } from 'react'
 import type { Object3D, Quaternion, Vector3 } from 'three'
 
+import type { Animations } from '../../animation/character-animation'
+
 export interface ControlsState {
 	move: Vector3
 	orientation: Quaternion
@@ -22,6 +24,7 @@ export interface InteractionState {
 export interface EntityRuntime {
 	rigidBody: RefObject<RapierRigidBody | null>
 	object3D: RefObject<Object3D | null>
+	animations: RefObject<Animations | null>
 }
 
 export interface EntityState {
@@ -43,5 +46,4 @@ export interface EntityApi {
 	rotateBy: (delta: [number, number, number]) => EntityState
 	lookAt(target: Vector3): EntityState
 	lookInDirection(direction: Vector3): EntityState
-	setVelocity: (vel: Vector3) => EntityState
 }

@@ -70,12 +70,6 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	setVelocity(vel: Vector3) {
-		if (!this.physic) return this
-		this.physic.velocity.copy(vel)
-		return this
-	}
-
 	lookAt(target: Vector3) {
 		if (!this.physic || !this.position) return this
 
