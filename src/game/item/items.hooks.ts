@@ -31,7 +31,7 @@ export const Items = {
 			({ id, name, image }: ItemRecord) =>
 				database
 					.table<ItemRecord, string>('items')
-					.put({ id, name, image, collectedAt: Date.now() }),
+					.put({ id, name, image, collectedAt: Temporal.Now.instant().epochMilliseconds }),
 			[database],
 		)
 	},

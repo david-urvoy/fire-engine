@@ -20,7 +20,7 @@ export abstract class AbstractDialogue {
 
 	protected constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
 		this.id = dialogue.id
-		this.startedAt = Date.now()
+		this.startedAt = Temporal.Now.instant().epochMilliseconds
 		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.options.length
 		this.currentNodeId = dialogue.entryNodeId
 		this.timer = 0

@@ -9,12 +9,12 @@ export type Animations = { [key in Action]: AnimationAction | null }
 
 export function CharacterAnimation() {
 	const { entity } = useEntity()
-	const animations = entity.runtime.animations
+	const animations = entity.runtime.animations.current
 	const runningAnimation = useRef<AnimationAction | undefined>(null)
 
 	const playAction = useCallback(
 		(action: Action) => {
-			const animation = animations.current?.[action]
+			const animation = animations?.[action]
 
 			if (animation !== runningAnimation.current) {
 				runningAnimation.current?.stop()
@@ -24,7 +24,7 @@ export function CharacterAnimation() {
 
 			return animation
 		},
-		[animations],
+		[animations, runningAnimation],
 	)
 
 	useEffect(() => {

@@ -26,7 +26,7 @@ export const barkStore = proxy({
 
 		const barkState: ActiveBark = {
 			...bark,
-			startedAt: Date.now(),
+			startedAt: Temporal.Now.instant().epochMilliseconds,
 			duration,
 		}
 

@@ -26,18 +26,11 @@ type BindingParam<T extends Bindable> = {
 	onChange?: (value: T[keyof T]) => void
 }
 
-function ensureRegistry(parent: FolderApi | Pane) {
-	if (!folderRegistry.has(parent)) {
-		folderRegistry.set(parent, new Map())
-	}
-	return folderRegistry.get(parent)!
-}
-
 function getOrCreateFolder(
 	parent: FolderApi | Pane,
 	{ title, ...params }: FolderParams,
 ): FolderApi {
-	const reg = ensureRegistry(parent)
+	const reg = folderRegistry.getOrInsert(parent, new Map())
 	if (!reg.has(title)) {
 		const newFolder = parent.addFolder({ title, ...params })
 		reg.set(title, newFolder)
