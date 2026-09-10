@@ -14,12 +14,6 @@ export function Physic({
 	const { physic } = useGameLoopSystem()
 
 	useEffect(() => {
-		entity.physic = {
-			velocity: new Vector3(),
-			isGrounded: true,
-			isSleeping: false,
-		}
-
 		physic.register({
 			entity,
 			move,

@@ -42,6 +42,16 @@ export class PhysicSystem {
 			if (character.move && !existing.move) existing.move = character.move
 			existing.refCount = (existing.refCount ?? 1) + 1
 		} else {
+			const { entity } = character
+
+			if (!entity.physic) {
+				entity.physic = {
+					velocity: new Vector3(),
+					isGrounded: true,
+					isSleeping: false,
+				}
+			}
+
 			this.entities.set(id, {
 				...character,
 				velocity: new Vector3(),
