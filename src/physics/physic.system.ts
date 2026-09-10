@@ -18,10 +18,12 @@ export class PhysicSystem {
 		this.entities.forEach(({ entity, velocity, rotation, move }) => {
 			if (!entity.physic || entity.physic.isSleeping) return
 
-			const vel = entity.physic.velocity
 			const targetX = entity.controls.move.x
 			const targetZ = entity.controls.move.z
+
 			const alpha = 1 - Math.exp(-MOVEMENT_SMOOTHING * delta)
+
+			const vel = entity.physic.velocity
 			vel.x += (targetX - vel.x) * alpha
 			vel.z += (targetZ - vel.z) * alpha
 
@@ -53,9 +55,8 @@ export class PhysicSystem {
 		const existing = this.entities.get(entityId)
 		if (!existing) return
 
-		if (existing.refCount <= 1) {
-			this.entities.delete(entityId)
-		} else {
+		if (existing.refCount <= 1) this.entities.delete(entityId)
+		else {
 			existing.refCount = existing.refCount - 1
 		}
 	}

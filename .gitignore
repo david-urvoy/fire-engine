@@ -149,5 +149,8 @@ dist
 # pnpm
 .pnpm-store
 
+# vitest
+.vitest/
+
 # MacOS
 **/.DS_Store

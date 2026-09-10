@@ -25,6 +25,7 @@ export function Character({
 				<KinematicMotor colliders={false} position={position}>
 					<CapsuleCollider
 						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
+						position={[0, height * 0.5, 0]}
 					/>
 					<Visual
 						onClick={() => eventBus.emit('character_interacted', { characterId: id })}

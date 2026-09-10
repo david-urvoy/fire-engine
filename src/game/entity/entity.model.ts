@@ -1,10 +1,14 @@
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
-import { game, INTERACTION_MAX_DISTANCE, UP } from '../game.store'
+import {
+	game,
+	INTERACTION_MAX_DISTANCE,
+	PHYSIC_APPROXIMATION as POSITION_EPSILON,
+	UP,
+} from '../game.store'
 import type {
 	ControlsState,
-	EntityApi,
 	EntityRuntime,
 	EntityState,
 	InteractionState,
@@ -19,7 +23,7 @@ class Controls implements ControlsState {
 	) {}
 }
 
-export class Entity implements EntityState, EntityApi {
+export class Entity implements EntityState {
 	readonly id: string
 	readonly ref: string
 	readonly name: string
@@ -59,9 +63,15 @@ export class Entity implements EntityState, EntityApi {
 		return this
 	}
 
-	moveTo(target: Vector3) {
-		this.controls.move.copy(target).sub(this.position)
-		return this
+	moveTo(target: Vector3, speed: number) {
+		this.controls.move.copy(target).sub(this.position).normalize().multiplyScalar(speed)
+
+		const dx = target.x - this.position.x
+		const dz = target.z - this.position.z
+
+		const distance = Math.hypot(dx, dz)
+
+		return distance < POSITION_EPSILON
 	}
 
 	teleportTo(target: Vector3) {

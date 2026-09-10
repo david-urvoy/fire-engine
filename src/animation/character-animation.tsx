@@ -5,16 +5,27 @@ import type { AnimationAction } from 'three'
 import { useEntity } from '../game'
 
 type Action = 'idle' | 'walk' | 'run'
+const ACTIONS = {
+	idle: {
+		ratio: 0,
+	},
+	walk: {
+		ratio: 0.5,
+	},
+	run: {
+		ratio: 0.2,
+	},
+} as const
 export type Animations = { [key in Action]: AnimationAction | null }
 
 export function CharacterAnimation() {
 	const { entity } = useEntity()
-	const animations = entity.runtime.animations.current
 	const runningAnimation = useRef<AnimationAction | undefined>(null)
 
 	const playAction = useCallback(
 		(action: Action) => {
-			const animation = animations?.[action]
+			const animations = entity.runtime.animations
+			const animation = animations.current?.[action]
 
 			if (animation !== runningAnimation.current) {
 				runningAnimation.current?.stop()
@@ -24,7 +35,7 @@ export function CharacterAnimation() {
 
 			return animation
 		},
-		[animations, runningAnimation],
+		[entity.runtime.animations, runningAnimation],
 	)
 
 	useEffect(() => {
@@ -33,7 +44,7 @@ export function CharacterAnimation() {
 		return () => {
 			runningAnimation.current?.stop()
 		}
-	}, [animations, playAction])
+	}, [playAction])
 
 	useFrame(() => {
 		const velocity = entity.velocity?.length()
@@ -41,8 +52,8 @@ export function CharacterAnimation() {
 			playAction('idle')
 			return
 		}
-		if (velocity > 0.8) playAction('run')?.setEffectiveTimeScale(velocity)
-		else playAction('walk')?.setEffectiveTimeScale(velocity)
+		if (velocity > 0.8) playAction('run')?.setEffectiveTimeScale(velocity * ACTIONS.run.ratio)
+		else playAction('walk')?.setEffectiveTimeScale(velocity * ACTIONS.walk.ratio)
 	})
 
 	return <></>
