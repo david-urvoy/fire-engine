@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- camera -->
+    <rect x="20" y="24" width="24" height="17" rx="3"/>
+    <path d="M25 24l3-5h8l3 5"/>
+    <circle cx="32" cy="32.5" r="5.5"/>
+    <circle cx="32" cy="32.5" r="1.5" fill="#fff" stroke="none"/>
+    <!-- orbital path -->
+    <path d="M13 32c0-12 8.5-21 19-21"/>
+    <path d="M51 32c0 12-8.5 21-19 21"/>
+    <path d="M32 11l-3 3m3-3 3 3"/>
+    <path d="M32 53l-3-3m3 3 3-3"/>
+  </g>
+</svg>
