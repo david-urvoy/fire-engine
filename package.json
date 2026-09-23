@@ -10,7 +10,8 @@
 		"url": "https://github.com/david-urvoy/fire-engine.git"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"assets"
 	],
 	"main": "dist/src/index.js",
 	"types": "dist/src/index.d.ts",
@@ -33,8 +34,8 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"scripts": {
-		"dev": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
-		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/",
+		"dev": "tsc --build --watch && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/ && bunx cpx 'assets/**/*' dist/assets/",
+		"compile": "tsc --build && bunx cpx 'src/**/*.{glsl,vert,frag}' dist/ && bunx cpx 'assets/**/*' dist/assets/",
 		"compile:check": "tsc"
 	},
 	"dependencies": {
