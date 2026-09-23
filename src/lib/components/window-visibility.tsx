@@ -23,7 +23,7 @@ export function WindowVisibility() {
 	}, [isFocused])
 
 	useEffect(() => {
-		if (isPointerLocked) pane.expanded = false
+		if (isPointerLocked && !keepOpen) pane.expanded = false
 	}, [isPointerLocked, keepOpen])
 
 	return null

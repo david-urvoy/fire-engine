@@ -7,10 +7,8 @@ import { CameraTracking } from '../camera'
 import { useEntity } from '../game'
 import { usePlayer } from '../game/character/use-player'
 import { game } from '../game/game.store'
-import { gamepad, Gamepad } from './input/gamepad/gamepad'
-import { KeyboardControls } from './input/keyboard/keyboard-controls'
+import { gamepad } from './input/gamepad/gamepad'
 import { useKeyboardDirection } from './input/keyboard/keyboard.store'
-import { Keymap } from './input/keyboard/keymap'
 
 function usePlayerDirection() {
 	const { isMobile } = useSnapshot(game.responsive)
@@ -38,7 +36,6 @@ function useCharacterMove() {
 }
 
 export function Controllable() {
-	const { isMobile } = useSnapshot(game.responsive)
 	const { id } = useEntity()
 	useCharacterMove()
 
@@ -46,10 +43,5 @@ export function Controllable() {
 		game.controlledCharacter = id
 	}, [id])
 
-	return (
-		<>
-			<CameraTracking />
-			{isMobile ? <Gamepad /> : <KeyboardControls map={Keymap} />}
-		</>
-	)
+	return <CameraTracking />
 }

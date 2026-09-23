@@ -47,6 +47,7 @@ export const Tweaks = {
 			folder: (childArgs: FolderParams) => Tweaks.folder(childArgs, newFolder),
 		})
 	},
+	refresh: () => pane.refresh(),
 }
 
 export function useAddBinding<T extends Bindable>({
@@ -57,27 +58,25 @@ export function useAddBinding<T extends Bindable>({
 	onChange,
 }: {
 	folder: FolderApi
-} & BindingParam<T>) {
+} & BindingParam<T> &
+	BindingParams) {
 	const [value, setValue] = useState<T>(() => (param.clone ? param.clone() : param))
 	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
 	const paramsRef = useRef([param, key ?? (Object.keys(param)[0] as keyof T), options] as const)
-	const folderRef = useRef(folder)
 
 	useEffect(() => {
-		bindingRef.current = folderRef.current
-			.addBinding(...paramsRef.current)
-			.on('change', ({ value }) => {
-				setValue((prev) => ({
-					...prev,
-					[paramsRef.current[1]]: value.clone ? value.clone() : value,
-				}))
-				onChange?.(value)
-			})
-		const cleanupFolder = folderRef.current
+		bindingRef.current = folder.addBinding(...paramsRef.current).on('change', ({ value }) => {
+			setValue((prev) => ({
+				...prev,
+				[paramsRef.current[1]]: value.clone ? value.clone() : value,
+			}))
+			onChange?.(value)
+		})
+
 		return () => {
-			if (bindingRef.current) cleanupFolder.remove(bindingRef.current)
+			if (bindingRef.current) folder.remove(bindingRef.current)
 		}
-	}, [onChange])
+	}, [folder, onChange])
 
 	return value
 }

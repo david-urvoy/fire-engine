@@ -8,10 +8,17 @@ export function usePointerLock() {
 	const controlsRef = useRef<ThreePLC>(null)
 	const { isPaused } = useSnapshot(game)
 
-	if (isPaused) controlsRef.current?.unlock()
+	useEffect(() => {
+		if (isPaused) controlsRef.current?.unlock()
+	}, [isPaused])
 
 	useEffect(() => {
 		game.pointerLock.ref.current = controlsRef.current
+		const ref = game.pointerLock.ref
+
+		return () => {
+			ref.current = null
+		}
 	}, [controlsRef])
 
 	return controlsRef

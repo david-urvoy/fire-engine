@@ -7,7 +7,7 @@ import { Tweaks, useAddBindings } from '../../ui'
 export function Grid() {
 	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
 
-	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid' })
+	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid', expanded: false })
 	const test = useAddBindings({
 		folder,
 		bindings: [
