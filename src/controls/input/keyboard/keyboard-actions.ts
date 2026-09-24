@@ -1,7 +1,6 @@
 import { Vector3 } from 'three'
 
 import { pane } from '../../..'
-import { CameraType } from '../../../camera'
 import { game, useGame } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
 import { eventBus } from '../../../lib'
@@ -16,7 +15,7 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 		mobile: game.responsive.toggle,
 		toggleDebug: game.debug.toggle,
 		switchCameraType: () => {
-			CameraType.type = CameraType.type === 'first-person' ? 'orbit' : 'first-person'
+			game.camera.type = game.camera.type === 'first-person' ? 'orbit' : 'first-person'
 		},
 		pause: game.pause,
 		fullscreen: toggleFullscreen,

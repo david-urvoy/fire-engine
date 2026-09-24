@@ -1,6 +1,7 @@
 import { Vector3 } from 'three'
 import { proxy } from 'valtio'
 
+import { cameraStore } from '../camera/camera.store'
 import { pointerLock } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
 import { gameMenu } from '../ui/game-menu/game-menu.store'
@@ -36,6 +37,7 @@ export const game = proxy({
 		return 'gameplay'
 	},
 
+	camera: cameraStore,
 	pointerLock,
 	interactable,
 	controlledCharacter: '',

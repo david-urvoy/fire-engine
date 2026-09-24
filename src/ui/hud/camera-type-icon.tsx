@@ -2,10 +2,10 @@ import { useSnapshot } from 'valtio'
 
 import firstPersonViewImage from '../../../../assets/images/first_person_view.svg'
 import orbitCameraImage from '../../../../assets/images/orbital_camera.svg'
-import { CameraType } from '../../camera'
+import { game } from '../../game'
 
 export function CameraTypeIcon() {
-	const { type } = useSnapshot(CameraType)
+	const { type } = useSnapshot(game.camera)
 
 	return (
 		<img
