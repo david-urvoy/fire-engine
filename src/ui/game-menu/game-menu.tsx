@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useSnapshot } from 'valtio'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '#design/components/tabs'
-
 import { game } from '../../game'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../lib/design-system/components/tabs'
 import { InventoryMenu } from './inventory-menu'
 import { QuestMenu } from './quest-menu'
 
