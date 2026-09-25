@@ -81,47 +81,53 @@ export function useAddBinding<T extends Bindable>({
 	return value
 }
 
-export function useAddBindings<T extends Bindable>({
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+	? I
+	: never
+
+type ExtractBindingValues<T extends readonly BindingParam<any>[]> = UnionToIntersection<
+	T extends readonly { param: infer P }[] ? (P extends Bindable ? P : never) : never
+>
+
+export function useAddBindings<T extends readonly BindingParam<Bindable>[]>({
 	folder,
 	bindings,
 }: {
 	folder: FolderApi
-	bindings: BindingParam<T>[]
-}) {
-	const defsRef = useRef<BindingParam<T>[]>(
+	bindings: T
+}): ExtractBindingValues<T> {
+	const defsRef = useRef<(BindingParam<Bindable> & { key: keyof Bindable })[]>(
 		bindings.map(({ param, key, options, onChange }) => ({
-			id: Symbol(),
 			param,
-			key: key ?? (Object.keys(param)[0] as keyof T),
+			key: key ?? (Object.keys(param)[0] as keyof Bindable),
 			options,
 			onChange,
 		})),
 	)
 
-	const [values, setValues] = useState(() =>
-		defsRef.current.map(({ param }) => (param.clone ? param.clone() : { ...param })),
-	)
+	const [values, setValues] = useState(() => {
+		const result: Record<string, unknown> = {}
+		bindings.forEach(({ param, key }) => {
+			const actualKey = key ?? (Object.keys(param)[0] as keyof Bindable)
+			result[String(actualKey)] = param[actualKey]
+		})
+		return result
+	})
 
 	const folderRef = useRef(folder)
 
 	useEffect(() => {
 		const created: BindingApi<unknown, unknown>[] = []
 
-		defsRef.current.forEach((def, index) => {
-			const key = def.key ?? (Object.keys(def.param)[0] as keyof T)
+		defsRef.current.forEach((def) => {
+			const key = def.key
 			const binding = folderRef.current
 				.addBinding(def.param, key, def.options)
 				.on('change', ({ value }) => {
-					setValues((prev) =>
-						prev.map((v, i) =>
-							i === index
-								? {
-										...v,
-										[key]: value?.clone ? value.clone() : value,
-									}
-								: v,
-						),
-					)
+					setValues((prev) => ({
+						...prev,
+						[String(key)]: value?.clone ? value.clone() : value,
+					}))
 					def.onChange?.(value)
 				})
 
@@ -135,7 +141,7 @@ export function useAddBindings<T extends Bindable>({
 		}
 	}, [])
 
-	return values
+	return values as ExtractBindingValues<T>
 }
 
 export function useAddButton({
