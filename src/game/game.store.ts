@@ -4,7 +4,7 @@ import { proxy } from 'valtio'
 import { cameraStore } from '../camera/camera.store'
 import { pointerLock } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
-import { gameMenu } from '../ui/game-menu/game-menu.store'
+import { gameInterface } from '../ui/game-menu/game-menu.store'
 import { interactable } from '../ui/interactable.store'
 import { pauseMenu } from '../ui/pause-menu/pause-menu.store'
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
@@ -28,12 +28,12 @@ export type CharacterDimensions = typeof characterDimensions
 
 export const game = proxy({
 	...pauseMenu,
-	gameMenu,
+	gameInterface,
 
 	get uiMode(): 'gameplay' | 'pause' | 'dialogue' | 'hud' {
 		if (this.isPaused) return 'pause'
 		if (dialogueStore.active?.locked) return 'dialogue'
-		if (this.gameMenu.isOpen) return 'hud'
+		if (this.gameInterface.isOpen) return 'hud'
 		return 'gameplay'
 	},
 
@@ -45,4 +45,5 @@ export const game = proxy({
 
 	debug: debugStore,
 	responsive: responsiveStore,
+	toggleFullscreen: () => {},
 })

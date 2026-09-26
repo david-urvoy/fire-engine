@@ -4,11 +4,9 @@ import { pane } from '../../..'
 import { game, useGame } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
 import { eventBus } from '../../../lib'
-import { useToggleFullscreen } from '../../bindings/fullscreen'
 import type { Action } from './keymap'
 
 export function useKeyboardActions(): Partial<Record<Action, () => void>> {
-	const toggleFullscreen = useToggleFullscreen()
 	const { entityManager } = useGame()
 
 	return {
@@ -18,7 +16,7 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			game.camera.type = game.camera.type === 'first-person' ? 'orbit' : 'first-person'
 		},
 		pause: game.pause,
-		fullscreen: toggleFullscreen,
+		fullscreen: game.toggleFullscreen,
 		snap: () => {
 			const sphere = entityManager.get('sphere')
 			if (!sphere) return
@@ -33,7 +31,7 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			eventBus.emit('clear_inventory')
 			eventBus.emit('reset_quests')
 		},
-		gameMenu: game.gameMenu.toggle,
+		gameMenu: game.gameInterface.toggle,
 		toggleTweaks: () => {
 			pane.expanded = !pane.expanded
 			if (pane.expanded) game.pointerLock.ref.current?.unlock()

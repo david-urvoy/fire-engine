@@ -1,5 +1,6 @@
 export * from './input/keyboard/keymap'
 
+export { useEnableFullscreen } from './bindings/fullscreen'
 export * from './controllable'
 export * from './input/controls'
 export * from './input/gamepad/gamepad'

@@ -2,18 +2,18 @@ import { proxy } from 'valtio'
 
 import { game } from '../../game'
 
-export const gameMenu = proxy({
+export const gameInterface = proxy({
 	isOpen: false,
 	open() {
-		gameMenu.isOpen = true
+		gameInterface.isOpen = true
 		game.pointerLock.ref.current?.unlock()
 	},
 	close() {
-		gameMenu.isOpen = false
+		gameInterface.isOpen = false
 		game.pointerLock.ref.current?.lock()
 	},
 	toggle() {
-		if (gameMenu.isOpen) gameMenu.close()
-		else gameMenu.open()
+		if (gameInterface.isOpen) gameInterface.close()
+		else gameInterface.open()
 	},
 })

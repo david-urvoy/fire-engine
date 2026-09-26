@@ -9,7 +9,7 @@ import { QuestMenu } from './quest-menu'
 const TABS = { inventory: 'inventory', quests: 'quests' } as const
 
 export function GameMenu() {
-	const { isOpen } = useSnapshot(game.gameMenu)
+	const { isOpen } = useSnapshot(game.gameInterface)
 	const [selectedTab, selectTab] = useState(TABS.inventory)
 
 	if (!isOpen) return null

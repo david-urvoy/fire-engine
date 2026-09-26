@@ -1,13 +1,15 @@
-import { useGame } from '../../game'
+import { useEffect, type RefObject } from 'react'
 
-export function useToggleFullscreen() {
-	const { canvasRef } = useGame()
+import { game } from '../../game'
 
-	return () => {
-		if (!document.fullscreenEnabled) return
+export function useEnableFullscreen(canvasRef: RefObject<HTMLCanvasElement | null>) {
+	useEffect(() => {
+		game.toggleFullscreen = () => {
+			if (!document.fullscreenEnabled) return
 
-		return !document.fullscreenElement
-			? canvasRef.current?.requestFullscreen()
-			: document.exitFullscreen()
-	}
+			return !document.fullscreenElement
+				? canvasRef.current?.requestFullscreen()
+				: document.exitFullscreen()
+		}
+	}, [canvasRef])
 }
