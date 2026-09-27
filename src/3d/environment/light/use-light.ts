@@ -4,7 +4,7 @@ import { Tweaks, useAddBinding } from '../../../ui'
 import type { Light } from './light'
 
 export const useLight = ({ light }: { folderName: string; light: Light }) => {
-	const folder = Tweaks.folder({ title: '💡 Lights' })
+	const folder = Tweaks.folder({ title: '💡 Lights', expanded: false })
 	const { intensity } = useAddBinding({
 		folder,
 		param: { intensity: light.intensity },

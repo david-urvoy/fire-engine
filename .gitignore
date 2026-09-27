@@ -154,3 +154,5 @@ dist
 
 # MacOS
 **/.DS_Store
+
+.notes

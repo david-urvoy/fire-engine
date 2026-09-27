@@ -2,7 +2,7 @@ import { Grid as DreiGrid } from '@react-three/drei'
 import { useSnapshot } from 'valtio'
 
 import { game } from '../../game'
-import { Tweaks, useAddBindings } from '../../ui'
+import { Tweaks, binding, useAddBindings } from '../../ui'
 
 export function Grid() {
 	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
@@ -12,12 +12,12 @@ export function Grid() {
 		useAddBindings({
 			folder,
 			bindings: [
-				{ param: { sectionSize: 12 }, options: { min: 2, max: 20, step: 2 } },
-				{ param: { sectionThickness: 1.5 }, options: { min: 0.5, max: 5, step: 0.5 } },
-				{ param: { sectionColor: '#9d4b4b' } },
-				{ param: { cellSize: 0.5 }, options: { min: 0.1, max: 2, step: 0.1 } },
-				{ param: { cellThickness: 0.5 }, options: { min: 0.1, max: 5, step: 0.1 } },
-				{ param: { cellColor: '#6f6f6f' } },
+				binding({ param: { sectionSize: 12 }, options: { min: 2, max: 20, step: 2 } }),
+				binding({ param: { sectionThickness: 1.5 }, options: { min: 0.5, max: 5, step: 0.5 } }),
+				binding({ param: { sectionColor: '#9d4b4b' } }),
+				binding({ param: { cellSize: 0.5 }, options: { min: 0.1, max: 2, step: 0.1 } }),
+				binding({ param: { cellThickness: 0.5 }, options: { min: 0.1, max: 5, step: 0.1 } }),
+				binding({ param: { cellColor: '#6f6f6f' } }),
 			],
 		})
 

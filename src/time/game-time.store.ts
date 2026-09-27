@@ -73,7 +73,7 @@ function increment(minutes: number = 1) {
 }
 
 if (typeof document !== 'undefined') {
-	Tweaks.folder({ title: '🕒 Time' })
+	Tweaks.folder({ title: '🕒 Time', expanded: false })
 		.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
 			min: 0,
 			max: 100,

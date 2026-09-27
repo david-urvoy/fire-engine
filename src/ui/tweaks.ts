@@ -3,6 +3,7 @@ import {
 	ButtonApi,
 	type Bindable,
 	type BindingParams,
+	type BladeApi,
 	type ButtonParams,
 } from '@tweakpane/core'
 import { useEffect, useRef, useState } from 'react'
@@ -59,89 +60,103 @@ export function useAddBinding<T extends Bindable>({
 }: {
 	folder: FolderApi
 } & BindingParam<T> &
-	BindingParams) {
-	const [value, setValue] = useState<T>(() => (param.clone ? param.clone() : param))
-	const bindingRef = useRef<BindingApi<unknown, unknown> | null>(null)
-	const paramsRef = useRef([param, key ?? (Object.keys(param)[0] as keyof T), options] as const)
-
-	useEffect(() => {
-		bindingRef.current = folder.addBinding(...paramsRef.current).on('change', ({ value }) => {
-			setValue((prev) => ({
-				...prev,
-				[paramsRef.current[1]]: value.clone ? value.clone() : value,
-			}))
-			onChange?.(value)
-		})
-
-		return () => {
-			if (bindingRef.current) folder.remove(bindingRef.current)
-		}
-	}, [folder, onChange])
-
-	return value
+	BindingParams): T {
+	return useAddBindings({
+		folder,
+		bindings: [binding({ param, key, options, onChange })] as const,
+	})
 }
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
-	? I
-	: never
+function isBinding(item: unknown): item is BindingParam<Bindable> & { __binding: true } {
+	return typeof item === 'object' && item !== null && '__binding' in item
+}
 
-type ExtractBindingValues<T extends readonly BindingParam<any>[]> = UnionToIntersection<
-	T extends readonly { param: infer P }[] ? (P extends Bindable ? P : never) : never
->
+function isSeparator(item: unknown): item is { __separator: true } {
+	return typeof item === 'object' && item !== null && '__separator' in item
+}
 
-export function useAddBindings<T extends readonly BindingParam<Bindable>[]>({
-	folder,
-	bindings,
-}: {
+export const binding = <T extends Bindable>(
+	def: BindingParam<T> & BindingParams,
+): BindingParam<T> & { __binding: true } => ({
+	...def,
+	__binding: true,
+})
+
+export const separator = (): { __separator: true } => ({
+	__separator: true,
+})
+
+type IsBinding<T> = T extends { __binding: true } ? true : false
+type ExtractBindingParams<T> = T extends BindingParam<infer P> & { __binding: true } ? P : never
+
+type AccumulateBindingTypes<T extends readonly any[]> = T extends readonly [
+	infer First,
+	...infer Rest,
+]
+	? IsBinding<First> extends true
+		? ExtractBindingParams<First> & AccumulateBindingTypes<Rest>
+		: AccumulateBindingTypes<Rest>
+	: {}
+
+export function useAddBindings<T extends Bindable>(config: {
 	folder: FolderApi
-	bindings: T
-}): ExtractBindingValues<T> {
-	const defsRef = useRef<(BindingParam<Bindable> & { key: keyof Bindable })[]>(
-		bindings.map(({ param, key, options, onChange }) => ({
-			param,
-			key: key ?? (Object.keys(param)[0] as keyof Bindable),
-			options,
-			onChange,
-		})),
-	)
+	bindings: readonly [BindingParam<T> & { __binding: true }]
+}): T
 
+export function useAddBindings<
+	const T extends readonly (
+		| (BindingParam<Bindable> & { __binding: true })
+		| { __separator: true }
+	)[],
+>(config: { folder: FolderApi; bindings: T }): AccumulateBindingTypes<T>
+
+export function useAddBindings<
+	const T extends readonly (
+		| (BindingParam<Bindable> & { __binding: true })
+		| { __separator: true }
+	)[],
+>({ folder, bindings }: { folder: FolderApi; bindings: T }): any {
 	const [values, setValues] = useState(() => {
 		const result: Record<string, unknown> = {}
-		bindings.forEach(({ param, key }) => {
-			const actualKey = key ?? (Object.keys(param)[0] as keyof Bindable)
-			result[String(actualKey)] = param[actualKey]
+		bindings.forEach((item) => {
+			if (isBinding(item)) {
+				const key = item.key ?? (Object.keys(item.param)[0] as keyof Bindable)
+				result[String(key)] = item.param[key]
+			}
 		})
 		return result
 	})
 
-	const folderRef = useRef(folder)
-
 	useEffect(() => {
-		const created: BindingApi<unknown, unknown>[] = []
+		const created: (BindingApi<unknown, unknown> | BladeApi)[] = []
 
-		defsRef.current.forEach((def) => {
-			const key = def.key
-			const binding = folderRef.current
-				.addBinding(def.param, key, def.options)
-				.on('change', ({ value }) => {
-					setValues((prev) => ({
-						...prev,
-						[String(key)]: value?.clone ? value.clone() : value,
-					}))
-					def.onChange?.(value)
-				})
-
-			created.push(binding)
+		bindings.forEach((item) => {
+			if (isSeparator(item)) {
+				const separator = folder.addBlade({ view: 'separator' })
+				created.push(separator)
+			} else if (isBinding(item)) {
+				const key = item.key ?? (Object.keys(item.param)[0] as keyof Bindable)
+				const binding = folder
+					.addBinding(item.param, key, item.options)
+					.on('change', ({ value }) => {
+						setValues((prev) => ({
+							...prev,
+							[String(key)]: value?.clone ? value.clone() : value,
+						}))
+						item.onChange?.(value)
+					})
+				created.push(binding)
+			}
 		})
 
-		const folders = folderRef.current
-
 		return () => {
-			created.forEach((b) => folders.remove(b))
+			created.forEach((b) => {
+				if (b) folder.remove(b)
+			})
 		}
-	}, [])
+	}, [folder, bindings])
 
-	return values as ExtractBindingValues<T>
+	return values
 }
 
 export function useAddButton({
