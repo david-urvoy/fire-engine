@@ -3,7 +3,6 @@ import { useRef } from 'react'
 import { proxy } from 'valtio'
 
 import { game } from '../game'
-import { Tweaks } from '../ui'
 import { type PeriodName, Period, PERIODS } from './periods/period'
 import type { Time } from './time'
 
@@ -70,18 +69,6 @@ function increment(minutes: number = 1) {
 	gameTime.day = Math.floor(totalMinutes / (24 * 60))
 	gameTime.hour = Math.floor((totalMinutes % (24 * 60)) / 60)
 	gameTime.minute = totalMinutes % 60
-}
-
-if (typeof document !== 'undefined') {
-	Tweaks.folder({ title: '🕒 Time', expanded: false })
-		.addBinding({ 'Time Speed Ratio': gameTime.GAME_SPEED }, 'Time Speed Ratio', {
-			min: 0,
-			max: 100,
-			step: 1,
-		})
-		.on('change', ({ value }) => {
-			gameTime.GAME_SPEED = value
-		})
 }
 
 function timeToMinutes(time: Time): number {

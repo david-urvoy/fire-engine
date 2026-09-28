@@ -44,7 +44,6 @@
 	},
 	"devDependencies": {
 		"@dimforge/rapier3d-compat": "0.19.2",
-		"@tweakpane/core": "^2.0.5",
 		"@types/node": "^26.4.1",
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.5",
@@ -52,10 +51,10 @@
 		"@vitest/ui": "^4.1.11",
 		"babel-plugin-react-compiler": "^19.1.0-rc.3",
 		"bun-plugin-tailwind": "^0.1.2",
+		"leva": "^0.10.1",
 		"oxc-parser": "^0.148.0",
 		"oxfmt": "^0.66.0",
 		"oxlint": "^1.81.0",
-		"tweakpane": "^4.0.5",
 		"typescript": "^7.0.2",
 		"vitest": "^4.1.11"
 	},

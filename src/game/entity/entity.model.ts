@@ -1,12 +1,7 @@
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
-import {
-	game,
-	INTERACTION_MAX_DISTANCE,
-	PHYSIC_APPROXIMATION as POSITION_EPSILON,
-	UP,
-} from '../game.store'
+import { game, INTERACTION_MAX_DISTANCE, POSITION_EPSILON, UP } from '../game.store'
 import type {
 	ControlsState,
 	EntityRuntime,

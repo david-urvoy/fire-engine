@@ -1,25 +1,25 @@
 import { Grid as DreiGrid } from '@react-three/drei'
+import { useControls } from 'leva'
 import { useSnapshot } from 'valtio'
 
 import { game } from '../../game'
-import { Tweaks, binding, useAddBindings } from '../../ui'
 
 export function Grid() {
 	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
 
-	const folder = Tweaks.folder({ title: 'Debug' }).folder({ title: '𖣯 Grid', expanded: false })
-	const { sectionSize, sectionColor, sectionThickness, cellColor, cellThickness, cellSize } =
-		useAddBindings({
-			folder,
-			bindings: [
-				binding({ param: { sectionSize: 12 }, options: { min: 2, max: 20, step: 2 } }),
-				binding({ param: { sectionThickness: 1.5 }, options: { min: 0.5, max: 5, step: 0.5 } }),
-				binding({ param: { sectionColor: '#9d4b4b' } }),
-				binding({ param: { cellSize: 0.5 }, options: { min: 0.1, max: 2, step: 0.1 } }),
-				binding({ param: { cellThickness: 0.5 }, options: { min: 0.1, max: 5, step: 0.1 } }),
-				binding({ param: { cellColor: '#6f6f6f' } }),
-			],
-		})
+	const { sectionSize, sectionThickness, sectionColor, cellSize, cellThickness, cellColor } =
+		useControls(
+			'𖣯 Grid',
+			{
+				sectionSize: { value: 12, min: 2, max: 20, step: 2 },
+				sectionThickness: { value: 1.5, min: 0.5, max: 5, step: 0.5 },
+				sectionColor: '#9d4b4b',
+				cellSize: { value: 0.5, min: 0.1, max: 2, step: 0.1 },
+				cellThickness: { value: 0.5, min: 0.1, max: 5, step: 0.1 },
+				cellColor: '#6f6f6f',
+			},
+			{ collapsed: true },
+		)
 
 	return (
 		<DreiGrid

@@ -16,7 +16,6 @@ export const Keymap = {
 		pause: ['KeyP'],
 		mobile: ['KeyM'],
 		toggleDebug: ['KeyK'],
-		toggleTweaks: ['KeyT'],
 		switchCameraType: ['KeyL'],
 		fullscreen: ['KeyO'],
 	},

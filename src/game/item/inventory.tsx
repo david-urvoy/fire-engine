@@ -1,7 +1,7 @@
+import { button, useControls } from 'leva'
 import { useEffect } from 'react'
 
 import { eventBus } from '../../lib'
-import { Tweaks, useAddButton } from '../../ui'
 import { Items } from './items.hooks'
 
 export function Inventory() {
@@ -22,12 +22,10 @@ export function Inventory() {
 		}
 	}, [collect, clear])
 
-	const folder = Tweaks.folder({ title: 'Intenvory' })
-	useAddButton({
-		folder,
-		label: 'All items',
-		title: 'Clear',
-		onClick: () => eventBus.emit('clear_inventory'),
+	useControls('🎒 Inventory', {
+		'Clear All Items': button(() => {
+			eventBus.emit('clear_inventory')
+		}),
 	})
 
 	return <></>

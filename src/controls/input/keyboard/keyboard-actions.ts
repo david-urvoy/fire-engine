@@ -1,6 +1,5 @@
 import { Vector3 } from 'three'
 
-import { pane } from '../../..'
 import { game, useGame } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
 import { eventBus } from '../../../lib'
@@ -32,9 +31,5 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			eventBus.emit('reset_quests')
 		},
 		gameMenu: game.gameInterface.toggle,
-		toggleTweaks: () => {
-			pane.expanded = !pane.expanded
-			if (pane.expanded) game.pointerLock.ref.current?.unlock()
-		},
 	}
 }
