@@ -1,5 +1,6 @@
 export * from './character'
 export * from './environment'
+export * from './material'
 export * from './overlays'
 export * from './tools'
 export * from './visual/visual'
