@@ -15,7 +15,9 @@ export type MaterialGroupConfig = {
 	variants: Record<string, VariantConfig>
 }
 
-function generateControlsSchema(materialsConfig: Record<string, MaterialGroupConfig>) {
+export type MaterialsConfig = Record<string, MaterialGroupConfig>
+
+function generateControlsSchema(materialsConfig: MaterialsConfig) {
 	return Object.fromEntries(
 		Object.entries(materialsConfig).map(([groupName, group]) => {
 			const groupControls: Record<string, any> = {}
@@ -64,7 +66,7 @@ function getMaterialName(groupName: string, variantName: string): string {
 }
 
 function createMaterialsFromControls(
-	materialsConfig: Record<string, MaterialGroupConfig>,
+	materialsConfig: MaterialsConfig,
 	controls: Record<string, any>,
 ): Record<string, MeshStandardMaterial> {
 	const materials: Record<string, MeshStandardMaterial> = {}
@@ -104,7 +106,7 @@ const MaterialsContext = createContext<MaterialsContextType | undefined>(undefin
 export function MaterialsProvider({
 	materialsConfig,
 	children,
-}: PropsWithChildren<{ materialsConfig: Record<string, MaterialGroupConfig> }>) {
+}: PropsWithChildren<{ materialsConfig: MaterialsConfig }>) {
 	const controls = useControls('🎨 Materials', generateControlsSchema(materialsConfig), {
 		collapsed: true,
 	})
@@ -116,15 +118,10 @@ export function MaterialsProvider({
 	return <MaterialsContext.Provider value={materials}>{children}</MaterialsContext.Provider>
 }
 
-export function useMaterials(): Record<string, MeshStandardMaterial> {
+export function useMaterials() {
 	const materials = useContext(MaterialsContext)
 
-	if (!materials) {
-		throw new Error(
-			'useMaterials must be used within a MaterialsProvider. ' +
-				'Wrap your component tree with <MaterialsProvider>',
-		)
-	}
+	if (!materials) throw new Error('useMaterials must be used within a MaterialsProvider.')
 
 	return materials
 }
