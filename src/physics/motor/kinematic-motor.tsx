@@ -1,19 +1,18 @@
-import { type RigidBodyProps } from '@react-three/rapier'
 import { type PropsWithChildren } from 'react'
 
 import { type CharacterDimensions } from '../../game'
-import { Physic } from '../physic'
+import { Body, type BodyProps } from '../body'
 import { useCharacterMovement } from './use-controlled-rigid-body'
 
 export function KinematicMotor({
 	children,
 	...props
-}: PropsWithChildren<{ dimensions?: CharacterDimensions } & RigidBodyProps>) {
+}: PropsWithChildren<{ dimensions?: CharacterDimensions } & BodyProps>) {
 	const move = useCharacterMovement()
 
 	return (
-		<Physic move={move} {...props} type="kinematicPosition">
+		<Body move={move} {...props} type="kinematicPosition">
 			{children}
-		</Physic>
+		</Body>
 	)
 }

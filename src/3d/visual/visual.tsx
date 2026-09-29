@@ -16,7 +16,7 @@ export function Visual({
 	...props
 }: PropsWithChildren<VisualProps>) {
 	const { entityManager } = useGame()
-	const { id, entity } = useEntity()
+	const { id, entity, setRuntime } = useEntity()
 
 	useEffect(() => {
 		const object3D = entity.runtime.object3D
@@ -31,7 +31,7 @@ export function Visual({
 
 	return (
 		<group
-			ref={entity.runtime.object3D}
+			ref={(current) => setRuntime({ object3DRef: { current } })}
 			{...props}
 			onClick={(e) => {
 				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return

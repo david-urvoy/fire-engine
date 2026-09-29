@@ -22,11 +22,13 @@ export function Inventory() {
 		}
 	}, [collect, clear])
 
-	useControls('🎒 Inventory', {
-		'Clear All Items': button(() => {
-			eventBus.emit('clear_inventory')
-		}),
-	})
+	useControls(
+		'🎒 Inventory',
+		{
+			'Drop everything': button(() => eventBus.emit('clear_inventory')),
+		},
+		{ collapsed: true },
+	)
 
 	return <></>
 }
