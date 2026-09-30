@@ -11,14 +11,15 @@ export type BodyProps = RigidBodyProps & {
 	debug?: boolean
 }
 
-export function Body({ move, position, debug = false, ...props }: BodyProps) {
+export function Body({ move, position: positionInput, debug = false, ...props }: BodyProps) {
 	const { entity, setRuntime } = useEntity()
 	const { physic } = useGameLoopSystem()
 
-	const {
-		position: { x, z },
-		vertical: y,
-	} = useSceneLayout({ name: entity.name, position, debug })
+	const { position } = useSceneLayout({
+		folder: entity.name,
+		position: positionInput,
+		debug,
+	})
 
 	useEffect(() => {
 		physic.register({ entity, move })
@@ -30,7 +31,7 @@ export function Body({ move, position, debug = false, ...props }: BodyProps) {
 		<RigidBody
 			{...props}
 			ref={(current) => setRuntime({ rigidBodyRef: { current } })}
-			position={[x, y, z]}
+			position={position}
 		/>
 	)
 }

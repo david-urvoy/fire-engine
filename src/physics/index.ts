@@ -1,2 +1,2 @@
-export * from './gravity'
+export * from './gravity/gravity'
 export * from './motor/kinematic-motor'

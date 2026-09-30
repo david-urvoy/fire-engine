@@ -35,7 +35,7 @@ function useCharacterMove() {
 	})
 }
 
-export function Controllable() {
+function Controllable() {
 	const { id } = useEntity()
 	useCharacterMove()
 
@@ -45,3 +45,12 @@ export function Controllable() {
 
 	return <CameraTracking />
 }
+
+function ControllableWrapper() {
+	const { camera } = useSnapshot(game)
+	if (camera.type === 'orbit') return null
+
+	return <Controllable />
+}
+
+export { ControllableWrapper as Controllable }

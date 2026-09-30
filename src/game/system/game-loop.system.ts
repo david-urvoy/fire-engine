@@ -1,4 +1,4 @@
-import { GravitySystem } from '../../physics/gravity.system'
+import { GravitySystem } from '../../physics/gravity/gravity.system'
 import { PhysicSystem } from '../../physics/physic.system'
 import { DialogueSystem } from '../conversation/dialogue/dialogue.system'
 
