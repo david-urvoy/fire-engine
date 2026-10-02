@@ -3,6 +3,12 @@ import type { PropsWithChildren } from 'react'
 
 import { useSceneLayout } from '..'
 
+type AdjustableProps = {
+	name: string
+	folder: string
+	debug?: boolean
+}
+
 function Cuboid({
 	name,
 	folder,
@@ -10,12 +16,9 @@ function Cuboid({
 	position: positionInput,
 	debug = false,
 	...props
-}: {
-	name?: string
-	folder: string
+}: AdjustableProps & {
 	position?: [number, number, number]
 	dimension?: [number, number, number]
-	debug?: boolean
 } & Parameters<typeof CuboidCollider>[0]) {
 	const { dimension, position } = useSceneLayout({
 		name,
@@ -27,12 +30,7 @@ function Cuboid({
 	return <CuboidCollider name={name} args={dimension} position={position} {...props} />
 }
 
-function Group({
-	name,
-	folder,
-	debug = false,
-	children,
-}: PropsWithChildren<{ name: string; folder: string; debug?: boolean }>) {
+function Group({ name, folder, debug = false, children }: PropsWithChildren<AdjustableProps>) {
 	const { position } = useSceneLayout({ name, folder, debug })
 
 	return <group position={position}>{children}</group>

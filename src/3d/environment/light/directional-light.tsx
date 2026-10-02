@@ -8,18 +8,16 @@ import { useSnapshot } from 'valtio'
 import { gameTime } from '../../../time'
 import { useLight } from './use-light'
 
-// export const light = {
-// 	position: [gameTime?.isDay ? (12 * 60 - (gameTime.hour * 60 + gameTime.minute)) / 20 : 5, 50, 5],
-// }
-
 export function StarLight() {
 	const starlight = useRef<DirectionalLight>(null)
 	const target = useRef<Group>(null)
 	const { isDay, hour, minute } = useSnapshot(gameTime)
-	const springs = useLight({
-		folderName: `${isDay ? 'Sun' : 'Moon'} Light`,
-		light: { color: new Color('#f3f37e'), intensity: 0.8 },
-	})
+
+	const { intensity, color } = useLight(
+		`${isDay ? 'Sun' : 'Moon'} Light`,
+		{ color: new Color('#f3f37e'), intensity: 0.8 },
+		{ min: 0, max: 2, step: 0.01 },
+	)
 
 	useEffect(() => {
 		if (starlight.current) starlight.current.visible = isDay
@@ -35,8 +33,8 @@ export function StarLight() {
 			<animated.directionalLight
 				ref={starlight}
 				position={[isDay ? (12 * 60 - (hour * 60 + minute)) / 20 : 5, 50, 5]}
-				intensity={springs.intensity}
-				color={springs.color}
+				intensity={intensity}
+				color={color}
 				castShadow
 			>
 				<Helper type={DirectionalLightHelper} />

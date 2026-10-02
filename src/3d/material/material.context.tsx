@@ -92,7 +92,9 @@ function createMaterialsFromControls(
 				materialProps.emissiveIntensity = Number(controls[intensityKey])
 			}
 
-			materials[materialName] = new MeshStandardMaterial(materialProps)
+			materials[materialName] = new MeshStandardMaterial({
+				...materialProps,
+			})
 		}
 	}
 

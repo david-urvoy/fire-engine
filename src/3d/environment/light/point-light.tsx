@@ -1,20 +1,32 @@
-import type { Color } from 'three'
+import { animated } from '@react-spring/three'
+import { Helper } from '@react-three/drei'
+import { PointLightHelper, type Color } from 'three'
+import { useSnapshot } from 'valtio'
 
-export function PointLight(props: {
-	position: [x: number, y: number, z: number]
+import { game } from '../../../game'
+import { useLight } from './use-light'
+
+export function PointLight({
+	name,
+	position,
+	intensity: intensityInput,
+	color: initialColor,
+}: {
+	name: string
+	position?: [x: number, y: number, z: number]
 	intensity: number
 	color: Color
-	index: number
 }) {
-	// const { position, intensity, color } = useControls('Debug', {
-	// 	Lights: folder({
-	// 		[`Point Light ${props.index}`]: folder({
-	// 			position: { value: props.position },
-	// 			intensity: { value: props.intensity, step: 1, min: 0, max: 100 },
-	// 			color: `#${props.color.getHexString()}`,
-	// 		}),
-	// 	}),
-	// })
+	const { debug } = useSnapshot(game)
+	const { intensity, color } = useLight(
+		`Point Light ${name}`,
+		{ intensity: intensityInput, color: initialColor },
+		{ min: 0, max: 1000, step: 10 },
+	)
 
-	return <pointLight position={props.position} intensity={props.intensity} color={props.color} />
+	return (
+		<animated.pointLight position={position} intensity={intensity} color={color}>
+			{debug.enabled && <Helper type={PointLightHelper} />}
+		</animated.pointLight>
+	)
 }

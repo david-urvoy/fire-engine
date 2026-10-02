@@ -1,14 +1,20 @@
-import { useControls } from 'leva'
+import { folder, useControls } from 'leva'
 import { Color } from 'three'
 
-import type { Light } from './light'
+import type { Light } from './light.model'
 
-export const useLight = ({ light }: { folderName: string; light: Light }) => {
+export const useLight = (
+	name: string,
+	{ color: colorInput, intensity: intensityInput }: Light,
+	{ min, max, step }: { min: number; max: number; step: number },
+) => {
 	const { intensity, color } = useControls(
 		'💡 Light',
 		{
-			intensity: { value: light.intensity, min: 0, max: 3, step: 0.1 },
-			color: light.color.getStyle(),
+			[name]: folder({
+				intensity: { value: intensityInput, min, max, step },
+				color: colorInput.getStyle(),
+			}),
 		},
 		{ collapsed: true },
 	)

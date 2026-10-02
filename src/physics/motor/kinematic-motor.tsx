@@ -11,7 +11,7 @@ export function KinematicMotor({
 	const move = useCharacterMovement()
 
 	return (
-		<Body move={move} {...props} type="kinematicPosition">
+		<Body move={move} {...props} type="kinematicPosition" debug>
 			{children}
 		</Body>
 	)

@@ -1,5 +1,5 @@
 export * from './character'
-export * from './environment'
+export * from './environment/light'
 export * from './material'
 export * from './overlays'
 export * from './tools'
