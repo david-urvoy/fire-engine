@@ -2,24 +2,16 @@ import { RigidBody, type RigidBodyProps } from '@react-three/rapier'
 import { useEffect } from 'react'
 import { Vector3, type Quaternion } from 'three'
 
-import { useSceneLayout } from '../3d/tools/use-scene-layout'
 import { useEntity, useGameLoopSystem } from '../game'
 
-export type BodyProps = RigidBodyProps & {
+export type PhysicBodyProps = RigidBodyProps & {
 	position?: [number, number, number]
 	move?: (translation: Vector3, rotation: Quaternion) => void
-	debug?: boolean
 }
 
-export function Body({ move, position: positionInput, debug = false, ...props }: BodyProps) {
+export function PhysicBody({ move, position, ...props }: PhysicBodyProps) {
 	const { entity, setRuntime } = useEntity()
 	const { physic } = useGameLoopSystem()
-
-	const { position } = useSceneLayout({
-		folder: entity.name,
-		position: positionInput,
-		debug,
-	})
 
 	useEffect(() => {
 		physic.register({ entity, move })

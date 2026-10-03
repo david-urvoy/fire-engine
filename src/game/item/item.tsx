@@ -3,33 +3,25 @@ import type { ThreeElements } from '@react-three/fiber'
 import { Visual } from '../../3d/visual/visual'
 import { eventBus } from '../../lib'
 import { KinematicMotor } from '../../physics'
-import { Body, type BodyProps } from '../../physics/body'
+import { PhysicBody, type PhysicBodyProps } from '../../physics/body'
 import { Entity, type EntityProps } from '../entity/entity'
 import { Items } from './items.hooks'
 
 export type ItemProps = EntityProps &
-	BodyProps &
+	PhysicBodyProps &
 	Omit<ThreeElements['mesh'], 'id'> & {
 		name?: string
 		image?: string
 	}
 
-export function KinematicItem({
-	id,
-	name = id,
-	image,
-	position,
-	debug,
-	children,
-	...props
-}: ItemProps) {
+export function KinematicItem({ id, name = id, image, position, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
 		<Entity id={id} {...props}>
-			<KinematicMotor position={position} debug={debug}>
+			<KinematicMotor position={position}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
@@ -44,7 +36,6 @@ export function DynamicItem({
 	image,
 	position,
 	rotation,
-	debug,
 	children,
 	...props
 }: ItemProps) {
@@ -54,35 +45,27 @@ export function DynamicItem({
 
 	return (
 		<Entity id={id} {...props}>
-			<Body colliders="cuboid" type="dynamic" position={position} rotation={rotation} debug={debug}>
+			<PhysicBody colliders="cuboid" type="dynamic" position={position} rotation={rotation}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
-			</Body>
+			</PhysicBody>
 		</Entity>
 	)
 }
 
-export function FixedItem({
-	id,
-	name = id,
-	image,
-	position,
-	debug,
-	children,
-	...props
-}: ItemProps) {
+export function FixedItem({ id, name = id, image, position, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
 		<Entity id={id} {...props}>
-			<Body colliders="cuboid" type="fixed" position={position} debug={debug}>
+			<PhysicBody colliders="cuboid" type="fixed" position={position}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
-			</Body>
+			</PhysicBody>
 		</Entity>
 	)
 }

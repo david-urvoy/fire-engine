@@ -1,18 +1,18 @@
 import { type PropsWithChildren } from 'react'
 
 import { type CharacterDimensions } from '../../game'
-import { Body, type BodyProps } from '../body'
+import { PhysicBody, type PhysicBodyProps } from '../body'
 import { useCharacterMovement } from './use-controlled-rigid-body'
 
 export function KinematicMotor({
 	children,
 	...props
-}: PropsWithChildren<{ dimensions?: CharacterDimensions } & BodyProps>) {
+}: PropsWithChildren<{ dimensions?: CharacterDimensions } & PhysicBodyProps>) {
 	const move = useCharacterMovement()
 
 	return (
-		<Body move={move} {...props} type="kinematicPosition" debug>
+		<PhysicBody move={move} {...props} type="kinematicPosition">
 			{children}
-		</Body>
+		</PhysicBody>
 	)
 }
