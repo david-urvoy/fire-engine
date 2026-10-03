@@ -10,7 +10,7 @@ type VariantConfig = {
 	emissiveIntensity?: number
 }
 
-export type MaterialGroupConfig = {
+type MaterialGroupConfig = {
 	emoji: string
 	variants: Record<string, VariantConfig>
 }
@@ -101,9 +101,9 @@ function createMaterialsFromControls(
 	return materials
 }
 
-type MaterialsContextType = Record<string, MeshStandardMaterial>
+type MaterialsContextType<Key extends string> = Record<Key, MeshStandardMaterial>
 
-const MaterialsContext = createContext<MaterialsContextType | undefined>(undefined)
+const MaterialsContext = createContext<MaterialsContextType<string> | undefined>(undefined)
 
 export function MaterialsProvider({
 	materialsConfig,
@@ -120,7 +120,7 @@ export function MaterialsProvider({
 	return <MaterialsContext.Provider value={materials}>{children}</MaterialsContext.Provider>
 }
 
-export function useMaterials() {
+export function useMaterials<MaterialKey extends string>(): MaterialsContextType<MaterialKey> {
 	const materials = useContext(MaterialsContext)
 
 	if (!materials) throw new Error('useMaterials must be used within a MaterialsProvider.')

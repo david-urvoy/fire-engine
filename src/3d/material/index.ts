@@ -1,1 +1,1 @@
-export { useMaterials, type MaterialGroupConfig } from './material.context'
+export { useMaterials } from './material.context'

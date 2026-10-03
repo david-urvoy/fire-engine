@@ -1,7 +1,7 @@
 import { type Dexie } from 'dexie'
 import { createContext, useContext, type PropsWithChildren } from 'react'
 
-import { MaterialsProvider, type MaterialGroupConfig } from '../3d/material/material.context'
+import { MaterialsProvider, type MaterialsConfig } from '../3d/material/material.context'
 import { DialogueProvider } from './conversation/dialogue/dialogue.context'
 import type { EntityManager } from './entity/entity.manager'
 
@@ -17,9 +17,7 @@ export function GameProvider({
 	database,
 	materialsConfig,
 	children,
-}: PropsWithChildren<
-	GameProviderProps & { materialsConfig: Record<string, MaterialGroupConfig> }
->) {
+}: PropsWithChildren<GameProviderProps & { materialsConfig: MaterialsConfig }>) {
 	return (
 		<GameContext.Provider value={{ entityManager, database }}>
 			<MaterialsProvider materialsConfig={materialsConfig}>
