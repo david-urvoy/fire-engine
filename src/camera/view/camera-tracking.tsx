@@ -7,7 +7,7 @@ function CameraPosition() {
 
 	useFrame(({ camera }) => {
 		camera.position.copy(entity.position)
-		camera.position.y += characterDimensions.height
+		camera.position.y += characterDimensions.height * 0.9
 	})
 
 	return <></>

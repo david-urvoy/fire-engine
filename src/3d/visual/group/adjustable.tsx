@@ -1,11 +1,12 @@
 import { CuboidCollider } from '@react-three/rapier'
 import type { PropsWithChildren } from 'react'
 
-import { useSceneLayout } from '..'
+import { useSceneLayout } from '../..'
 
 type AdjustableProps = {
-	name: string
+	name?: string
 	folder: string
+	position?: [number, number, number]
 	debug?: boolean
 }
 
@@ -30,8 +31,14 @@ function Cuboid({
 	return <CuboidCollider name={name} args={dimension} position={position} {...props} />
 }
 
-function Group({ name, folder, debug = false, children }: PropsWithChildren<AdjustableProps>) {
-	const { position } = useSceneLayout({ name, folder, debug })
+function Group({
+	name,
+	folder,
+	position: positionInput,
+	debug = false,
+	children,
+}: PropsWithChildren<AdjustableProps>) {
+	const { position } = useSceneLayout({ name, folder, debug, position: positionInput })
 
 	return <group position={position}>{children}</group>
 }
