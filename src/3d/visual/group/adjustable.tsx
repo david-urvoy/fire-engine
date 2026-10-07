@@ -1,7 +1,11 @@
+import { Helper } from '@react-three/drei'
 import { CuboidCollider } from '@react-three/rapier'
-import type { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
+import { Color, PointLightHelper } from 'three'
+import { useSnapshot } from 'valtio'
 
-import { useSceneLayout } from '../..'
+import { PointLight, useLight, useSceneLayout, type PointLightProps } from '../..'
+import { game } from '../../../game'
 
 type AdjustableProps = {
 	name?: string
@@ -43,7 +47,29 @@ function Group({
 	return <group position={position}>{children}</group>
 }
 
+function AjustablePointLight({
+	name = 'Point Light',
+	position,
+	intensity: intensityInput = 1,
+	color: initialColor = new Color('white'),
+}: PointLightProps) {
+	const { debug } = useSnapshot(game)
+	const { intensity, color, helper } = useLight(
+		name,
+		{ intensity: intensityInput, color: initialColor },
+		{ min: 0, max: 1000, step: 10 },
+	)
+
+	return (
+		<PointLight position={position} intensity={intensity} color={color}>
+			{/* {lightRef.current && <cameraHelper args={[lightRef.current?.shadow.camera]} />} */}
+			{debug.enabled && helper && <Helper type={PointLightHelper} />}
+		</PointLight>
+	)
+}
+
 export const Adjustable = {
 	Collider: { Cuboid },
 	Group,
+	Light: { PointLight: AjustablePointLight },
 }

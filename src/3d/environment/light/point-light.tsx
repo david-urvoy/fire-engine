@@ -1,29 +1,24 @@
-import { animated } from '@react-spring/three'
-import { Helper } from '@react-three/drei'
-import { useEffect, useRef } from 'react'
-import { PointLightHelper, type Color, type PointLight as PointLightType } from 'three'
-import { useSnapshot } from 'valtio'
+import { animated, type Overwrite } from '@react-spring/three'
+import type { InstanceProps, MathProps, ReactProps } from '@react-three/fiber'
+import { useEffect, useRef, type PropsWithChildren } from 'react'
+import { Color, type PointLight as PointLightType } from 'three'
 
-import { game } from '../../../game'
-import { useLight } from './use-light'
+export type PointLightProps = {
+	position?: [number, number, number]
+	color?: Color
+	intensity?: number
+	name?: string
+} & Omit<InstanceProps<PointLightType, typeof PointLightType>, 'object'> &
+	Partial<Overwrite<PointLightType, MathProps<PointLightType> & ReactProps<PointLightType>>>
 
 export function PointLight({
-	name,
 	position,
-	intensity: intensityInput,
-	color: initialColor,
-}: {
-	name: string
-	position?: [x: number, y: number, z: number]
-	intensity: number
-	color: Color
-}) {
-	const { debug } = useSnapshot(game)
-	const { intensity, color, helper } = useLight(
-		`Point Light ${name}`,
-		{ intensity: intensityInput, color: initialColor },
-		{ min: 0, max: 1000, step: 10 },
-	)
+	intensity = 1,
+	color = new Color('white'),
+	distance = 8,
+	children,
+	...props
+}: PropsWithChildren<PointLightProps>) {
 	const lightRef = useRef<PointLightType>(null)
 
 	useEffect(() => {
@@ -40,11 +35,11 @@ export function PointLight({
 			position={position}
 			intensity={intensity}
 			color={color}
-			distance={8}
+			distance={distance}
 			castShadow
+			{...props}
 		>
-			{/* {lightRef.current && <cameraHelper args={[lightRef.current?.shadow.camera]} />} */}
-			{debug.enabled && helper && <Helper type={PointLightHelper} />}
+			{children}
 		</animated.pointLight>
 	)
 }
