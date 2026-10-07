@@ -7,7 +7,7 @@ type AdjustableProps = {
 	name?: string
 	folder: string
 	position?: [number, number, number]
-	debug?: boolean
+	hide?: boolean
 }
 
 function Cuboid({
@@ -15,7 +15,7 @@ function Cuboid({
 	folder,
 	args: dimensionInput,
 	position: positionInput,
-	debug = false,
+	hide = false,
 	...props
 }: AdjustableProps & {
 	position?: [number, number, number]
@@ -26,7 +26,7 @@ function Cuboid({
 		folder,
 		position: positionInput,
 		dimension: dimensionInput,
-		debug,
+		hide,
 	})
 	return <CuboidCollider name={name} args={dimension} position={position} {...props} />
 }
@@ -35,10 +35,10 @@ function Group({
 	name,
 	folder,
 	position: positionInput,
-	debug = false,
+	hide = false,
 	children,
 }: PropsWithChildren<AdjustableProps>) {
-	const { position } = useSceneLayout({ name, folder, debug, position: positionInput })
+	const { position } = useSceneLayout({ name, folder, hide, position: positionInput })
 
 	return <group position={position}>{children}</group>
 }

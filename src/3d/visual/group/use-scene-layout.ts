@@ -5,13 +5,13 @@ export function useSceneLayout({
 	folder: folderName,
 	position,
 	dimension: dimensionInput,
-	debug = false,
+	hide = false,
 }: {
 	name?: string
 	folder: string
 	position?: [number, number, number]
 	dimension?: [number, number, number]
-	debug?: boolean
+	hide?: boolean
 }) {
 	const baseConfig = {
 		dimension: {
@@ -33,7 +33,7 @@ export function useSceneLayout({
 		{
 			'🎬 Scene layout': folder(
 				{
-					[folderName]: folder(config, { collapsed: true, render: () => debug }),
+					[folderName]: folder(config, { collapsed: true, render: () => !hide }),
 				},
 				{ collapsed: true },
 			),

@@ -14,7 +14,7 @@ export const useLight = (
 			[name]: folder({
 				intensity: { value: intensityInput, min, max, step },
 				color: colorInput.getStyle(),
-				helper: true,
+				helper: false,
 			}),
 		},
 		{ collapsed: true },
