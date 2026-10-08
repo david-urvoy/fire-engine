@@ -1,6 +1,7 @@
 import { Vector3 } from 'three'
 import { proxy } from 'valtio'
 
+import { audioStore } from '../audio/audio.store'
 import { cameraStore } from '../camera/camera.store'
 import { pointerLock } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
@@ -43,6 +44,8 @@ export const game = proxy({
 	interactable,
 	controlledCharacter: '',
 	dialogue: dialogueStore,
+
+	audio: audioStore,
 
 	debug: debugStore,
 	tweaks: tweaksStore,

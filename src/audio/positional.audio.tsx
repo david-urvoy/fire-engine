@@ -12,20 +12,20 @@ import { game } from '../game'
 type PositionalAudioDistanceModel = 'linear' | 'inverse' | 'exponential'
 
 export function PositionalAudio({
-	distance = 2,
 	maxDistance = 8,
 	rollOffFactor = 1,
 	distanceModel = 'inverse',
-	volume = 1,
 	...props
 }: PositionalAudioProps & {
-	volume?: number
 	rollOffFactor?: number
 	maxDistance?: number
 	distanceModel?: PositionalAudioDistanceModel
 }) {
 	const audioRef = useRef<PositionalAudioType>(null)
-	const { enabled: isDebugEnabled } = useSnapshot(game.debug)
+	const {
+		debug: { enabled: isDebugEnabled },
+		audio: { voices, isMuted },
+	} = useSnapshot(game)
 
 	useEffect(() => {
 		audioRef.current?.setRolloffFactor(rollOffFactor)
@@ -37,7 +37,7 @@ export function PositionalAudio({
 		const audio = audioRef.current
 		if (!audio) return
 
-		audio.setVolume(volume)
+		audio.setVolume(isMuted ? 0 : voices.volume)
 
 		if (!isDebugEnabled) return
 
@@ -48,7 +48,7 @@ export function PositionalAudio({
 			audio.remove(helper)
 			helper.dispose()
 		}
-	}, [isDebugEnabled, volume])
+	}, [isDebugEnabled, voices.volume, isMuted])
 
-	return <DreiPositionalAudio distance={distance} ref={audioRef} {...props} />
+	return <DreiPositionalAudio {...props} distance={voices.distance} ref={audioRef} />
 }

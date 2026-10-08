@@ -3,18 +3,15 @@ import { useSnapshot } from 'valtio'
 
 import { game } from '../game'
 
-export function BackgroundAudio({
-	volume = 1,
-	...props
-}: { volume?: number } & JSX.IntrinsicElements['audio']) {
-	const { isPaused } = useSnapshot(game)
+export function BackgroundAudio({ ...props }: JSX.IntrinsicElements['audio']) {
+	const { isPaused, audio } = useSnapshot(game)
 	const audioRef = useRef<HTMLAudioElement | null>(null)
 
 	useEffect(() => {
 		if (!audioRef.current) return
 
-		audioRef.current.volume = volume
-	}, [volume])
+		audioRef.current.volume = audio.isMuted ? 0 : audio.music.volume
+	}, [audio.isMuted, audio.music.volume])
 
 	useEffect(() => {
 		if (isPaused) audioRef.current?.pause()
