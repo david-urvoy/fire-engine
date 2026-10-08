@@ -1,4 +1,7 @@
-import { PositionalAudio as DreiPositionalAudio } from '@react-three/drei'
+import {
+	PositionalAudio as DreiPositionalAudio,
+	type PositionalAudioProps,
+} from '@react-three/drei'
 import { useEffect, useRef } from 'react'
 import { PositionalAudio as PositionalAudioType } from 'three'
 import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js'
@@ -13,8 +16,10 @@ export function PositionalAudio({
 	maxDistance = 8,
 	rollOffFactor = 1,
 	distanceModel = 'inverse',
+	volume = 1,
 	...props
-}: Parameters<typeof DreiPositionalAudio>[0] & {
+}: PositionalAudioProps & {
+	volume?: number
 	rollOffFactor?: number
 	maxDistance?: number
 	distanceModel?: PositionalAudioDistanceModel
@@ -30,7 +35,11 @@ export function PositionalAudio({
 
 	useEffect(() => {
 		const audio = audioRef.current
-		if (!isDebugEnabled || !audio) return
+		if (!audio) return
+
+		audio.setVolume(volume)
+
+		if (!isDebugEnabled) return
 
 		const helper = new PositionalAudioHelper(audio, 1)
 		audio.add(helper)
@@ -39,7 +48,7 @@ export function PositionalAudio({
 			audio.remove(helper)
 			helper.dispose()
 		}
-	}, [isDebugEnabled])
+	}, [isDebugEnabled, volume])
 
 	return <DreiPositionalAudio distance={distance} ref={audioRef} {...props} />
 }
