@@ -1,27 +1,24 @@
 import { useControls } from 'leva'
-import { useState } from 'react'
 
 import { audioStore } from './audio.store'
 
 export function AudioControls() {
 	// const icons = ['🔇', '🔈', '🔊']
-	function getVolumeIcon(volume: number) {
-		return volume >= 30
-			? '█'
-			: volume >= 25
-				? '▇'
-				: volume >= 20
-					? '▆'
-					: volume >= 15
-						? '▅'
-						: volume >= 10
-							? '▄'
-							: volume >= 5
-								? '▃'
-								: '▂'
-	}
-	const [value, setValue] = useState(0)
-	console.log(getVolumeIcon(value))
+	// function getVolumeIcon(volume: number) {
+	// 	return volume >= 30
+	// 		? '█'
+	// 		: volume >= 25
+	// 			? '▇'
+	// 			: volume >= 20
+	// 				? '▆'
+	// 				: volume >= 15
+	// 					? '▅'
+	// 					: volume >= 10
+	// 						? '▄'
+	// 						: volume >= 5
+	// 							? '▃'
+	// 							: '▂'
+	// }
 
 	useControls(
 		`🔈 Audio`,
@@ -33,7 +30,6 @@ export function AudioControls() {
 				step: 1,
 				onChange: (volume) => {
 					audioStore.voices.volume = volume
-					setValue(volume)
 				},
 			},
 			music: {
