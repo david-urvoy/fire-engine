@@ -1,3 +1,4 @@
+import { Shadow } from '@react-three/drei'
 import { CapsuleCollider } from '@react-three/rapier'
 
 import { Visual } from '../../3d/visual/visual'
@@ -31,6 +32,7 @@ export function Character({
 						onClick={() => eventBus.emit('character_interacted', { characterId: id })}
 						interactable
 					>
+						<Shadow color="black" colorStop={0} opacity={1} />
 						{children}
 					</Visual>
 				</KinematicMotor>
