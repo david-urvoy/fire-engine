@@ -1,11 +1,11 @@
-import { game } from '../../game'
+import { proxy } from 'valtio'
 
-export const pauseMenu = {
-	isPaused: false,
+export const pauseMenuStore = proxy({
+	isActive: false,
 	pause() {
-		game.isPaused = true
+		this.isActive = true
 	},
 	resume() {
-		game.isPaused = false
+		this.isActive = false
 	},
-}
+})

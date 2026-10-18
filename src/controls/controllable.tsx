@@ -24,7 +24,7 @@ function useCharacterMove() {
 
 	useFrame(() => {
 		const player = getPlayer()
-		if (!player || (uiMode !== 'gameplay' && uiMode !== 'hud')) return
+		if (!player || (uiMode !== 'gameplay' && uiMode !== 'playerMenu')) return
 
 		vec.current
 			.set(direction.x, 0, direction.y)

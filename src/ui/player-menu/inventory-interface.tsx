@@ -1,6 +1,6 @@
 import { Items } from '../../game'
 
-export function InventoryMenu() {
+export function InventoryInterface() {
 	const items = Items.useAll()
 
 	return (

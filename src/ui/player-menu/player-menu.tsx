@@ -3,13 +3,13 @@ import { useSnapshot } from 'valtio'
 
 import { game } from '../../game'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../lib/design-system/components/tabs'
-import { InventoryMenu } from './inventory-menu'
-import { QuestMenu } from './quest-menu'
+import { InventoryInterface } from './inventory-interface'
+import { QuestsInterface } from './quests-interface'
 
 const TABS = { inventory: 'inventory', quests: 'quests' } as const
 
-export function GameMenu() {
-	const { isOpen } = useSnapshot(game.gameInterface)
+export function PlayerMenu() {
+	const { isOpen } = useSnapshot(game.interface.playerMenu)
 	const [selectedTab, selectTab] = useState(TABS.inventory)
 
 	if (!isOpen) return null
@@ -30,10 +30,10 @@ export function GameMenu() {
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value={TABS.inventory}>
-					<InventoryMenu />
+					<InventoryInterface />
 				</TabsContent>
 				<TabsContent value={TABS.quests}>
-					<QuestMenu />
+					<QuestsInterface />
 				</TabsContent>
 			</Tabs>
 		</div>

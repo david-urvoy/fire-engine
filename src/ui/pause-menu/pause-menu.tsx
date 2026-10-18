@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useSnapshot } from 'valtio'
 
@@ -143,15 +143,15 @@ function MenuButton({
 }
 
 function ResumeButton({ isPaused }: { isPaused: boolean }) {
-	const [isResumeReady, setIsResumeReady] = useState(false)
+	const isResumeReady = useRef(false)
 
 	useEffect(() => {
 		if (!isPaused) return
 
-		setIsResumeReady(false)
+		isResumeReady.current = false
 
 		const timeout = setTimeout(() => {
-			setIsResumeReady(true)
+			isResumeReady.current = true
 		}, 1000)
 
 		return () => clearTimeout(timeout)

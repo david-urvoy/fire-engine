@@ -2,7 +2,7 @@ import { Leva, useControls } from 'leva'
 import type { LevaRootProps } from 'leva/dist/declarations/src/components/Leva/LevaRoot'
 import { useSnapshot } from 'valtio'
 
-import { game } from '../game'
+import { game } from '../../game'
 
 export function Tweaks(props: LevaRootProps) {
 	const {

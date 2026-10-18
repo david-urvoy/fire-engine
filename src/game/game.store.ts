@@ -5,10 +5,9 @@ import { audioStore } from '../audio/audio.store'
 import { cameraStore } from '../camera/camera.store'
 import { pointerLock } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
-import { gameInterface } from '../ui/game-menu/game-menu.store'
 import { interactable } from '../ui/interactable.store'
-import { pauseMenu } from '../ui/pause-menu/pause-menu.store'
-import { tweaksStore } from '../ui/tweaks.store'
+import { interfaceStore } from '../ui/interface.store'
+import { tweaksStore } from '../ui/tweaks/tweaks.store'
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
 import { debugStore } from './debug/debug.store'
 
@@ -29,13 +28,22 @@ export const characterDimensions = { height: 1.8, radius: 0.25, offset: 0.01 } a
 export type CharacterDimensions = typeof characterDimensions
 
 export const game = proxy({
-	...pauseMenu,
-	gameInterface,
+	interface: interfaceStore,
 
-	get uiMode(): 'gameplay' | 'pause' | 'dialogue' | 'hud' {
-		if (this.isPaused) return 'pause'
+	get isPaused() {
+		return this.interface.pauseMenu.isActive
+	},
+	pause() {
+		this.interface.pauseMenu.isActive = true
+	},
+	resume() {
+		this.interface.pauseMenu.isActive = false
+	},
+
+	get uiMode(): 'gameplay' | 'pause' | 'playerMenu' | 'dialogue' | 'narrative' {
+		if (this.interface.pauseMenu.isActive) return 'pause'
 		if (dialogueStore.active?.locked) return 'dialogue'
-		if (this.gameInterface.isOpen) return 'hud'
+		if (this.interface.playerMenu.isOpen) return 'playerMenu'
 		return 'gameplay'
 	},
 

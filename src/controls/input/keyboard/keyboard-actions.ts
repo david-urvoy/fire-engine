@@ -30,6 +30,6 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			eventBus.emit('clear_inventory')
 			eventBus.emit('reset_quests')
 		},
-		gameMenu: game.gameInterface.toggle,
+		gameMenu: game.interface.playerMenu.toggle,
 	}
 }

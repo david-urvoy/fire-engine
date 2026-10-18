@@ -1,6 +1,6 @@
 import { useQuests, type QuestRecord } from '../../game/quest/quest-store'
 
-export function QuestMenu() {
+export function QuestsInterface() {
 	const quests = useQuests()
 
 	if (!quests) return null

@@ -2,8 +2,8 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import { Raycaster, Vector2, type Object3D } from 'three'
 
-import { game, INTERACTION_MAX_DISTANCE } from '../game'
-import { LAYERS } from '../lib/enums/layers'
+import { game, INTERACTION_MAX_DISTANCE } from '../../game'
+import { LAYERS } from '../../lib/enums/layers'
 
 export function Reticle() {
 	return (
