@@ -14,14 +14,14 @@ export type ItemProps = EntityProps &
 		image?: string
 	}
 
-export function KinematicItem({ id, name = id, image, position, children, ...props }: ItemProps) {
+export function KinematicItem({ id, name = id, image, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} {...props}>
-			<KinematicMotor position={position}>
+		<Entity id={id}>
+			<KinematicMotor {...props}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
@@ -30,22 +30,14 @@ export function KinematicItem({ id, name = id, image, position, children, ...pro
 	)
 }
 
-export function DynamicItem({
-	id,
-	name = id,
-	image,
-	position,
-	rotation,
-	children,
-	...props
-}: ItemProps) {
+export function DynamicItem({ id, name = id, image, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} {...props}>
-			<PhysicBody colliders="cuboid" type="dynamic" position={position} rotation={rotation}>
+		<Entity id={id}>
+			<PhysicBody colliders="cuboid" type="dynamic" {...props}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
@@ -54,14 +46,14 @@ export function DynamicItem({
 	)
 }
 
-export function FixedItem({ id, name = id, image, position, children, ...props }: ItemProps) {
+export function FixedItem({ id, name = id, image, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
 
 	return (
-		<Entity id={id} {...props}>
-			<PhysicBody colliders="cuboid" type="fixed" position={position}>
+		<Entity id={id}>
+			<PhysicBody colliders="cuboid" type="fixed" {...props}>
 				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
 					{children}
 				</Visual>
