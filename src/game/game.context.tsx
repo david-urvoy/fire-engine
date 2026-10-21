@@ -1,8 +1,7 @@
 import { type Dexie } from 'dexie'
-import { createContext, useContext, type PropsWithChildren, type ReactNode } from 'react'
+import { createContext, useContext, type PropsWithChildren } from 'react'
 
 import { AudioControls } from '../audio/audio-controls'
-import { NarrativeProvider } from '../ui'
 import { DialogueProvider } from './conversation/dialogue/dialogue.context'
 import type { EntityManager } from './entity/entity.manager'
 
@@ -16,14 +15,11 @@ const GameContext = createContext<GameProviderProps | null>(null)
 export function GameProvider({
 	entityManager,
 	database,
-	narrativeIntro,
 	children,
-}: PropsWithChildren<GameProviderProps> & { narrativeIntro?: ReactNode }) {
+}: PropsWithChildren<GameProviderProps>) {
 	return (
 		<GameContext.Provider value={{ entityManager, database }}>
-			<NarrativeProvider intro={narrativeIntro}>
-				<DialogueProvider>{children}</DialogueProvider>
-			</NarrativeProvider>
+			<DialogueProvider>{children}</DialogueProvider>
 			<AudioControls />
 		</GameContext.Provider>
 	)
