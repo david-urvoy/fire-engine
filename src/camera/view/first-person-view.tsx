@@ -21,8 +21,8 @@ function FirstPersonControls() {
 	return (
 		<PointerLockControls
 			ref={controlsRef}
-			onLock={() => (game.pointerLock.isLocked = true)}
-			onUnlock={() => (game.pointerLock.isLocked = false)}
+			onLock={() => (game.pointer.isLocked = true)}
+			onUnlock={() => (game.pointer.isLocked = false)}
 			onChange={() => {
 				const entity = entityManager.get(game.controlledCharacter)
 				if (!entity) return

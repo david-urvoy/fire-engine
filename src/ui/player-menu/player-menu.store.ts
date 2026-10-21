@@ -6,11 +6,11 @@ export const playerMenuStore = proxy({
 	isOpen: false,
 	open() {
 		playerMenuStore.isOpen = true
-		game.pointerLock.ref.current?.unlock()
+		game.pointer.ref.current?.unlock()
 	},
 	close() {
 		playerMenuStore.isOpen = false
-		game.pointerLock.ref.current?.lock()
+		game.pointer.ref.current?.lock()
 	},
 	toggle() {
 		if (playerMenuStore.isOpen) playerMenuStore.close()

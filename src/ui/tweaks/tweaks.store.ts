@@ -1,11 +1,11 @@
 import { proxy, subscribe } from 'valtio'
 
-import { pointerLock } from '../../camera/lock/pointer-lock.store'
+import { pointer } from '../../camera/lock/pointer-lock.store'
 
-subscribe(pointerLock, () => {
+subscribe(pointer, () => {
 	if (tweaksStore.keepOpen) tweaksStore.expanded = true
 	else {
-		tweaksStore.expanded = !pointerLock.isLocked
+		tweaksStore.expanded = !pointer.isLocked
 	}
 })
 

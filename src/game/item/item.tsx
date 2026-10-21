@@ -12,9 +12,10 @@ export type ItemProps = EntityProps &
 	Omit<ThreeElements['mesh'], 'id'> & {
 		name?: string
 		image?: string
+		onClick?: () => void
 	}
 
-export function KinematicItem({ id, name = id, image, children, ...props }: ItemProps) {
+export function KinematicItem({ id, name = id, image, onClick, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
@@ -22,7 +23,13 @@ export function KinematicItem({ id, name = id, image, children, ...props }: Item
 	return (
 		<Entity id={id}>
 			<KinematicMotor {...props}>
-				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
+				<Visual
+					onClick={() => {
+						eventBus.emit('item_collected', { id, name, image })
+						onClick?.()
+					}}
+					interactable
+				>
 					{children}
 				</Visual>
 			</KinematicMotor>
@@ -30,7 +37,7 @@ export function KinematicItem({ id, name = id, image, children, ...props }: Item
 	)
 }
 
-export function DynamicItem({ id, name = id, image, children, ...props }: ItemProps) {
+export function DynamicItem({ id, name = id, image, onClick, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
@@ -38,7 +45,13 @@ export function DynamicItem({ id, name = id, image, children, ...props }: ItemPr
 	return (
 		<Entity id={id}>
 			<PhysicBody colliders="cuboid" type="dynamic" {...props}>
-				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
+				<Visual
+					onClick={() => {
+						eventBus.emit('item_collected', { id, name, image })
+						onClick?.()
+					}}
+					interactable
+				>
 					{children}
 				</Visual>
 			</PhysicBody>
@@ -46,7 +59,7 @@ export function DynamicItem({ id, name = id, image, children, ...props }: ItemPr
 	)
 }
 
-export function FixedItem({ id, name = id, image, children, ...props }: ItemProps) {
+export function FixedItem({ id, name = id, image, onClick, children, ...props }: ItemProps) {
 	const isCollected = Items.useIsCollected(id)
 
 	if (isCollected) return null
@@ -54,7 +67,13 @@ export function FixedItem({ id, name = id, image, children, ...props }: ItemProp
 	return (
 		<Entity id={id}>
 			<PhysicBody colliders="cuboid" type="fixed" {...props}>
-				<Visual onClick={() => eventBus.emit('item_collected', { id, name, image })} interactable>
+				<Visual
+					onClick={() => {
+						eventBus.emit('item_collected', { id, name, image })
+						onClick?.()
+					}}
+					interactable
+				>
 					{children}
 				</Visual>
 			</PhysicBody>

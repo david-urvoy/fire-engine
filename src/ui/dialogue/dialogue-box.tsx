@@ -57,8 +57,8 @@ export function DialogueEventBlocker() {
 			events.enabled = !isDialogueMode
 
 			if (previousModeRef.current !== null && previousModeRef.current !== isDialogueMode) {
-				if (isDialogueMode) game.pointerLock.ref.current?.unlock()
-				else game.pointerLock.ref.current?.lock()
+				if (isDialogueMode) game.pointer.ref.current?.unlock()
+				else game.pointer.ref.current?.lock()
 			}
 
 			previousModeRef.current = isDialogueMode

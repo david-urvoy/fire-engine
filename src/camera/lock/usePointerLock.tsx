@@ -13,8 +13,8 @@ export function usePointerLock() {
 	}, [isPaused])
 
 	useEffect(() => {
-		game.pointerLock.ref.current = controlsRef.current
-		const ref = game.pointerLock.ref
+		game.pointer.ref.current = controlsRef.current
+		const ref = game.pointer.ref
 
 		return () => {
 			ref.current = null

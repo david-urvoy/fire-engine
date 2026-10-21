@@ -3,7 +3,7 @@ import { proxy } from 'valtio'
 
 import { audioStore } from '../audio/audio.store'
 import { cameraStore } from '../camera/camera.store'
-import { pointerLock } from '../camera/lock/pointer-lock.store'
+import { pointer } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
 import { interactable } from '../ui/interactable.store'
 import { interfaceStore } from '../ui/interface.store'
@@ -48,7 +48,7 @@ export const game = proxy({
 	},
 
 	camera: cameraStore,
-	pointerLock,
+	pointer,
 	interactable,
 	controlledCharacter: '',
 	dialogue: dialogueStore,
