@@ -5,7 +5,7 @@ import { useSnapshot } from 'valtio'
 
 import { dialogueStore, game } from '../../game'
 
-export const DialogueBox = () => {
+export function DialogueBox() {
 	const { active: dialogue } = useSnapshot(dialogueStore)
 
 	if (!dialogue?.line) return null
