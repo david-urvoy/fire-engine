@@ -7,8 +7,8 @@ import { LAYERS } from '../../lib/enums/layers'
 
 export function Reticle() {
 	return (
-		<div className="flex h-full w-full items-center justify-center">
-			<div className="pointer-events-none z-100 h-1 w-1 rounded-full bg-white" />
+		<div className="absolute flex h-full w-full items-center justify-center">
+			<div className="pointer-events-none z-10 h-1 w-1 rounded-full bg-white" />
 		</div>
 	)
 }
