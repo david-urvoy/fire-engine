@@ -7,8 +7,15 @@ import { CameraTypeIcon } from './hud/camera-type-icon'
 import { InfoPanel } from './info-panel/info-panel'
 
 export function Interface({ children }: PropsWithChildren) {
+	const {
+		narrative: { showCanvas },
+	} = useSnapshot(game)
 	return (
-		<div id="interface" className="pointer-events-none fixed top-0 left-0 z-50 h-full w-full">
+		<div
+			id="interface"
+			className="pointer-events-none fixed top-0 left-0 z-50 h-full w-full"
+			hidden={!showCanvas}
+		>
 			<PauseMenu />
 			<InfoPanel />
 			<Reticle />

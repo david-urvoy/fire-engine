@@ -7,6 +7,7 @@ import { pointer } from '../camera/lock/pointer-lock.store'
 import { responsiveStore } from '../camera/responsive/responsive.store'
 import { interactable } from '../ui/interactable.store'
 import { interfaceStore } from '../ui/interface.store'
+import { narrativeStore } from '../ui/narrative/narrative.store'
 import { tweaksStore } from '../ui/tweaks/tweaks.store'
 import { dialogueStore } from './conversation/dialogue/dialogue.store'
 import { debugStore } from './debug/debug.store'
@@ -52,6 +53,7 @@ export const game = proxy({
 	interactable,
 	controlledCharacter: '',
 	dialogue: dialogueStore,
+	narrative: narrativeStore,
 
 	audio: audioStore,
 
