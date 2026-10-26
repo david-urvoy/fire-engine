@@ -1,8 +1,13 @@
-import { useEffect, type PropsWithChildren } from 'react'
+import { createContext, useEffect, type PropsWithChildren } from 'react'
 
 import { eventBus } from '../../lib'
+import type { DialogueDefinition, QuestDialogueDefinition } from '../conversation'
 import { useGame } from '../game.context'
 import { useCompleteQuest, useFailQuest, useStartQuest, type QuestRecord } from './quest-store'
+
+const QuestContext = createContext<
+	DialogueDefinition<string> | QuestDialogueDefinition<string> | null
+>(null)
 
 export function QuestsProvider({ children }: PropsWithChildren) {
 	const startQuest = useStartQuest()
@@ -32,5 +37,5 @@ export function QuestsProvider({ children }: PropsWithChildren) {
 		}
 	}, [startQuest, completeQuest, failQuest, database])
 
-	return <>{children}</>
+	return <QuestContext.Provider value={null}>{children}</QuestContext.Provider>
 }

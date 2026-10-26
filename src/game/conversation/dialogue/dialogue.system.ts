@@ -3,10 +3,10 @@ import { dialogueStore } from './dialogue.store'
 
 export class DialogueSystem {
 	private _step({ dialogue, delta }: { dialogue: AbstractDialogue; delta: number }) {
-		dialogue.timer = (dialogue.timer || 0) + delta
+		dialogue.timer.value = (dialogue.timer.value || 0) + delta
 
-		if (dialogue.timer >= 5) {
-			dialogue.timer = 0
+		if (dialogue.timer.value >= 5) {
+			dialogue.timer.value = 0
 			dialogue.next()
 		}
 	}

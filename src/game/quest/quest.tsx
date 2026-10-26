@@ -1,8 +1,8 @@
 import { type PropsWithChildren, useEffect } from 'react'
 
 import { eventBus } from '../../lib'
-import type { QuestDialogueDefinition } from '../conversation'
-import { useQuestExtension } from '../conversation/dialogue/dialogue.context'
+import { useDialogue } from '../conversation/dialogue/dialogue.context'
+import type { QuestDialogueDefinition } from '../conversation/dsl/dialogue-definition.type'
 
 interface QuestProps {
 	id: string
@@ -18,14 +18,14 @@ export function Quest({
 	children,
 	autostart = false,
 }: PropsWithChildren<QuestProps>) {
-	const { register, unregister } = useQuestExtension()
+	const { register, unregister } = useDialogue()
 
 	useEffect(() => {
 		if (!definition) return
 
-		register(id, definition)
+		register(definition)
 
-		return () => unregister(id)
+		return () => unregister(definition)
 	}, [id, definition, register, unregister])
 
 	useEffect(() => {

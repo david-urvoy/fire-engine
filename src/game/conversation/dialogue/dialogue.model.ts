@@ -1,3 +1,5 @@
+import { ref } from 'valtio'
+
 import { eventBus } from '../../../lib'
 import type { Character } from '../../character/character.types'
 import type {
@@ -5,6 +7,7 @@ import type {
 	DialogueNode,
 	DialogueOption,
 	DialogueParticipant,
+	QuestDialogueDefinition,
 } from '../dsl/dialogue-definition.type'
 import { dialogueStore } from './dialogue.store'
 
@@ -14,31 +17,40 @@ export abstract class AbstractDialogue {
 	protected currentNodeId: string
 	awaitingChoice: boolean
 	protected startedAt: number
-	timer: number
+	timer: { value: number }
 	protected currentLineIndex: number
 	protected participants: readonly DialogueParticipant<string>[]
+	protected extensions: QuestDialogueDefinition<string>[] = []
 
-	protected constructor(dialogue: DialogueDefinition<Character<string>['id']>) {
+	protected constructor(
+		dialogue: DialogueDefinition<Character<string>['id']>,
+		extensions: QuestDialogueDefinition<string>[] = [],
+	) {
 		this.id = dialogue.id
 		this.startedAt = Temporal.Now.instant().epochMilliseconds
 		this.awaitingChoice = !!dialogue.nodes[dialogue.entryNodeId]?.choice?.options.length
 		this.currentNodeId = dialogue.entryNodeId
-		this.timer = 0
+		this.timer = ref({ value: 0 })
 		this.currentLineIndex = 0
 
 		this.participants = dialogue.participants
-		this.nodes = dialogue.nodes
+		this.extensions = extensions
+
+		this.nodes = {
+			...dialogue.nodes,
+			...extensions.reduce((acc, { nodes }) => ({ ...acc, ...nodes }), {}),
+		}
+
 		eventBus.emit('dialogue_started', { dialogueId: this.id })
 	}
 
 	private nextLine() {
-		const node = this.nodes[this.currentNodeId]
-		if (!node) {
+		if (!this.node) {
 			console.warn(`Node with id "${this.currentNodeId}" not found in dialogue "${this.id}".`)
 			return false
 		}
 
-		if (this.currentLineIndex < node.lines.length - 1) {
+		if (this.currentLineIndex < this.node.lines.length - 1) {
 			this.currentLineIndex++
 			return true
 		}
@@ -47,16 +59,15 @@ export abstract class AbstractDialogue {
 	}
 
 	private nextNode() {
-		const node = this.nodes[this.currentNodeId]
-		if (!node) {
+		if (!this.node) {
 			console.warn(`Node with id "${this.currentNodeId}" not found in dialogue "${this.id}".`)
 			return false
 		}
 
-		if (node.nextNodeId) {
-			this.currentNodeId = node.nextNodeId
+		if (this.node.nextNodeId) {
+			this.currentNodeId = this.node.nextNodeId
 			this.currentLineIndex = 0
-			this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.options.length
+			this.awaitingChoice = !!this.node?.choice?.options.length
 			return true
 		}
 
@@ -64,14 +75,13 @@ export abstract class AbstractDialogue {
 	}
 
 	next() {
-		this.timer = 0
+		this.timer.value = 0
+
 		if (this.awaitingChoice) return this
-
 		if (this.nextLine()) return this
-
 		eventBus.emit('dialogue_node_ended', { dialogueId: this.id, nodeId: this.currentNodeId })
-		if (this.nextNode()) return this
 
+		if (this.nextNode()) return this
 		return this.end()
 	}
 
@@ -81,8 +91,7 @@ export abstract class AbstractDialogue {
 			return this
 		}
 
-		const node = this.nodes[this.currentNodeId]
-		const validOption = node?.choice?.options.find(({ label }) => label === choice.label)
+		const validOption = this.node?.choice?.options.find(({ label }) => label === choice.label)
 
 		if (!validOption) {
 			console.warn(`Invalid choice: ${choice.label}`)
@@ -91,7 +100,7 @@ export abstract class AbstractDialogue {
 
 		this.currentNodeId = validOption.nextNodeId
 		this.currentLineIndex = 0
-		this.awaitingChoice = !!this.nodes[this.currentNodeId]?.choice?.options.length
+		this.awaitingChoice = !!this.node?.choice?.options.length
 
 		return this
 	}
@@ -100,14 +109,37 @@ export abstract class AbstractDialogue {
 		eventBus.emit('dialogue_ended', { dialogueId: this.id })
 	}
 
-	get line() {
+	get node() {
 		const node = this.nodes[this.currentNodeId]
-		return node?.lines[this.currentLineIndex]
+		if (!node) return undefined
+
+		if (!node.choice?.type || node.choice.type === 'extensible') {
+			return {
+				...node,
+				choice: node.choice
+					? {
+							...node.choice,
+							options: [
+								...node.choice.options,
+								...this.extensions.map(({ option }) => ({
+									label: option.label,
+									nextNodeId: option.nextNodeId,
+								})),
+							],
+						}
+					: node.choice,
+			}
+		}
+
+		return node
+	}
+
+	get line() {
+		return this.node?.lines[this.currentLineIndex]
 	}
 
 	get choice() {
-		const node = this.nodes[this.currentNodeId]
-		return node?.choice
+		return this.node?.choice
 	}
 }
 
@@ -130,13 +162,10 @@ export class PlayerDialogue extends AbstractDialogue {
 
 	public constructor(
 		dialogue: DialogueDefinition<Character<string>['id']>,
-		{
-			locked = true,
-		}: {
-			locked?: boolean
-		},
+		extensions: QuestDialogueDefinition<string>[],
+		{ locked = true }: { locked?: boolean },
 	) {
-		super(dialogue)
+		super(dialogue, extensions)
 		dialogueStore.active = this
 		this.locked = locked
 	}
@@ -149,8 +178,9 @@ export class PlayerDialogue extends AbstractDialogue {
 
 export function createDialogue(
 	dialogue: DialogueDefinition<Character<string>['id']>,
+	...extensions: QuestDialogueDefinition<string>[]
 ): AbstractDialogue {
 	return dialogue.isNpcOnly
 		? new NpcDialogue(dialogue)
-		: new PlayerDialogue(dialogue, { locked: dialogue.locked })
+		: new PlayerDialogue(dialogue, extensions, { locked: dialogue.locked })
 }
