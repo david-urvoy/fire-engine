@@ -1,7 +1,4 @@
-import { useLiveQuery } from 'dexie-react-hooks'
-import { useCallback } from 'react'
-
-import { useGame } from '../game.context'
+import { useDatabase, useQuery } from '../../lib/database/use-query'
 
 export interface ItemRecord {
 	id: string
@@ -12,40 +9,25 @@ export interface ItemRecord {
 
 export const Items = {
 	useIsCollected(itemId: string) {
-		const { database } = useGame()
-
-		return useLiveQuery(
-			async () => !!(await database.table<ItemRecord, string>('items').get(itemId)),
-			[database, itemId],
+		return useQuery(
+			async (database) => !!(await database.table<ItemRecord, string>('items').get(itemId)),
+			[itemId],
 		)
 	},
 	useAll() {
-		const { database } = useGame()
-
-		return useLiveQuery(() => database.table<ItemRecord, string>('items').toArray(), [database])
+		return useQuery((database) => database.table<ItemRecord, string>('items').toArray())
 	},
 	useCollect() {
-		const { database } = useGame()
-
-		return useCallback(
-			({ id, name, image }: ItemRecord) =>
-				database
-					.table<ItemRecord, string>('items')
-					.put({ id, name, image, collectedAt: Temporal.Now.instant().epochMilliseconds }),
-			[database],
+		return useDatabase((database, { id, name, image }: ItemRecord) =>
+			database
+				.table<ItemRecord, string>('items')
+				.put({ id, name, image, collectedAt: Temporal.Now.instant().epochMilliseconds }),
 		)
 	},
 	useClear() {
-		const { database } = useGame()
-
-		return useCallback(() => database.table<ItemRecord, string>('items').clear(), [database])
+		return useDatabase((database) => database.table<ItemRecord, string>('items').clear())
 	},
 	useDelete(itemid: string) {
-		const { database } = useGame()
-
-		return useCallback(
-			() => database.table<ItemRecord, string>('items').delete(itemid),
-			[database, itemid],
-		)
+		return useDatabase((database) => database.table<ItemRecord, string>('items').delete(itemid))
 	},
 }

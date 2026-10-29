@@ -1,7 +1,4 @@
-import { useGame } from '@david-urvoy/fire-engine'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { useCallback } from 'react'
-
+import { useDatabase, useQuery } from '../../lib/database/use-query'
 import type { Quest, QuestStatus } from './quest.model'
 
 export interface QuestRecord {
@@ -11,64 +8,43 @@ export interface QuestRecord {
 }
 
 export function useQuest(id: string) {
-	const { database } = useGame()
-
-	return useLiveQuery(() => database.table<QuestRecord, string>('quests').get(id), [database, id])
+	return useQuery((database) => database.table<QuestRecord, string>('quests').get(id), [id])
 }
 
 export function useQuests() {
-	const { database } = useGame()
-	return useLiveQuery(() => database.table<QuestRecord, string>('quests').toArray(), [database])
+	return useQuery((database) => database.table<QuestRecord, string>('quests').toArray())
 }
 
 export function useOnGoingQuests() {
-	const { database } = useGame()
-	return useLiveQuery(
-		() => database.table<QuestRecord, string>('quests').where('status').equals('ongoing').toArray(),
-		[database],
+	return useQuery((database) =>
+		database.table<QuestRecord, string>('quests').where('status').equals('ongoing').toArray(),
 	)
 }
 export function useCompletedQuests() {
-	const { database } = useGame()
-	return useLiveQuery(
-		() =>
-			database.table<QuestRecord, string>('quests').where('status').equals('completed').toArray(),
-		[database],
+	return useQuery((database) =>
+		database.table<QuestRecord, string>('quests').where('status').equals('completed').toArray(),
 	)
 }
 export function useFailedQuests() {
-	const { database } = useGame()
-	return useLiveQuery(
-		() => database.table<QuestRecord, string>('quests').where('status').equals('failed').toArray(),
-		[database],
+	return useQuery((database) =>
+		database.table<QuestRecord, string>('quests').where('status').equals('failed').toArray(),
 	)
 }
 
 export function useStartQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		({ id, name }: Omit<Quest, 'status'>) =>
-			database.table<QuestRecord, string>('quests').put({ id, name, status: 'ongoing' }),
-		[database],
+	return useDatabase((database, { id, name }: Omit<Quest, 'status'>) =>
+		database.table<QuestRecord, string>('quests').put({ id, name, status: 'ongoing' }),
 	)
 }
 
 export function useCompleteQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		(id: string) =>
-			database.table<QuestRecord, string>('quests').update(id, { status: 'completed' }),
-		[database],
+	return useDatabase((database, id: string) =>
+		database.table<QuestRecord, string>('quests').update(id, { status: 'completed' }),
 	)
 }
 
 export function useFailQuest() {
-	const { database } = useGame()
-
-	return useCallback(
-		(id: string) => database.table<QuestRecord, string>('quests').update(id, { status: 'failed' }),
-		[database],
+	return useDatabase((database, id: string) =>
+		database.table<QuestRecord, string>('quests').update(id, { status: 'failed' }),
 	)
 }

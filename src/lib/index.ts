@@ -1,5 +1,5 @@
 export * from './components/window-visibility'
-export * from './database/database'
+export * from './database'
 export * from './events/event-bus'
 export * from './hooks'
 export * from './types'
