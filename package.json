@@ -40,7 +40,8 @@
 	},
 	"dependencies": {
 		"dexie": "^4.4.5",
-		"dexie-react-hooks": "^4.4.0"
+		"dexie-react-hooks": "^4.4.0",
+		"yuka": "^0.7.8"
 	},
 	"devDependencies": {
 		"@dimforge/rapier3d-compat": "0.19.2",
@@ -48,6 +49,7 @@
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.5",
 		"@types/three": "^0.185.4",
+		"@types/yuka": "^0.7.4",
 		"@vitest/ui": "^4.1.11",
 		"babel-plugin-react-compiler": "^19.1.0-rc.3",
 		"bun-plugin-tailwind": "^0.1.2",

@@ -1,1 +1,1 @@
-export * from './wandering'
+export * from './navigation'

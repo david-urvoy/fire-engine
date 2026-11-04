@@ -1,7 +1,7 @@
 import { type Dexie } from 'dexie'
-import { createContext, useContext, type PropsWithChildren } from 'react'
+import { createContext, Suspense, useContext, type PropsWithChildren } from 'react'
 
-import { AudioControls } from '../audio/audio-controls'
+import { NavigationProvider } from '../ai'
 import { DialogueProvider } from './conversation/dialogue/dialogue.context'
 import type { EntityManager } from './entity/entity.manager'
 import { QuestsProvider } from './quest'
@@ -19,12 +19,15 @@ export function GameProvider({
 	children,
 }: PropsWithChildren<GameProviderProps>) {
 	return (
-		<GameContext.Provider value={{ entityManager, database }}>
-			<QuestsProvider>
-				<DialogueProvider>{children}</DialogueProvider>
-			</QuestsProvider>
-			<AudioControls />
-		</GameContext.Provider>
+		<Suspense fallback="Loading...">
+			<GameContext.Provider value={{ entityManager, database }}>
+				<QuestsProvider>
+					<NavigationProvider>
+						<DialogueProvider>{children}</DialogueProvider>
+					</NavigationProvider>
+				</QuestsProvider>
+			</GameContext.Provider>
+		</Suspense>
 	)
 }
 

@@ -8,12 +8,15 @@ type Action = 'idle' | 'walk' | 'run'
 const ACTIONS = {
 	idle: {
 		ratio: 0,
+		maxSpeed: 0,
 	},
 	walk: {
 		ratio: 0.5,
+		maxSpeed: 1,
 	},
 	run: {
 		ratio: 0.2,
+		maxSpeed: Infinity,
 	},
 } as const
 export type Animations = { [key in Action]: AnimationAction | null }
@@ -48,11 +51,10 @@ export function CharacterAnimation() {
 
 	useFrame(() => {
 		const velocity = entity.velocity?.length()
-		if (!velocity || velocity < 0.1) {
-			playAction('idle')
-			return
-		}
-		if (velocity > 0.8) playAction('run')?.setEffectiveTimeScale(velocity * ACTIONS.run.ratio)
+		if (!velocity || velocity < 0.01) return playAction('idle')
+
+		if (velocity > ACTIONS.walk.maxSpeed)
+			playAction('run')?.setEffectiveTimeScale(velocity * ACTIONS.run.ratio)
 		else playAction('walk')?.setEffectiveTimeScale(velocity * ACTIONS.walk.ratio)
 	})
 
