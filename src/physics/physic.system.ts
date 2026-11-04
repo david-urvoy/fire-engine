@@ -1,7 +1,8 @@
 import { Quaternion, Vector3 } from 'three'
 
-import { MOVEMENT_SMOOTHING } from '../game'
+import { MOVEMENT_SMOOTHING, POSITION_EPSILON } from '../game'
 import type { Entity } from '../game/entity/entity.model'
+import { eventBus } from '../lib'
 
 type PhysicEntry = {
 	entity: Entity
@@ -18,14 +19,31 @@ export class PhysicSystem {
 		this.entities.forEach(({ entity, velocity, rotation, move }) => {
 			if (!entity.physic || entity.physic.isSleeping) return
 
-			const targetX = entity.controls.move.x
-			const targetZ = entity.controls.move.z
-
-			const alpha = 1 - Math.exp(-MOVEMENT_SMOOTHING * delta)
-
 			const vel = entity.physic.velocity
-			vel.x += (targetX - vel.x) * alpha
-			vel.z += (targetZ - vel.z) * alpha
+
+			if (entity.controls.isMoving) {
+				const dx = entity.controls.target.x - entity.position.x
+				const dz = entity.controls.target.z - entity.position.z
+				const distance = Math.hypot(dx, dz)
+
+				if (distance < POSITION_EPSILON) {
+					vel.x = 0
+					vel.z = 0
+					eventBus.emit('hasReached', { id: entity.id })
+				} else {
+					const targetMove = entity.controls.target
+						.clone()
+						.sub(entity.position)
+						.normalize()
+						.multiplyScalar(entity.controls.speed)
+					const alpha = 1 - Math.exp(-MOVEMENT_SMOOTHING * delta)
+					vel.x += (targetMove.x - vel.x) * alpha
+					vel.z += (targetMove.z - vel.z) * alpha
+				}
+			} else {
+				vel.x = 0
+				vel.z = 0
+			}
 
 			velocity.copy(vel).multiplyScalar(delta)
 			rotation.copy(entity.controls.orientation)

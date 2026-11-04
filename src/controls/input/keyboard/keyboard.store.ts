@@ -16,11 +16,14 @@ export const keyboardKeys = proxy(
 
 const keyboardCommands = computed({
 	direction: () => {
-		const { up, down, left, right, sprint } = keyboardKeys
+		const { up, down, left, right } = keyboardKeys
 		const z = -up + +down
 		const x = -left + +right
-		const speed = (!sprint ? 2 : 1) * 0.2
-		return _dir.set(x, z).multiplyScalar(speed)
+		return _dir.clone().set(x, z)
+	},
+	speed: () => {
+		const { sprint } = keyboardKeys
+		return !sprint ? 2 : 1
 	},
 })
 
@@ -28,9 +31,9 @@ export function useKeyboard() {
 	return useSnapshot(keyboardKeys)
 }
 
-export function useKeyboardDirection() {
+export function useKeyboardMovement(): [Vector2, number] {
 	const commands = useSnapshot(keyboardCommands)
-	return commands.direction
+	return [commands.direction, commands.speed] as const
 }
 
 export function resetKeyboardKeys() {

@@ -1,8 +1,6 @@
 export * from './character'
 
-export * from './entity/entity'
-export * from './entity/entity.context'
-export * from './entity/entity.manager'
+export * from './entity'
 
 export * from './conversation'
 export * from './quest'

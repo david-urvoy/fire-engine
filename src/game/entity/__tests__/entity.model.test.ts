@@ -42,57 +42,57 @@ describe('Entity.moveTo', () => {
 		})
 	})
 
-	describe('should move controls towards target', () => {
-		it('should set move controls straight forward', () => {
+	describe('should set target and movement state', () => {
+		it('should set target position', () => {
 			const target = new Vector3(10, 0, 0)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
 
-			expect(entity.controls.move.x).toBe(0.5)
-			expect(entity.controls.move.y).toBe(0)
-			expect(entity.controls.move.z).toBe(0)
+			expect(entity.controls.target).toEqual(target)
+			expect(entity.controls.speed).toBe(speed)
 		})
 
-		it('should set move controls diagonally', () => {
+		it('should set isMoving to true', () => {
 			const target = new Vector3(10, 0, 10)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
 
-			const comp = Math.sqrt(0.5) * 0.5
-			expect(entity.controls.move.x).toBeCloseTo(comp)
-			expect(entity.controls.move.y).toBe(0)
-			expect(entity.controls.move.z).toBeCloseTo(comp)
+			expect(entity.controls.isMoving).toBe(true)
 		})
 
-		it('should set move controls straight backward', () => {
-			const target = new Vector3(-10, 0, 0)
-			const speed = 0.5
+		it('should handle negative target coordinates', () => {
+			const target = new Vector3(-10, 0, -10)
+			const speed = 0.8
 
 			entity.moveTo(target, speed)
 
-			expect(entity.controls.move.x).toBe(-0.5)
-			expect(entity.controls.move.y).toBe(0)
-			expect(entity.controls.move.z).toBe(0)
+			expect(entity.controls.target).toEqual(target)
+			expect(entity.controls.speed).toBe(speed)
+			expect(entity.controls.isMoving).toBe(true)
 		})
 	})
 
-	it('should return true when distance is less than POSITION_EPSILON', () => {
-		const target = new Vector3(0.0001, 0, 0)
-		const speed = 1
+	describe('Entity.moveBy', () => {
+		it('should move entity by delta relative to current position', () => {
+			const delta: [number, number, number] = [5, 0, 5]
+			const speed = 1
 
-		const result = entity.moveTo(target, speed)
+			entity.moveBy(delta, speed)
 
-		expect(result).toBe(true)
-	})
+			// moveBy should calculate target as current position + delta
+			// Since entity starts at origin (0,0,0), target should be at delta
+			expect(entity.controls.target.x).toBe(delta[0])
+			expect(entity.controls.target.y).toBe(delta[1])
+			expect(entity.controls.target.z).toBe(delta[2])
+			expect(entity.controls.speed).toBe(speed)
+		})
 
-	it('should return false when distance is greater than POSITION_EPSILON', () => {
-		const target = new Vector3(100, 0, 100)
-		const speed = 0.1
+		it('should be chainable', () => {
+			const result = entity.moveBy([1, 0, 1])
 
-		const result = entity.moveTo(target, speed)
-
-		expect(result).toBe(false)
+			expect(result).toBe(entity)
+		})
 	})
 })

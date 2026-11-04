@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
+import type { Vector2 } from 'three'
 import { Vector3 } from 'three/src/math/Vector3.js'
 import { useSnapshot } from 'valtio'
 
@@ -8,30 +9,34 @@ import { useEntity } from '../game'
 import { usePlayer } from '../game/character/use-player'
 import { game } from '../game/game.store'
 import { gamepad } from './input/gamepad/gamepad'
-import { useKeyboardDirection } from './input/keyboard/keyboard.store'
+import { useKeyboardMovement } from './input/keyboard/keyboard.store'
 
-function usePlayerDirection() {
+function usePlayerDirection(): [Vector2, number] {
 	const { isMobile } = useSnapshot(game.responsive)
-	const keyboardDirection = useKeyboardDirection()
-	return isMobile ? gamepad.direction : keyboardDirection
+	const keyboardDirection = useKeyboardMovement()
+	return isMobile ? [gamepad.direction, 1] : keyboardDirection
 }
 
 function useCharacterMove() {
 	const { uiMode } = useSnapshot(game)
 	const getPlayer = usePlayer()
-	const direction = usePlayerDirection()
-	const vec = useRef(new Vector3())
+	const [direction, speed] = usePlayerDirection()
+	const movement = useRef(new Vector3())
 
-	useFrame(() => {
+	useEffect(() => {
 		const player = getPlayer()
 		if (!player || (uiMode !== 'gameplay' && uiMode !== 'playerMenu')) return
 
-		vec.current
-			.set(direction.x, 0, direction.y)
-			.applyQuaternion(player.orientation)
-			.multiplyScalar(8)
+		movement.current.set(direction.x, 0, direction.y)
+		player.controls.isMoving = movement.current.length() > 0
+	}, [direction.x, direction.y, uiMode, getPlayer])
 
-		player.moveBy([vec.current.x, vec.current.y, vec.current.z])
+	useFrame(() => {
+		const player = getPlayer()
+		if (!player) return
+
+		const target = movement.current.clone().applyQuaternion(player.orientation).multiplyScalar(8)
+		player.moveBy([target.x, target.y, target.z], speed)
 	})
 }
 

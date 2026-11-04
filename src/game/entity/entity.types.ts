@@ -5,9 +5,10 @@ import type { Object3D, Quaternion, Vector3 } from 'three'
 import type { Animations } from '../../animation/character-animation'
 
 export interface ControlsState {
-	move: Vector3
+	target: Vector3
 	orientation: Quaternion
 	teleport?: Vector3
+	isMoving: boolean
 }
 
 export interface PhysicState {

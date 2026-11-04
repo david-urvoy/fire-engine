@@ -1,7 +1,7 @@
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
-import { game, INTERACTION_MAX_DISTANCE, POSITION_EPSILON, UP } from '../game.store'
+import { game, INTERACTION_MAX_DISTANCE, UP } from '../game.store'
 import type {
 	ControlsState,
 	EntityRuntime,
@@ -12,9 +12,11 @@ import type {
 
 class Controls implements ControlsState {
 	constructor(
-		public move: Vector3 = new Vector3(),
+		public target: Vector3 = new Vector3(),
+		public speed: number = 1,
 		public orientation: Quaternion = new Quaternion(),
 		public teleport?: Vector3,
+		public isMoving: boolean = false,
 	) {}
 }
 
@@ -53,20 +55,16 @@ export class Entity implements EntityState {
 		}
 	}
 
-	moveBy(delta: [number, number, number]) {
-		this.controls.move.set(...delta)
+	moveBy(delta: [number, number, number], speed = 1) {
+		this.controls.target.copy(this.position).add(new Vector3(...delta))
+		this.controls.speed = speed
 		return this
 	}
 
 	moveTo(target: Vector3, speed: number) {
-		this.controls.move.copy(target).sub(this.position).normalize().multiplyScalar(speed)
-
-		const dx = target.x - this.position.x
-		const dz = target.z - this.position.z
-
-		const distance = Math.hypot(dx, dz)
-
-		return distance < POSITION_EPSILON
+		this.controls.target.copy(target)
+		this.controls.speed = speed
+		this.controls.isMoving = true
 	}
 
 	teleportTo(target: Vector3) {
@@ -79,7 +77,7 @@ export class Entity implements EntityState {
 		if (!this.physic || !this.position) return this
 
 		const matrix = new Matrix4()
-		matrix.lookAt(this.position, target, UP)
+		matrix.lookAt(this.position, target.clone().setY(this.position.y), UP)
 		this.controls.orientation.setFromRotationMatrix(matrix)
 
 		return this
