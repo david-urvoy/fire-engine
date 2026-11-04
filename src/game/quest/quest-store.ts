@@ -2,7 +2,7 @@ import { useGame } from '@david-urvoy/fire-engine'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback } from 'react'
 
-import type { Quest, QuestStatus } from './quest.model'
+import type { Quest, QuestStatus } from './quest.types'
 
 export interface QuestRecord {
 	id: string
