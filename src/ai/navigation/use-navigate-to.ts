@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Vector3 } from 'three'
 
 import type { Entity } from '../../game/entity/entity.model'
 import { eventBus } from '../../lib'
 import { useNavigation } from './navigation.context'
 
-export function useNavigateTo<T extends string>(entity: Entity, pointOfInterest: T) {
-	const [waypointIndex, setWaypointIndex] = useWaypointIndex(pointOfInterest)
-	const path = usePath(entity, pointOfInterest)
+export function useNavigateTo(entity: Entity, group: string, pointOfInterest: string) {
+	const [waypointIndex, setWaypointIndex] = useWaypointIndex(group, pointOfInterest)
+	const path = usePath(entity, group, pointOfInterest)
 
 	const currentWaypoint = path?.[waypointIndex]
 
@@ -36,15 +37,16 @@ export function useNavigateTo<T extends string>(entity: Entity, pointOfInterest:
 	}, [waypointIndex, setWaypointIndex, path, entity.id, entity.controls])
 }
 
-function usePath<T extends string>(entity: Entity, pointOfInterest: T) {
+function usePath(entity: Entity, group: string, pointOfInterest: string) {
 	const { pathfinding, pointsOfInterest } = useNavigation()
-	const targetPointOfInterest = pointsOfInterest[pointOfInterest]
-	if (!targetPointOfInterest) console.warn(`POI key "${pointOfInterest}" not found in context`)
+	const key = `${group}:${pointOfInterest}`
+	const targetPointOfInterest = pointsOfInterest[key]
+	if (!targetPointOfInterest) console.warn(`POI "${key}" not found in context`)
 
 	const path = useMemo(
 		() =>
 			targetPointOfInterest
-				? pathfinding.findPath(entity.position, targetPointOfInterest.position)
+				? pathfinding.findPath(entity.position, new Vector3(...targetPointOfInterest.position))
 				: undefined,
 		[targetPointOfInterest, pathfinding, entity.position],
 	)
@@ -52,11 +54,12 @@ function usePath<T extends string>(entity: Entity, pointOfInterest: T) {
 	return path
 }
 
-function useWaypointIndex(poi: string) {
+function useWaypointIndex(group: string, pointOfInterest: string) {
 	const [waypointIndex, setWaypointIndex] = useState(1)
-	const [currentPoi, setCurrentPoi] = useState(poi)
-	if (poi !== currentPoi) {
-		setCurrentPoi(poi)
+	const [currentPoi, setCurrentPoi] = useState(`${group}:${pointOfInterest}`)
+	const key = `${group}:${pointOfInterest}`
+	if (key !== currentPoi) {
+		setCurrentPoi(key)
 		setWaypointIndex(1)
 	}
 

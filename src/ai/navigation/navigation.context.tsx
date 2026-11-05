@@ -3,6 +3,7 @@ import {
 	use,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
 	useState,
 	type PropsWithChildren,
@@ -16,14 +17,14 @@ type NavigationContextValue = {
 	pathfinding: Pathfinding
 	setNavMeshSource: (source: string) => void
 	pointsOfInterest: Record<string, PointOfInterest>
-	addPointsOfInterest: (points: Record<string, PointOfInterest>) => void
+	addPointOfInterest: (pointOfInterest: PointOfInterest) => void
 }
 
 const NavigationContext = createContext<NavigationContextValue>({
 	pathfinding: new Pathfinding(),
 	setNavMeshSource: () => {},
 	pointsOfInterest: {},
-	addPointsOfInterest: () => {},
+	addPointOfInterest: () => {},
 })
 
 const navMeshCache = new Map<string, Promise<NavMesh>>()
@@ -38,17 +39,20 @@ export function NavigationProvider({ children }: PropsWithChildren) {
 
 	const setNavMeshSource = useCallback((source: string) => setSource(source), [])
 
-	const addPointsOfInterest = useCallback(
-		(points: Record<string, PointOfInterest>) =>
-			setPointsOfInterest((prev) => ({ ...prev, ...points })),
+	const addPointOfInterest = useCallback(
+		(pointOfInterest: PointOfInterest) =>
+			setPointsOfInterest((prev) => ({
+				...prev,
+				[`${pointOfInterest.group}:${pointOfInterest.id}`]: pointOfInterest,
+			})),
 		[],
 	)
 
 	const pathfinding = useMemo(() => new Pathfinding(navMesh), [navMesh])
 
 	const value = useMemo(
-		() => ({ pathfinding, setNavMeshSource, pointsOfInterest, addPointsOfInterest }),
-		[pathfinding, setNavMeshSource, pointsOfInterest, addPointsOfInterest],
+		() => ({ pathfinding, setNavMeshSource, pointsOfInterest, addPointOfInterest }),
+		[pathfinding, setNavMeshSource, pointsOfInterest, addPointOfInterest],
 	)
 
 	return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>
@@ -62,4 +66,9 @@ export function useNavigation() {
 	}
 
 	return context
+}
+
+export function useLoadNavigation(navmesh: string) {
+	const { setNavMeshSource } = useNavigation()
+	useEffect(() => setNavMeshSource(navmesh), [navmesh, setNavMeshSource])
 }

@@ -4,7 +4,31 @@ import type { NavMesh } from 'yuka'
 import { Vector3 as YUKAVector3 } from 'yuka'
 
 import { Pathfinding } from '../pathfinding'
-import { PointOfInterest } from '../point-of-interest'
+import type { PointOfInterest } from '../point-of-interest'
+
+const DEFAULT_RADIUS = 0.5
+
+function createPointOfInterest<G extends string = string>({
+	id,
+	name = id,
+	group = 'default' as G,
+	position,
+	radius = DEFAULT_RADIUS,
+}: {
+	id: string
+	name?: string
+	group?: G
+	position: [number, number, number]
+	radius?: number
+}): Omit<PointOfInterest<G>, 'position'> & { position: Vector3 } {
+	return {
+		id,
+		name,
+		group,
+		position: new Vector3(...position),
+		radius,
+	}
+}
 
 describe('Pathfinding', () => {
 	it('should return undefined if no navmesh is provided', () => {
@@ -38,7 +62,7 @@ describe('Pathfinding', () => {
 
 describe('PointOfInterest', () => {
 	it('should create a PointOfInterest with default radius', () => {
-		const poi = PointOfInterest({
+		const poi = createPointOfInterest({
 			id: 'counter',
 			position: [1, 2, 3],
 		})
@@ -50,7 +74,7 @@ describe('PointOfInterest', () => {
 	})
 
 	it('should accept custom name and radius', () => {
-		const poi = PointOfInterest({
+		const poi = createPointOfInterest({
 			id: 'bed_01',
 			name: 'Bed',
 			position: [4, 0, -2],
@@ -63,4 +87,3 @@ describe('PointOfInterest', () => {
 		expect(poi.radius).toBe(1.2)
 	})
 })
-
