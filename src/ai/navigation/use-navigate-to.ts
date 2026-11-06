@@ -22,13 +22,11 @@ export function useNavigateTo(entity: Entity, group: string, pointOfInterest: st
 		if (!path) return
 
 		const listener = ({ id }: { id: string }) => {
-			if (id === entity.id) {
-				if (waypointIndex < path.length - 1) {
-					setWaypointIndex((prev) => prev + 1)
-				} else {
+			if (id === entity.id)
+				if (waypointIndex < path.length - 1) setWaypointIndex((prev) => prev + 1)
+				else {
 					entity.controls.isMoving = false
 				}
-			}
 		}
 
 		eventBus.on('hasReached', listener)
@@ -41,7 +39,6 @@ function usePath(entity: Entity, group: string, pointOfInterest: string) {
 	const { pathfinding, pointsOfInterest } = useNavigation()
 	const key = `${group}:${pointOfInterest}`
 	const targetPointOfInterest = pointsOfInterest[key]
-	if (!targetPointOfInterest) console.warn(`POI "${key}" not found in context`)
 
 	const path = useMemo(
 		() =>
