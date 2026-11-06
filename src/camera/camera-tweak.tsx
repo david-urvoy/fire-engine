@@ -1,30 +1,23 @@
 import { useFrame } from '@react-three/fiber'
-import { useControls } from 'leva'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
+import { useSnapshot } from 'valtio'
 
-import { POSITION_EPSILON } from '../game'
+import { game, POSITION_EPSILON } from '../game'
 
 export function CameraTweak() {
-	const lastCameraPosition = useRef(new Vector3())
-	const [_, set] = useControls(
-		'🎥 Camera position',
-		() => ({
-			x: { value: 0, disabled: true },
-			y: { value: 0, disabled: true },
-			z: { value: 0, disabled: true },
-		}),
-		{
-			collapsed: true,
-		},
-	)
+	const { camera: cameraStore } = useSnapshot(game)
+	const position = useRef(new Vector3())
 
 	useFrame(({ camera }) => {
-		if (lastCameraPosition.current.distanceTo(camera.position) > POSITION_EPSILON) {
-			set(camera.position)
-			lastCameraPosition.current.copy(camera.position)
+		if (position.current.distanceTo(camera.position) > POSITION_EPSILON) {
+			game.camera.position.x = camera.position.x
+			game.camera.position.y = camera.position.y
+			game.camera.position.z = camera.position.z
 		}
+
+		position.current.copy(cameraStore.position)
 	})
 
-	return null
+	return <></>
 }

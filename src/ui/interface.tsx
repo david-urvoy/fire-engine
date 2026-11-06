@@ -9,6 +9,7 @@ import { InfoPanel } from './info-panel/info-panel'
 export function Interface({ children }: PropsWithChildren) {
 	const {
 		narrative: { showCanvas },
+		camera,
 	} = useSnapshot(game)
 	return (
 		<div
@@ -16,6 +17,9 @@ export function Interface({ children }: PropsWithChildren) {
 			className="pointer-events-none fixed top-0 left-0 z-50 h-full w-full"
 			hidden={!showCanvas}
 		>
+			<span id="camera-position" className="absolute w-full text-center text-white">
+				{`[ ${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}] `}
+			</span>
 			<PauseMenu />
 			<InfoPanel />
 			<Reticle />
