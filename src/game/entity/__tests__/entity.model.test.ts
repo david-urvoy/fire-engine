@@ -32,11 +32,9 @@ describe('Entity.moveTo', () => {
 			id: 'test-entity',
 			name: 'Test Entity',
 			runtime: {
-				rigidBody: {
-					current: null,
-				},
-				object3D: { current: null },
-				animations: { current: null },
+				rigidBody: null,
+				object3D: null,
+				animations: null,
 			},
 		})
 	})

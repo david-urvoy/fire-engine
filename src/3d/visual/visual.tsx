@@ -20,18 +20,18 @@ export function Visual({
 
 	useEffect(() => {
 		const object3D = entity.runtime.object3D
-		object3D.current?.traverse((child) => {
+		object3D?.traverse((child) => {
 			child.userData.entityId = entity.id
 		})
 
 		return () => {
-			object3D.current = null
+			entity.runtime.object3D = undefined
 		}
 	}, [entity])
 
 	return (
 		<group
-			ref={(current) => setRuntime({ object3DRef: { current } })}
+			ref={(current) => setRuntime({ object3D: current })}
 			{...props}
 			onClick={(e) => {
 				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return

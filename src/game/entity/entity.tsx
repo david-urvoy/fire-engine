@@ -1,5 +1,5 @@
 import type { RigidBody } from '@dimforge/rapier3d-compat'
-import { useEffect, useRef, useState, type PropsWithChildren, type RefObject } from 'react'
+import { useEffect, useState, type PropsWithChildren } from 'react'
 import type { Object3D } from 'three'
 
 import { EntityProvider, useGame, type Animations } from '../..'
@@ -11,25 +11,22 @@ export type EntityProps = PropsWithChildren<{
 
 export function Entity({ id, children }: EntityProps) {
 	const { entityManager } = useGame()
-	const object3D = useRef(null)
-	const rigidBody = useRef(null)
-	const animations = useRef(null)
 	const [entity, setEntity] = useState(
-		new EntityModel({ id, runtime: { object3D, rigidBody, animations } }),
+		new EntityModel({ id, runtime: { object3D: null, rigidBody: null, animations: null } }),
 	)
 	const setRuntime = ({
-		object3DRef,
-		rigidBodyRef,
-		animationsRef,
+		object3D,
+		rigidBody,
+		animations,
 	}: {
-		object3DRef?: RefObject<Object3D | null>
-		rigidBodyRef?: RefObject<RigidBody | null>
-		animationsRef?: RefObject<Animations | null>
+		object3D?: Object3D | null
+		rigidBody?: RigidBody | null
+		animations?: Animations | null
 	}) => {
 		setEntity((entity) => {
-			if (object3DRef) entity.runtime.object3D = object3DRef
-			if (rigidBodyRef) entity.runtime.rigidBody = rigidBodyRef
-			if (animationsRef) entity.runtime.animations = animationsRef
+			if (object3D) entity.runtime.object3D = object3D
+			if (rigidBody) entity.runtime.rigidBody = rigidBody
+			if (animations) entity.runtime.animations = animations
 			return entity
 		})
 	}

@@ -10,7 +10,7 @@ function useComputedMovement(controllerRef: RefObject<KinematicCharacterControll
 	const { entity } = useEntity()
 
 	return useCallback(() => {
-		const body = entity.runtime.rigidBody?.current
+		const body = entity.runtime.rigidBody
 		const controller = controllerRef?.current
 		if (!body || !entity.physic || !controller) return
 
@@ -37,7 +37,7 @@ export function useCharacterMovement() {
 		(translation: Vector3, rotation: Quaternion) => {
 			applyTeleport()
 
-			const body = entity.runtime.rigidBody?.current
+			const body = entity.runtime.rigidBody
 			const controller = characterController?.current
 			if (!body || !controller) return
 

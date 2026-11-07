@@ -1,5 +1,5 @@
 import type { RigidBody } from '@dimforge/rapier3d-compat'
-import { createContext, useContext, type PropsWithChildren, type RefObject } from 'react'
+import { createContext, useContext, type PropsWithChildren } from 'react'
 import type { Object3D } from 'three'
 
 import type { Animations } from '../../animation'
@@ -9,13 +9,13 @@ interface EntityContextType {
 	id: string
 	entity: Entity
 	setRuntime: ({
-		object3DRef,
-		rigidBodyRef,
-		animationsRef,
+		object3D,
+		rigidBody,
+		animations,
 	}: {
-		object3DRef?: RefObject<Object3D | null>
-		rigidBodyRef?: RefObject<RigidBody | null>
-		animationsRef?: RefObject<Animations | null>
+		object3D?: Object3D | null
+		rigidBody?: RigidBody | null
+		animations?: Animations | null
 	}) => void
 }
 

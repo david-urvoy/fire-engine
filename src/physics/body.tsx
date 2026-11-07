@@ -22,7 +22,7 @@ export function PhysicBody({ move, position, ...props }: PhysicBodyProps) {
 	return (
 		<RigidBody
 			{...props}
-			ref={(current) => setRuntime({ rigidBodyRef: { current } })}
+			ref={(current) => setRuntime({ rigidBody: current })}
 			position={position}
 		/>
 	)

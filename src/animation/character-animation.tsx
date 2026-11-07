@@ -28,7 +28,7 @@ export function CharacterAnimation() {
 	const playAction = useCallback(
 		(action: Action) => {
 			const animations = entity.runtime.animations
-			const animation = animations.current?.[action]
+			const animation = animations?.[action]
 
 			if (animation !== runningAnimation.current) {
 				runningAnimation.current?.stop()

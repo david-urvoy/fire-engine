@@ -6,8 +6,5 @@ import type { Animations } from './character-animation'
 export function useBindAnimations(bindAnimations: () => Animations) {
 	const { setRuntime } = useEntity()
 
-	useEffect(
-		() => setRuntime({ animationsRef: { current: bindAnimations() } }),
-		[setRuntime, bindAnimations],
-	)
+	useEffect(() => setRuntime({ animations: bindAnimations() }), [setRuntime, bindAnimations])
 }

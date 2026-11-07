@@ -6,7 +6,7 @@ export function useTeleport() {
 	const { entity } = useEntity()
 
 	return useCallback(() => {
-		const body = entity.runtime.rigidBody?.current
+		const body = entity.runtime.rigidBody
 		const physic = entity.physic
 		const controls = entity.controls
 		if (!body || !physic || !controls.teleport) return
@@ -15,8 +15,8 @@ export function useTeleport() {
 
 		entity.position.copy(controls.teleport)
 		physic.velocity.set(0, 0, 0)
-		physic.isGrounded = false
+		physic.setGrounded(false)
 
-		controls.teleport = undefined
+		controls.setTeleport(undefined)
 	}, [entity])
 }

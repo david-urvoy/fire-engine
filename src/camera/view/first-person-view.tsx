@@ -27,7 +27,7 @@ function FirstPersonControls() {
 				const entity = entityManager.get(game.controlledCharacter)
 				if (!entity) return
 
-				entity.runtime.rigidBody.current?.wakeUp()
+				entity.runtime.rigidBody?.wakeUp()
 			}}
 			pointerSpeed={POINTER_SPEED}
 			selector={isPaused ? '#resume' : dialogue?.awaitingChoice ? '#none' : 'canvas'}

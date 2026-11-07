@@ -12,6 +12,10 @@ class Controls {
 		public teleport?: Vector3,
 		public isMoving: boolean = false,
 	) {}
+
+	setTeleport(target?: Vector3) {
+		this.teleport = target?.clone()
+	}
 }
 
 export class Entity {
@@ -96,17 +100,16 @@ export class Entity {
 	}
 
 	get position(): Vector3 {
-		const pos = this.runtime.rigidBody.current?.translation()
+		const pos = this.runtime.rigidBody?.translation()
 
 		if (pos) return this._position.copy(pos)
 
-		this.runtime.object3D.current?.getWorldPosition(this._position)
+		this.runtime.object3D?.getWorldPosition(this._position)
 		return this._position
 	}
 
 	get orientation(): Quaternion {
-		const rot =
-			this.runtime.rigidBody.current?.rotation() ?? this.runtime.object3D?.current?.quaternion
+		const rot = this.runtime.rigidBody?.rotation() ?? this.runtime.object3D?.quaternion
 
 		if (rot) return this._orientation.copy(rot)
 		return this._orientation
