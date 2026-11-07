@@ -1,5 +1,5 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
-import { useCallback, useRef, type RefObject } from 'react'
+import { useCallback, type RefObject } from 'react'
 import { Vector3, type Quaternion } from 'three'
 
 import { useEntity } from '../../game'
@@ -8,21 +8,23 @@ import { useTeleport } from './use-teleport'
 
 function useComputedMovement(controllerRef: RefObject<KinematicCharacterController | null>) {
 	const { entity } = useEntity()
-	const tmpDesired = useRef(new Vector3())
 
 	return useCallback(() => {
 		const body = entity.runtime.rigidBody?.current
 		const controller = controllerRef?.current
-
 		if (!body || !entity.physic || !controller) return
 
-		const desired = tmpDesired.current
-		desired.copy(body.translation()).add(controller.computedMovement())
+		const computedMovement = controller.computedMovement()
+		const translation = body.translation()
+		translation.x += computedMovement.x
+		translation.y += computedMovement.y
+		translation.z += computedMovement.z
 
-		if (desired.distanceToSquared(entity.position) > 1e-6) body.setNextKinematicTranslation(desired)
+		if (entity.position.distanceToSquared(translation) > 1e-6)
+			body.setNextKinematicTranslation(translation)
 
-		entity.physic.isGrounded = controller.computedGrounded()
-	}, [controllerRef, entity])
+		entity.physic.setGrounded(controller.computedGrounded())
+	}, [entity.runtime.rigidBody, controllerRef, entity.physic, entity.position])
 }
 
 export function useCharacterMovement() {

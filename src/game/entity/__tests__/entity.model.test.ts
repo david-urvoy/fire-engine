@@ -30,7 +30,6 @@ describe('Entity.moveTo', () => {
 	beforeEach(async () => {
 		entity = new Entity({
 			id: 'test-entity',
-			ref: 'test-ref',
 			name: 'Test Entity',
 			runtime: {
 				rigidBody: {

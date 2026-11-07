@@ -23,7 +23,7 @@ const keyboardCommands = computed({
 	},
 	speed: () => {
 		const { sprint } = keyboardKeys
-		return !sprint ? 2 : 1
+		return !sprint ? 4 : 1.5
 	},
 })
 

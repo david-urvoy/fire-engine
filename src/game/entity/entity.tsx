@@ -1,5 +1,5 @@
 import type { RigidBody } from '@dimforge/rapier3d-compat'
-import { useEffect, useId, useRef, useState, type PropsWithChildren, type RefObject } from 'react'
+import { useEffect, useRef, useState, type PropsWithChildren, type RefObject } from 'react'
 import type { Object3D } from 'three'
 
 import { EntityProvider, useGame, type Animations } from '../..'
@@ -11,12 +11,11 @@ export type EntityProps = PropsWithChildren<{
 
 export function Entity({ id, children }: EntityProps) {
 	const { entityManager } = useGame()
-	const ref = useId()
 	const object3D = useRef(null)
 	const rigidBody = useRef(null)
 	const animations = useRef(null)
 	const [entity, setEntity] = useState(
-		new EntityModel({ id, ref, runtime: { object3D, rigidBody, animations } }),
+		new EntityModel({ id, runtime: { object3D, rigidBody, animations } }),
 	)
 	const setRuntime = ({
 		object3DRef,

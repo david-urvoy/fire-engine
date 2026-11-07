@@ -1,19 +1,13 @@
 import type { RapierRigidBody } from '@react-three/rapier'
 import type { RefObject } from 'react'
-import type { Object3D, Quaternion, Vector3 } from 'three'
+import type { Object3D, Vector3 } from 'three'
 
 import type { Animations } from '../../animation/character-animation'
-
-export interface ControlsState {
-	target: Vector3
-	orientation: Quaternion
-	teleport?: Vector3
-	isMoving: boolean
-}
 
 export interface PhysicState {
 	velocity: Vector3
 	isGrounded: boolean
+	setGrounded: (grounded: boolean) => void
 	isSleeping: boolean
 	runtime?: RapierRigidBody
 }
@@ -26,16 +20,4 @@ export interface EntityRuntime {
 	rigidBody: RefObject<RapierRigidBody | null>
 	object3D: RefObject<Object3D | null>
 	animations: RefObject<Animations | null>
-}
-
-export interface EntityState {
-	id: string
-	ref: string
-	name: string
-	position: Vector3
-	orientation: Quaternion
-	controls: ControlsState
-	physic?: PhysicState
-	runtime: EntityRuntime
-	interaction?: InteractionState
 }

@@ -1,8 +1,8 @@
 import { GRAVITY_CONST, MAX_FALLING_SPEED } from '../../game'
-import type { EntityState } from '../../game/entity/entity.types'
+import type { Entity } from '../../game/entity/entity.model'
 
 export class GravitySystem {
-	private entities = new Set<EntityState>()
+	private entities = new Set<Entity>()
 
 	step(delta: number) {
 		this.entities.forEach((entity) => {
@@ -19,11 +19,11 @@ export class GravitySystem {
 		})
 	}
 
-	register(entity: EntityState) {
+	register(entity: Entity) {
 		this.entities.add(entity)
 	}
 
-	unregister(entity: EntityState) {
+	unregister(entity: Entity) {
 		this.entities.delete(entity)
 	}
 }

@@ -2,15 +2,9 @@ import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 
 import { CameraProxy } from '../../camera/camera-proxy'
 import { game, INTERACTION_MAX_DISTANCE, UP } from '../game.store'
-import type {
-	ControlsState,
-	EntityRuntime,
-	EntityState,
-	InteractionState,
-	PhysicState,
-} from './entity.types'
+import type { EntityRuntime, InteractionState, PhysicState } from './entity.types'
 
-class Controls implements ControlsState {
+class Controls {
 	constructor(
 		public target: Vector3 = new Vector3(),
 		public speed: number = 1,
@@ -20,9 +14,8 @@ class Controls implements ControlsState {
 	) {}
 }
 
-export class Entity implements EntityState {
+export class Entity {
 	readonly id: string
-	readonly ref: string
 	readonly name: string
 	readonly controls: Controls
 	physic?: PhysicState
@@ -35,18 +28,15 @@ export class Entity implements EntityState {
 
 	constructor({
 		id,
-		ref,
 		name = id,
 		runtime,
 	}: {
 		id: string
-		ref: string
 		name?: string
 		initialPosition?: [number, number, number]
 		runtime: EntityRuntime
 	}) {
 		this.id = id
-		this.ref = ref
 		this.name = name
 		this.controls = new Controls()
 		this.runtime = runtime

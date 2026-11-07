@@ -66,6 +66,9 @@ export class PhysicSystem {
 				entity.physic = {
 					velocity: new Vector3(),
 					isGrounded: true,
+					setGrounded: (grounded: boolean) => {
+						entity.physic!.isGrounded = grounded
+					},
 					isSleeping: false,
 				}
 			}
