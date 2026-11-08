@@ -18,7 +18,7 @@ export function Interface({ children }: PropsWithChildren) {
 			hidden={!showCanvas}
 		>
 			<span id="camera-position" className="absolute w-full text-center text-white">
-				{`[ ${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}] `}
+				{`[ ${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)} ]`}
 			</span>
 			<PauseMenu />
 			<InfoPanel />
