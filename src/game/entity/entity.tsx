@@ -7,12 +7,17 @@ import { Entity as EntityModel } from './entity.model'
 
 export type EntityProps = PropsWithChildren<{
 	id: string
+	position?: [number, number, number]
 }>
 
-export function Entity({ id, children }: EntityProps) {
+export function Entity({ id, position, children }: EntityProps) {
 	const { entityManager } = useGame()
 	const [entity, setEntity] = useState(
-		new EntityModel({ id, runtime: { object3D: null, rigidBody: null, animations: null } }),
+		new EntityModel({
+			id,
+			initialPosition: position,
+			runtime: { object3D: null, rigidBody: null, animations: null },
+		}),
 	)
 	const setRuntime = ({
 		object3D,
@@ -32,10 +37,10 @@ export function Entity({ id, children }: EntityProps) {
 	}
 
 	useEffect(() => {
-		entityManager.set(id, entity)
+		entityManager.add(entity)
 
 		return () => {
-			entityManager.delete(id)
+			entityManager.delete(entity)
 		}
 	}, [id, entity, entityManager])
 

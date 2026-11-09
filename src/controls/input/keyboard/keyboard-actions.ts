@@ -1,4 +1,4 @@
-import { Vector3 } from 'three'
+import { Vector3 as YukaVector3 } from 'yuka'
 
 import { game, useGame } from '../../../game'
 import { dialogueStore } from '../../../game/conversation/dialogue/dialogue.store'
@@ -20,7 +20,7 @@ export function useKeyboardActions(): Partial<Record<Action, () => void>> {
 			const sphere = entityManager.get('sphere')
 			if (!sphere) return
 
-			sphere.teleportTo(new Vector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
+			sphere.teleportTo(new YukaVector3(2.65, sphere.position.y === 2 ? 3 : 2, -1.5))
 		},
 		nextDialogue: () => {
 			if (!dialogueStore.active?.locked) return

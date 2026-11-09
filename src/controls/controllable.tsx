@@ -35,8 +35,8 @@ function useCharacterMove() {
 		const player = getPlayer()
 		if (!player) return
 
-		const target = movement.current.clone().applyQuaternion(player.orientation).multiplyScalar(8)
-		player.moveBy([target.x, target.y, target.z], speed)
+		const target = movement.current.clone().applyQuaternion(player.rotation).multiplyScalar(8)
+		player.moveBy(target, speed)
 	})
 }
 

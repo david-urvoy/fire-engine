@@ -11,11 +11,11 @@ const ACTIONS = {
 		maxSpeed: 0,
 	},
 	walk: {
-		ratio: 0.5,
-		maxSpeed: 1,
+		ratio: 50,
+		maxSpeed: 0.1,
 	},
 	run: {
-		ratio: 0.2,
+		ratio: 20,
 		maxSpeed: Infinity,
 	},
 } as const
@@ -27,9 +27,7 @@ export function CharacterAnimation() {
 
 	const playAction = useCallback(
 		(action: Action) => {
-			const animations = entity.runtime.animations
-			const animation = animations?.[action]
-
+			const animation = entity.runtime.animations?.[action]
 			if (animation !== runningAnimation.current) {
 				runningAnimation.current?.stop()
 				runningAnimation.current = animation
@@ -50,12 +48,12 @@ export function CharacterAnimation() {
 	}, [playAction])
 
 	useFrame(() => {
-		const velocity = entity.velocity?.length()
-		if (!velocity || velocity < 0.01) return playAction('idle')
+		const speed = entity.getSpeed()
+		if (speed === 0) return playAction('idle')
 
-		if (velocity > ACTIONS.walk.maxSpeed)
-			playAction('run')?.setEffectiveTimeScale(velocity * ACTIONS.run.ratio)
-		else playAction('walk')?.setEffectiveTimeScale(velocity * ACTIONS.walk.ratio)
+		if (speed > ACTIONS.walk.maxSpeed)
+			return playAction('run')?.setEffectiveTimeScale(speed * ACTIONS.run.ratio)
+		else return playAction('walk')?.setEffectiveTimeScale(speed * ACTIONS.walk.ratio)
 	})
 
 	return <></>

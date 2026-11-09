@@ -1,51 +1,47 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
-import { useCallback, type RefObject } from 'react'
-import { Vector3, type Quaternion } from 'three'
+import { useCallback, useRef, type RefObject } from 'react'
+import { Vector3 as YukaVector3 } from 'yuka'
 
 import { useEntity } from '../../game'
 import { useTeleport } from './use-teleport'
-
-function useComputedMovement(controllerRef: RefObject<KinematicCharacterController | null>) {
-	const { entity } = useEntity()
-
-	return useCallback(() => {
-		const body = entity.runtime.rigidBody
-		const controller = controllerRef?.current
-		if (!body || !entity.physic || !controller) return
-
-		const computedMovement = controller.computedMovement()
-		const translation = body.translation()
-		translation.x += computedMovement.x
-		translation.y += computedMovement.y
-		translation.z += computedMovement.z
-
-		if (entity.position.distanceToSquared(translation) > 1e-6)
-			body.setNextKinematicTranslation(translation)
-
-		entity.physic.setGrounded(controller.computedGrounded())
-	}, [entity.runtime.rigidBody, controllerRef, entity.physic, entity.position])
-}
 
 export function useCharacterMovement(
 	controllerRef: RefObject<KinematicCharacterController | null>,
 ) {
 	const { entity } = useEntity()
 	const applyTeleport = useTeleport()
-	const applyComputedMovement = useComputedMovement(controllerRef)
+	const position = useRef(new YukaVector3())
 
-	return useCallback(
-		(translation: Vector3, rotation: Quaternion) => {
-			applyTeleport()
+	return useCallback(() => {
+		applyTeleport()
 
-			const body = entity.runtime.rigidBody
-			const controller = controllerRef?.current
-			if (!body || !controller) return
+		const body = entity.runtime.rigidBody
+		const controller = controllerRef?.current
+		if (!body || !controller || !entity.physic) return
 
-			controller.computeColliderMovement(body.collider(0), translation)
+		controller.computeColliderMovement(body.collider(0), entity.velocity)
 
-			body.setNextKinematicRotation(rotation)
-			applyComputedMovement()
-		},
-		[entity, controllerRef, applyTeleport, applyComputedMovement],
-	)
+		const computedMovement = controller.computedMovement()
+		const translation = body.translation()
+		position.current.set(
+			translation.x + computedMovement.x,
+			translation.y + computedMovement.y,
+			translation.z + computedMovement.z,
+		)
+
+		if (entity.position.squaredDistanceTo(position.current) > 1e-6) {
+			entity.position.copy(position.current)
+			body.setNextKinematicTranslation(entity.position)
+		}
+		body.setNextKinematicRotation(entity.rotation)
+		entity.physic.setGrounded(controller.computedGrounded())
+	}, [
+		entity.runtime.rigidBody,
+		controllerRef,
+		applyTeleport,
+		entity.physic,
+		entity.position,
+		entity.rotation,
+		entity.velocity,
+	])
 }

@@ -1,12 +1,11 @@
 import { RigidBody, type RigidBodyProps } from '@react-three/rapier'
 import { useEffect } from 'react'
-import { Vector3, type Quaternion } from 'three'
 
 import { useEntity, useGameLoopSystem } from '../game'
 
 export type PhysicBodyProps = RigidBodyProps & {
 	position?: [number, number, number]
-	move?: (translation: Vector3, rotation: Quaternion) => void
+	move?: () => void
 }
 
 export function PhysicBody({ move, position, ...props }: PhysicBodyProps) {

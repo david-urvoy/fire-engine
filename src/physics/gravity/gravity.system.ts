@@ -8,14 +8,15 @@ export class GravitySystem {
 		this.entities.forEach((entity) => {
 			if (!entity.physic) return
 
-			const { velocity, isGrounded } = entity.physic
+			const { isGrounded } = entity.physic
+			const velocity = entity.velocity.y / delta
 
-			if (isGrounded && velocity.y <= 0) {
-				velocity.y = 0
+			if (isGrounded && velocity <= 0) {
+				entity.velocity.y = 0
 				return
 			}
 
-			velocity.y = Math.max(velocity.y - GRAVITY_CONST * delta, -MAX_FALLING_SPEED)
+			entity.velocity.y = Math.max(velocity - GRAVITY_CONST * delta, -MAX_FALLING_SPEED)
 		})
 	}
 

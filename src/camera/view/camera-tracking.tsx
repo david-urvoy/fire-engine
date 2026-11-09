@@ -20,10 +20,11 @@ function CameraOrientation() {
 		const controls = game.pointer.ref.current
 		if (!controls) return
 
-		const q = controls.getObject().quaternion
+		const q = controls.getObject().quaternion.clone()
 		const yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z))
 
-		entity.controls.orientation.setFromAxisAngle(UP, yaw)
+		q.setFromAxisAngle(UP, yaw)
+		entity.rotation.set(q.x, q.y, q.z, q.w)
 	})
 
 	return <></>

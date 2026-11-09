@@ -1,5 +1,6 @@
 import { useEffect, type PropsWithChildren } from 'react'
 import { Mesh } from 'three'
+import { Vector3 as YukaVector3 } from 'yuka'
 
 import { game, useEntity, useGame } from '../../game'
 import type { GroupProps } from '../../lib'
@@ -34,7 +35,13 @@ export function Visual({
 			ref={(current) => setRuntime({ object3D: current })}
 			{...props}
 			onClick={(e) => {
-				if (interactable && !entityManager.get(game.controlledCharacter)?.isInRange(e.point)) return
+				if (
+					interactable &&
+					!entityManager
+						.get(game.controlledCharacter)
+						?.isInRange(new YukaVector3(e.point.x, e.point.y, e.point.z))
+				)
+					return
 
 				onClick?.(e)
 				e.stopPropagation()

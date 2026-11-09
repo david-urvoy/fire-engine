@@ -10,18 +10,16 @@ import {
 } from 'react'
 import { NavMesh, NavMeshLoader } from 'yuka'
 
-import { Pathfinding } from './pathfinding'
 import type { PointOfInterest } from './point-of-interest'
 
 type NavigationContextValue = {
-	pathfinding: Pathfinding
+	navMesh?: NavMesh
 	setNavMeshSource: (source: string) => void
 	pointsOfInterest: Record<string, PointOfInterest>
 	addPointOfInterest: (pointOfInterest: PointOfInterest) => void
 }
 
 const NavigationContext = createContext<NavigationContextValue>({
-	pathfinding: new Pathfinding(),
 	setNavMeshSource: () => {},
 	pointsOfInterest: {},
 	addPointOfInterest: () => {},
@@ -48,11 +46,9 @@ export function NavigationProvider({ children }: PropsWithChildren) {
 		[],
 	)
 
-	const pathfinding = useMemo(() => new Pathfinding(navMesh), [navMesh])
-
 	const value = useMemo(
-		() => ({ pathfinding, setNavMeshSource, pointsOfInterest, addPointOfInterest }),
-		[pathfinding, setNavMeshSource, pointsOfInterest, addPointOfInterest],
+		() => ({ navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest }),
+		[navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest],
 	)
 
 	return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>

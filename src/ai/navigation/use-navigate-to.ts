@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Vector3 } from 'three'
+import { Vector3 as YukaVector3 } from 'yuka'
 
 import type { Entity } from '../../game/entity/entity.model'
 import { eventBus } from '../../lib'
@@ -14,7 +14,7 @@ export function useNavigateTo(entity: Entity, group: string, pointOfInterest: st
 	useEffect(() => {
 		if (!currentWaypoint) return
 
-		entity.moveTo(currentWaypoint, 1)
+		entity.moveTo(currentWaypoint, 1.6)
 		entity.lookAt(currentWaypoint)
 	}, [currentWaypoint, entity])
 
@@ -24,9 +24,7 @@ export function useNavigateTo(entity: Entity, group: string, pointOfInterest: st
 		const listener = ({ id }: { id: string }) => {
 			if (id === entity.id)
 				if (waypointIndex < path.length - 1) setWaypointIndex((prev) => prev + 1)
-				else {
-					entity.controls.isMoving = false
-				}
+				else entity.controls.isMoving = false
 		}
 
 		eventBus.on('hasReached', listener)
@@ -36,17 +34,15 @@ export function useNavigateTo(entity: Entity, group: string, pointOfInterest: st
 }
 
 function usePath(entity: Entity, group: string, pointOfInterest: string) {
-	const { pathfinding, pointsOfInterest } = useNavigation()
+	const { navMesh, pointsOfInterest } = useNavigation()
 	const key = `${group}:${pointOfInterest}`
 	const targetPointOfInterest = pointsOfInterest[key]
 
-	const path = useMemo(
-		() =>
-			targetPointOfInterest
-				? pathfinding.findPath(entity.position, new Vector3(...targetPointOfInterest.position))
-				: undefined,
-		[targetPointOfInterest, pathfinding, entity.position],
-	)
+	const path = useMemo(() => {
+		return targetPointOfInterest
+			? navMesh?.findPath(entity.position, new YukaVector3(...targetPointOfInterest.position))
+			: undefined
+	}, [targetPointOfInterest, navMesh, entity])
 
 	return path
 }

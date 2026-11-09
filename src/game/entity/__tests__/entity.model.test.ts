@@ -1,5 +1,6 @@
 import { Vector3 } from 'three'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { Vector3 as YukaVector3 } from 'yuka'
 
 import { Entity } from '../entity.model'
 
@@ -41,7 +42,7 @@ describe('Entity.moveTo', () => {
 
 	describe('should set target and movement state', () => {
 		it('should set target position', () => {
-			const target = new Vector3(10, 0, 0)
+			const target = new YukaVector3(10, 0, 0)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
@@ -51,7 +52,7 @@ describe('Entity.moveTo', () => {
 		})
 
 		it('should set isMoving to true', () => {
-			const target = new Vector3(10, 0, 10)
+			const target = new YukaVector3(10, 0, 10)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
@@ -60,7 +61,7 @@ describe('Entity.moveTo', () => {
 		})
 
 		it('should handle negative target coordinates', () => {
-			const target = new Vector3(-10, 0, -10)
+			const target = new YukaVector3(-10, 0, -10)
 			const speed = 0.8
 
 			entity.moveTo(target, speed)
@@ -73,21 +74,21 @@ describe('Entity.moveTo', () => {
 
 	describe('Entity.moveBy', () => {
 		it('should move entity by delta relative to current position', () => {
-			const delta: [number, number, number] = [5, 0, 5]
+			const delta = new Vector3(5, 0, 5)
 			const speed = 1
 
 			entity.moveBy(delta, speed)
 
 			// moveBy should calculate target as current position + delta
 			// Since entity starts at origin (0,0,0), target should be at delta
-			expect(entity.controls.target.x).toBe(delta[0])
-			expect(entity.controls.target.y).toBe(delta[1])
-			expect(entity.controls.target.z).toBe(delta[2])
+			expect(entity.controls.target.x).toBe(delta.x)
+			expect(entity.controls.target.y).toBe(delta.y)
+			expect(entity.controls.target.z).toBe(delta.z)
 			expect(entity.controls.speed).toBe(speed)
 		})
 
 		it('should be chainable', () => {
-			const result = entity.moveBy([1, 0, 1])
+			const result = entity.moveBy(new Vector3(1, 0, 1))
 
 			expect(result).toBe(entity)
 		})

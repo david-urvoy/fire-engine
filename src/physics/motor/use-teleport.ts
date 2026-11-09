@@ -14,7 +14,7 @@ export function useTeleport() {
 		body.setTranslation(controls.teleport, false)
 
 		entity.position.copy(controls.teleport)
-		physic.velocity.set(0, 0, 0)
+		entity.velocity.set(0, 0, 0)
 		physic.setGrounded(false)
 
 		controls.setTeleport(undefined)

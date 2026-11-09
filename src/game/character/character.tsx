@@ -21,9 +21,9 @@ export function Character({
 	position?: [number, number, number]
 }) {
 	return (
-		<Entity id={id} {...props}>
+		<Entity id={id} position={position} {...props}>
 			<CharacterProvider character={new CharacterModel(id, props.name, '', 0)}>
-				<KinematicMotor colliders={false} position={position}>
+				<KinematicMotor colliders={false}>
 					<CapsuleCollider
 						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
 						position={[0, height * 0.5, 0]}
