@@ -1,5 +1,6 @@
 import { Vector3 } from 'three'
-import { MovingEntity, Quaternion as YukaQuaternion, Vector3 as YukaVector3 } from 'yuka'
+import { proxy } from 'valtio'
+import { Vehicle, Quaternion as YukaQuaternion, Vector3 as YukaVector3 } from 'yuka'
 
 import { INTERACTION_MAX_DISTANCE } from '../game.store'
 import type { EntityRuntime, PhysicState } from './entity.types'
@@ -13,12 +14,16 @@ class Controls {
 		public isMoving = false,
 	) {}
 
+	setIsMoving(isMoving: boolean) {
+		this.isMoving = isMoving
+	}
+
 	setTeleport(target?: YukaVector3) {
 		this.teleport = target?.clone()
 	}
 }
 
-export class Entity extends MovingEntity {
+export class Entity extends Vehicle {
 	readonly id: string
 	readonly controls: Controls
 	physic?: PhysicState
@@ -39,7 +44,7 @@ export class Entity extends MovingEntity {
 		this.id = id
 		this.name = name
 		this.position = new YukaVector3(...(initialPosition ?? [0, 0, 0]))
-		this.controls = new Controls()
+		this.controls = proxy(new Controls())
 		this.runtime = runtime
 	}
 

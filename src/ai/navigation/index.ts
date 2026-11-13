@@ -1,4 +1,4 @@
-export * from './navigation.context'
-export * from './pathfinding'
+export * from './behaviors'
+export * from './movement'
+export * from './navmesh.context'
 export * from './point-of-interest'
-export * from './use-navigate-to'

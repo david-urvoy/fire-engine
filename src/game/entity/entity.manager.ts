@@ -17,4 +17,8 @@ export class EntityManager {
 	delete<Entity extends GameEntity>(entity: Entity) {
 		return this._yukaEntityManager.remove(entity)
 	}
+
+	update(delta: number) {
+		this._yukaEntityManager.update(delta)
+	}
 }

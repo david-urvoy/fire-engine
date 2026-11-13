@@ -12,14 +12,14 @@ import { NavMesh, NavMeshLoader } from 'yuka'
 
 import type { PointOfInterest } from './point-of-interest'
 
-type NavigationContextValue = {
+type NavMeshContextValue = {
 	navMesh?: NavMesh
 	setNavMeshSource: (source: string) => void
 	pointsOfInterest: Record<string, PointOfInterest>
 	addPointOfInterest: (pointOfInterest: PointOfInterest) => void
 }
 
-const NavigationContext = createContext<NavigationContextValue>({
+const NavMeshContext = createContext<NavMeshContextValue>({
 	setNavMeshSource: () => {},
 	pointsOfInterest: {},
 	addPointOfInterest: () => {},
@@ -27,7 +27,7 @@ const NavigationContext = createContext<NavigationContextValue>({
 
 const navMeshCache = new Map<string, Promise<NavMesh>>()
 
-export function NavigationProvider({ children }: PropsWithChildren) {
+export function NavMeshProvider({ children }: PropsWithChildren) {
 	const [source, setSource] = useState<string | null>(null)
 	const [pointsOfInterest, setPointsOfInterest] = useState<Record<string, PointOfInterest>>({})
 
@@ -51,20 +51,20 @@ export function NavigationProvider({ children }: PropsWithChildren) {
 		[navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest],
 	)
 
-	return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>
+	return <NavMeshContext.Provider value={value}>{children}</NavMeshContext.Provider>
 }
 
-export function useNavigation() {
-	const context = useContext(NavigationContext)
+export function useNavMesh() {
+	const context = useContext(NavMeshContext)
 
 	if (!context) {
-		throw new Error('useNavigation must be used within a NavigationProvider')
+		throw new Error('useNavMesh must be used within a NavMeshProvider')
 	}
 
 	return context
 }
 
-export function useLoadNavigation(navmesh: string) {
-	const { setNavMeshSource } = useNavigation()
+export function useLoadNavMesh(navmesh: string) {
+	const { setNavMeshSource } = useNavMesh()
 	useEffect(() => setNavMeshSource(navmesh), [navmesh, setNavMeshSource])
 }
