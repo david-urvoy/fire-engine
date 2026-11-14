@@ -35,8 +35,11 @@ export class PhysicSystem {
 						.normalize()
 						.multiplyScalar(entity.controls.speed)
 
-					velocity.add(targetMove).multiplyScalar(1 - Math.exp(-MOVEMENT_SMOOTHING * delta))
+					velocity
+						.set(velocity.x + targetMove.x, velocity.y + targetMove.y, velocity.z + targetMove.z)
+						.multiplyScalar(1 - Math.exp(-MOVEMENT_SMOOTHING * delta))
 					velocity.y = 0
+					entity.lookAt(velocity)
 				}
 			}
 

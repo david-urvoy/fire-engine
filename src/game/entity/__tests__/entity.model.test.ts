@@ -1,6 +1,5 @@
 import { Vector3 } from 'three'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { Vector3 as YukaVector3 } from 'yuka'
 
 import { Entity } from '../entity.model'
 
@@ -42,7 +41,7 @@ describe('Entity.moveTo', () => {
 
 	describe('should set target and movement state', () => {
 		it('should set target position', () => {
-			const target = new YukaVector3(10, 0, 0)
+			const target = new Vector3(10, 0, 0)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
@@ -52,7 +51,7 @@ describe('Entity.moveTo', () => {
 		})
 
 		it('should set isMoving to true', () => {
-			const target = new YukaVector3(10, 0, 10)
+			const target = new Vector3(10, 0, 10)
 			const speed = 0.5
 
 			entity.moveTo(target, speed)
@@ -61,7 +60,7 @@ describe('Entity.moveTo', () => {
 		})
 
 		it('should handle negative target coordinates', () => {
-			const target = new YukaVector3(-10, 0, -10)
+			const target = new Vector3(-10, 0, -10)
 			const speed = 0.8
 
 			entity.moveTo(target, speed)

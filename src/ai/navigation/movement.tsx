@@ -11,7 +11,6 @@ export function MoveToTarget({ speed }: { speed?: number }) {
 	useEffect(() => {
 		if (!target || !speed) return
 		entity.moveTo(target, speed)
-		entity.lookAt(target)
 	}, [entity, target, speed])
 
 	return null

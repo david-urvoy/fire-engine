@@ -1,5 +1,6 @@
 import { type Dexie } from 'dexie'
 import { createContext, Suspense, useContext, type PropsWithChildren } from 'react'
+import { EntityManager as YukaEntityManager } from 'yuka'
 
 import { NavMeshProvider } from '../ai'
 import { DialogueProvider } from './conversation/dialogue/dialogue.context'
@@ -12,6 +13,7 @@ export interface GameProviderProps {
 
 interface GameContextValue extends GameProviderProps {
 	entityManager: EntityManager
+	yukaEntityManager: YukaEntityManager
 }
 
 const GameContext = createContext<GameContextValue | null>(null)
@@ -19,7 +21,13 @@ const GameContext = createContext<GameContextValue | null>(null)
 export function GameProvider({ database, children }: PropsWithChildren<GameProviderProps>) {
 	return (
 		<Suspense fallback="Loading...">
-			<GameContext.Provider value={{ entityManager: new EntityManager(), database }}>
+			<GameContext.Provider
+				value={{
+					entityManager: new EntityManager(),
+					yukaEntityManager: new YukaEntityManager(),
+					database,
+				}}
+			>
 				<QuestsProvider>
 					<NavMeshProvider>
 						<DialogueProvider>{children}</DialogueProvider>

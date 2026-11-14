@@ -1,24 +1,18 @@
-import { EntityManager as YukaEntityManager, type GameEntity } from 'yuka'
-
 import { Entity } from './entity.model'
 
 export class EntityManager {
-	private readonly _yukaEntityManager = new YukaEntityManager()
+	private readonly entities = new Map<string, Entity>()
 
-	add<Entity extends GameEntity>(entity: Entity) {
-		this._yukaEntityManager.add(entity)
+	add(entity: Entity) {
+		this.entities.set(entity.id, entity)
 		return entity
 	}
 
 	get(id: string) {
-		return this._yukaEntityManager.getEntityByName(id) as unknown as Entity | null
+		return this.entities.get(id) as unknown as Entity | null
 	}
 
-	delete<Entity extends GameEntity>(entity: Entity) {
-		return this._yukaEntityManager.remove(entity)
-	}
-
-	update(delta: number) {
-		this._yukaEntityManager.update(delta)
+	delete(entity: Entity) {
+		return this.entities.delete(entity.id)
 	}
 }

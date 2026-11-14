@@ -4,7 +4,6 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
-	useMemo,
 	useState,
 	type PropsWithChildren,
 } from 'react'
@@ -31,11 +30,11 @@ export function NavMeshProvider({ children }: PropsWithChildren) {
 	const [source, setSource] = useState<string | null>(null)
 	const [pointsOfInterest, setPointsOfInterest] = useState<Record<string, PointOfInterest>>({})
 
+	const setNavMeshSource = useCallback((source: string) => setSource(source), [])
+
 	const navMesh = source
 		? use(navMeshCache.getOrInsertComputed(source, () => new NavMeshLoader().load(source)))
 		: undefined
-
-	const setNavMeshSource = useCallback((source: string) => setSource(source), [])
 
 	const addPointOfInterest = useCallback(
 		(pointOfInterest: PointOfInterest) =>
@@ -46,12 +45,13 @@ export function NavMeshProvider({ children }: PropsWithChildren) {
 		[],
 	)
 
-	const value = useMemo(
-		() => ({ navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest }),
-		[navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest],
+	return (
+		<NavMeshContext.Provider
+			value={{ navMesh, setNavMeshSource, pointsOfInterest, addPointOfInterest }}
+		>
+			{children}
+		</NavMeshContext.Provider>
 	)
-
-	return <NavMeshContext.Provider value={value}>{children}</NavMeshContext.Provider>
 }
 
 export function useNavMesh() {

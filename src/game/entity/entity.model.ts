@@ -1,16 +1,16 @@
-import { Vector3 } from 'three'
+import { Quaternion, Vector3 } from 'three'
 import { proxy } from 'valtio'
-import { Vehicle, Quaternion as YukaQuaternion, Vector3 as YukaVector3 } from 'yuka'
+import { MovingEntity, Vector3 as YukaVector3 } from 'yuka'
 
 import { INTERACTION_MAX_DISTANCE } from '../game.store'
 import type { EntityRuntime, PhysicState } from './entity.types'
 
 class Controls {
 	constructor(
-		public target = new YukaVector3(),
+		public target = new Vector3(),
 		public speed = 1,
-		public orientation = new YukaQuaternion(),
-		public teleport?: YukaVector3,
+		public orientation = new Quaternion(),
+		public teleport?: Vector3,
 		public isMoving = false,
 	) {}
 
@@ -18,16 +18,22 @@ class Controls {
 		this.isMoving = isMoving
 	}
 
-	setTeleport(target?: YukaVector3) {
+	setTeleport(target?: Vector3) {
 		this.teleport = target?.clone()
 	}
 }
 
-export class Entity extends Vehicle {
+export class Entity {
 	readonly id: string
+	readonly name: string
+	readonly position: Vector3
+	readonly rotation: Quaternion
 	readonly controls: Controls
 	physic?: PhysicState
 	readonly runtime: EntityRuntime
+
+	private _proxy = new MovingEntity()
+	private _quaternion = new Quaternion()
 
 	constructor({
 		id,
@@ -40,38 +46,53 @@ export class Entity extends Vehicle {
 		initialPosition?: [number, number, number]
 		runtime: EntityRuntime
 	}) {
-		super()
 		this.id = id
 		this.name = name
-		this.position = new YukaVector3(...(initialPosition ?? [0, 0, 0]))
+		this.position = new Vector3(...(initialPosition ?? [0, 0, 0]))
 		this.controls = proxy(new Controls())
+		this.rotation = new Quaternion()
 		this.runtime = runtime
 	}
 
 	moveBy(delta: Vector3, speed = 1) {
-		this.controls.target.copy(this.position).add(new YukaVector3(...delta))
+		this.controls.target.copy(this.position).add(new Vector3(...delta))
 		this.controls.speed = speed
 		this.controls.isMoving = true
 		return this
 	}
 
-	moveTo(target: YukaVector3, speed: number) {
+	moveTo(target: Vector3, speed: number) {
 		this.controls.target.copy(target)
 		this.controls.speed = speed
 		this.controls.isMoving = true
 		return this
 	}
 
-	teleportTo(target: YukaVector3) {
+	teleportTo(target: Vector3) {
 		this.controls.teleport = target.clone()
 		return this
 	}
 
-	distanceTo(target: YukaVector3) {
+	distanceTo(target: Vector3) {
 		return this.position.distanceTo(target)
 	}
 
-	isInRange(target: YukaVector3, maxDistance = INTERACTION_MAX_DISTANCE) {
+	isInRange(target: Vector3, maxDistance = INTERACTION_MAX_DISTANCE) {
 		return this.distanceTo(target) <= maxDistance
+	}
+
+	get velocity() {
+		return this._proxy.velocity
+	}
+
+	getSpeed() {
+		return this._proxy.getSpeed()
+	}
+
+	lookAt(target: YukaVector3) {
+		this._proxy.lookAt(target)
+		this._quaternion.copy(this._proxy.rotation)
+		this.rotation.slerp(this._quaternion, 0.1)
+		return this
 	}
 }

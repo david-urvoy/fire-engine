@@ -1,6 +1,6 @@
 import type { KinematicCharacterController } from '@dimforge/rapier3d-compat'
 import { useCallback, useRef, type RefObject } from 'react'
-import { Vector3 as YukaVector3 } from 'yuka'
+import { Vector3 } from 'three'
 
 import { useEntity } from '../../game'
 import { useTeleport } from './use-teleport'
@@ -10,7 +10,7 @@ export function useCharacterMovement(
 ) {
 	const { entity } = useEntity()
 	const applyTeleport = useTeleport()
-	const position = useRef(new YukaVector3())
+	const position = useRef(new Vector3())
 
 	return useCallback(() => {
 		applyTeleport()
@@ -29,7 +29,7 @@ export function useCharacterMovement(
 			translation.z + computedMovement.z,
 		)
 
-		if (entity.position.squaredDistanceTo(position.current) > 1e-6) {
+		if (entity.position.distanceToSquared(position.current) > 1e-6) {
 			entity.position.copy(position.current)
 			body.setNextKinematicTranslation(entity.position)
 		}

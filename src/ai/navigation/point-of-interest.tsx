@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react'
+import { useEffect, useMemo, useRef, type PropsWithChildren } from 'react'
 import { Vector3 as YukaVector3 } from 'yuka'
 
 import { useEntity } from '../../game'
@@ -38,31 +38,35 @@ export function PointOfInterestNavigation({
 	pointOfInterest: string
 }) {
 	const { entity } = useEntity()
-	const [waypointIndex, setWaypointIndex] = useState(1)
+	const waypointIndex = useRef(1)
 	const { navMesh, pointsOfInterest } = useNavMesh()
 
 	const key = `${group}:${pointOfInterest}`
-	const pointOfInterestRef = useRef(key)
+	const pointOfInterestKey = useRef(key)
 
-	const targetPointOfInterest = pointsOfInterest[key]
+	const targetPointOfInterest = useMemo(() => pointsOfInterest[key], [pointsOfInterest, key])
 
 	const path = useMemo(() => {
 		if (!targetPointOfInterest || !navMesh) return undefined
-		return navMesh.findPath(entity.position, new YukaVector3(...targetPointOfInterest.position))
-	}, [targetPointOfInterest, navMesh, entity])
+		return navMesh.findPath(
+			new YukaVector3(entity.position.x, entity.position.y, entity.position.z),
+			new YukaVector3(...targetPointOfInterest.position),
+		)
+	}, [entity.position, navMesh, targetPointOfInterest])
 
 	useEffect(() => {
-		if (key !== pointOfInterestRef.current) {
-			pointOfInterestRef.current = key
-			setWaypointIndex(1)
+		if (key !== pointOfInterestKey.current) {
+			pointOfInterestKey.current = key
+			waypointIndex.current = 1
 		}
 	}, [key])
 
 	useOnHasReached(() => {
-		if (!path || !path[waypointIndex]) return null
-		if (waypointIndex < path.length) {
-			entity.controls.target.copy(path[waypointIndex])
-			setWaypointIndex(waypointIndex + 1)
+		const waypoint = path?.[waypointIndex.current]
+		if (!path || !waypoint) return null
+		if (waypointIndex.current < path.length) {
+			entity.controls.target.copy(waypoint)
+			waypointIndex.current += 1
 		} else entity.controls.setIsMoving(false)
 	})
 
