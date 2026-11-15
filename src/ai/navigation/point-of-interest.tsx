@@ -61,6 +61,11 @@ export function PointOfInterestNavigation({
 		}
 	}, [key])
 
+	useEffect(() => {
+		if (!path || !path[0]) return
+		entity.controls.target.set(path[0].x, path[0].y, path[0].z)
+	}, [path, entity.controls])
+
 	useOnHasReached(() => {
 		const waypoint = path?.[waypointIndex.current]
 		if (!path || !waypoint) return null
