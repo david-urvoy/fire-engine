@@ -1,34 +1,9 @@
-import { useEffect, useMemo, useRef, type PropsWithChildren } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Vector3 as YukaVector3 } from 'yuka'
 
-import { useEntity } from '../../game'
-import { useOnHasReached } from './movement'
-import { useNavMesh } from './navmesh.context'
-
-export type PointOfInterest<Group extends string = string> = {
-	id: string
-	name: string
-	group: Group
-	position: [number, number, number]
-	radius: number
-}
-
-export function PointOfInterest<Group extends string = string>({
-	id,
-	name,
-	group,
-	position,
-	radius,
-	children,
-}: PropsWithChildren<PointOfInterest<Group>>) {
-	const { addPointOfInterest } = useNavMesh()
-	useEffect(
-		() => addPointOfInterest({ id, name, group, position, radius }),
-		[id, name, group, position, radius, addPointOfInterest],
-	)
-
-	return <group position={position}>{children}</group>
-}
+import { useEntity } from '../../../game'
+import { useOnHasReached } from '../movement'
+import { useNavMesh } from '../navmesh.context'
 
 export function PointOfInterestNavigation({
 	group,
@@ -44,7 +19,10 @@ export function PointOfInterestNavigation({
 	const key = `${group}:${pointOfInterest}`
 	const pointOfInterestKey = useRef(key)
 
-	const targetPointOfInterest = useMemo(() => pointsOfInterest[key], [pointsOfInterest, key])
+	const targetPointOfInterest = useMemo(
+		() => pointsOfInterest[group]?.[pointOfInterest],
+		[pointsOfInterest, group, pointOfInterest],
+	)
 
 	const path = useMemo(() => {
 		if (!targetPointOfInterest || !navMesh) return undefined

@@ -9,12 +9,12 @@ import {
 } from 'react'
 import { NavMesh, NavMeshLoader } from 'yuka'
 
-import type { PointOfInterest } from './point-of-interest'
+import type { PointOfInterest } from './point-of-interest/point-of-interest.model'
 
 type NavMeshContextValue = {
 	navMesh?: NavMesh
 	setNavMeshSource: (source: string) => void
-	pointsOfInterest: Record<string, PointOfInterest>
+	pointsOfInterest: Record<string, Record<string, PointOfInterest>>
 	addPointOfInterest: (pointOfInterest: PointOfInterest) => void
 }
 
@@ -28,7 +28,9 @@ const navMeshCache = new Map<string, Promise<NavMesh>>()
 
 export function NavMeshProvider({ children }: PropsWithChildren) {
 	const [source, setSource] = useState<string | null>(null)
-	const [pointsOfInterest, setPointsOfInterest] = useState<Record<string, PointOfInterest>>({})
+	const [pointsOfInterest, setPointsOfInterest] = useState<
+		Record<string, Record<string, PointOfInterest>>
+	>({})
 
 	const setNavMeshSource = useCallback((source: string) => setSource(source), [])
 
@@ -40,7 +42,10 @@ export function NavMeshProvider({ children }: PropsWithChildren) {
 		(pointOfInterest: PointOfInterest) =>
 			setPointsOfInterest((prev) => ({
 				...prev,
-				[`${pointOfInterest.group}:${pointOfInterest.id}`]: pointOfInterest,
+				[pointOfInterest.group]: {
+					...prev[pointOfInterest.group],
+					[pointOfInterest.id]: pointOfInterest,
+				},
 			})),
 		[],
 	)

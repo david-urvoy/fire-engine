@@ -2,6 +2,7 @@ import { Shadow } from '@react-three/drei'
 import { CapsuleCollider } from '@react-three/rapier'
 
 import { Visual } from '../../3d/visual/visual'
+import { MoveToTarget } from '../../ai/navigation/movement'
 import { eventBus } from '../../lib'
 import { Gravity, KinematicMotor } from '../../physics'
 import { Entity, type EntityProps } from '../entity/entity'
@@ -23,7 +24,7 @@ export function Character({
 	return (
 		<Entity id={id} position={position} {...props}>
 			<CharacterProvider character={new CharacterModel(id, props.name, '', 0)}>
-				<KinematicMotor colliders={false}>
+				<KinematicMotor userData={{ id }} colliders={false}>
 					<CapsuleCollider
 						args={[(height - characterDimensions.radius * 2) * 0.5, characterDimensions.radius]}
 						position={[0, height * 0.5, 0]}
@@ -37,6 +38,7 @@ export function Character({
 					</Visual>
 				</KinematicMotor>
 				<Gravity />
+				<MoveToTarget speed={2} />
 			</CharacterProvider>
 		</Entity>
 	)
