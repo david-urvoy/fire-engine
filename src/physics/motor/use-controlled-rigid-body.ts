@@ -19,7 +19,7 @@ export function useCharacterMovement(
 		const controller = controllerRef?.current
 		if (!body || !controller || !entity.physic) return
 
-		controller.computeColliderMovement(body.collider(0), entity.velocity)
+		controller.computeColliderMovement(body.collider(0), entity.velocity, 8)
 
 		const computedMovement = controller.computedMovement()
 		const translation = body.translation()

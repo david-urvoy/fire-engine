@@ -20,7 +20,6 @@ export function PointOfInterestRoam({
 					(option) => option !== prev,
 				)
 				const next = options[MathUtils.randInt(0, options.length - 1)]
-				console.log(next)
 				if (!next) return prev
 				return next
 			})
